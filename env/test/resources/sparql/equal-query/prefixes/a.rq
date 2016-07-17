@@ -1,0 +1,6 @@
+PREFIX schema: <http://schema.org/>
+
+SELECT ?person
+WHERE {
+  ?person a schema:Person .
+}

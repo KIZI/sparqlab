@@ -1,0 +1,6 @@
+select ?property (count(*) AS ?count)
+where {
+  [] ?property [] .
+}
+group by ?property
+order by desc(?count)

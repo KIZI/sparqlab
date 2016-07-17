@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{name}}</h1>
+    {{description|markdown}}
+    <form action="/exercise/evaluate/{{id}}" method="POST">
+      {% csrf-field %}
+      {% include "sparql_editor.html" %}
+      <div class="control-buttons hidden btn-group" role="group">
+        <button id="run-query" type="button" class="btn btn-default">Spustit dotaz</button>
+        <button type="submit" class="btn btn-primary">Odeslat</button>
+      </div>
+    </form>
+    {% include "sparql_results.html" %}
+  </div>
+</div>
+{% endblock %}
+{% block page-scripts %}
+{% script "/js/yasqe.js" %}
+{% endblock %}

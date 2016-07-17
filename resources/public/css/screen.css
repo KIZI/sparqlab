@@ -1,0 +1,72 @@
+/*
+ * Colour palette:
+ * Pink #ff358b
+ * Blue #01b0f0
+ * Green #aeee00
+ * Yellow #fef501
+ */
+
+html,
+body {
+	font-family: Rubik, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  height: 100%;
+}
+.navbar {
+  margin-bottom: 10px;
+}
+.navbar-brand {
+  float: none;
+}
+.navbar-nav .nav-item {
+  float: none;
+}
+.navbar-divider,
+.navbar-nav .nav-item+.nav-item,
+.navbar-nav .nav-link + .nav-link {
+  margin-left: 0;
+}
+@media (min-width: 34em) {
+  .navbar-brand {
+    float: left;
+  }
+  .navbar-nav .nav-item {
+    float: left;
+  }
+  .navbar-divider,
+  .navbar-nav .nav-item+.nav-item,
+  .navbar-nav .nav-link + .nav-link {
+    margin-left: 1rem;
+  }
+}
+
+.navbar-brand {
+  background: url("/img/logo.svg") left / contain no-repeat;
+  padding-left: 40px;
+}
+
+a {
+  color: #01b0f0;
+}
+
+code {
+  color: #ff358b;
+}
+
+.control-buttons {
+  margin: .5em 0;
+}
+
+.show {
+  display: block !important;
+}
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+.btn.btn-default:focus, .btn.btn-primary:focus, .btn.btn-danger:focus, button.close {
+  outline: 0;
+}
+
+#verdict p {
+  padding: 15px;
+}

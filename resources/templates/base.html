@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <META name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPARQLab</title>
+    <link href="/favicon.ico" rel="shortcut icon"/>
+
+    <!-- styles -->
+    <link href="https://fonts.googleapis.com/css?family=Rubik:400,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <!-- <link href="//cdn.jsdelivr.net/yasqe/2.10.0/yasqe.min.css" rel="stylesheet" type="text/css"/> -->
+    <link href='http://cdn.jsdelivr.net/g/yasqe@2.10(yasqe.min.css),yasr@2.7.5(yasr.min.css)' rel='stylesheet' type='text/css'/>
+    {% style "/assets/bootstrap/css/bootstrap.min.css" %}
+    {% style "/assets/font-awesome/css/font-awesome.min.css" %}
+
+    {% style "/css/screen.css" %}
+  </head>
+  <body>
+      <!-- navbar -->
+      <nav class="navbar navbar-light bg-faded" role="navigation">
+          <button class="navbar-toggler hidden-sm-up"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapsing-navbar">
+              &#9776;
+          </button>
+          <div class="collapse navbar-toggleable-xs" id="collapsing-navbar">
+              <a class="navbar-brand" href="{{servlet-context}}/" rel="home">SPARQLab</a>
+              <ul class="nav navbar-nav">
+                  <li class="nav-item">
+                      <a href="{{servlet-context}}/"
+                         class="nav-link{% ifequal page "home.html" %} active{%endifequal%}">
+                      Cvičení
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{servlet-context}}/endpoint"
+                         class="nav-link{% ifequal page "endpoint.html" %} active{%endifequal%}">
+                      SPARQL endpoint
+                      </a>
+                  </li>
+              </ul>
+          </div>
+      </nav>
+
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <!-- scripts -->
+    {% script "/assets/jquery/jquery.min.js" %}
+    {% script "/assets/tether/dist/js/tether.min.js" %}
+    {% script "/assets/bootstrap/js/bootstrap.min.js" %}
+
+    <script src='//cdn.jsdelivr.net/yasr/2.7.5/yasr.bundled.min.js'></script>
+    <script src="//cdn.jsdelivr.net/yasqe/2.10.0/yasqe.bundled.min.js"></script>
+
+    <script type="text/javascript">
+      var context = "{{servlet-context}}";
+    </script>
+    {% block page-scripts %}
+    {% endblock %}
+  </body>
+</html>

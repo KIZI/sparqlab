@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{name}}</h1>
+{{description|markdown}}
+<div id="verdict">
+  Výsledek:
+  {% if verdict %}
+  <p class="bg-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Správně</p>
+  {% else %}
+  <p class="bg-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Špatně</p>
+  {% endif %}
+</div>
+{% endblock %}

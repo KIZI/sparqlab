@@ -1,0 +1,6 @@
+SELECT ?property (COUNT(*) AS ?count)
+WHERE {
+  _:b1 ?property _:b2 .
+}
+GROUP BY ?property
+ORDER BY DESC(?count)
