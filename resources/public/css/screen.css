@@ -67,6 +67,43 @@ code {
   outline: 0;
 }
 
-#verdict p {
-  padding: 15px;
+#verdict {
 }
+
+.fa {
+  padding-right: 5px;
+}
+
+/* SPARQLab theme for CodeMirror */
+
+.cm-s-sparqlab * { font-family: "Ubuntu Mono", monospace; }
+.cm-s-sparqlab .cm-header {color: blue;}
+.cm-s-sparqlab .cm-quote {color: #090;}
+
+.cm-s-sparqlab .cm-keyword {color: #a71d5d;} /* PREFIX, SELECT, WHERE, LIMIT, atp. */
+.cm-s-sparqlab .cm-atom {color: #0086b3;} /* variables */
+.cm-s-sparqlab .cm-number {color: #0086b3;}
+.cm-s-sparqlab .cm-def {color: #00f;}
+.cm-s-sparqlab .cm-variable,
+.cm-s-sparqlab .cm-punc, /* ^^ in datatype annotations, triple separators */
+.cm-s-sparqlab .cm-property,
+.cm-s-sparqlab .cm-operator {}
+.cm-s-sparqlab .cm-variable-2 {color: #05a;} 
+.cm-s-sparqlab .cm-variable-3 {color: #795da3;} /* absolute IRIs */
+.cm-s-sparqlab .cm-comment {color: #969896;} /* comments */
+.cm-s-sparqlab .cm-string {color: #183691;} /* literals */
+.cm-s-sparqlab .cm-string-2 {color: #333;} /* prefixes, relative IRIs */
+.cm-s-sparqlab .cm-meta {color: #555;}
+.cm-s-sparqlab .cm-qualifier {color: #555;}
+.cm-s-sparqlab .cm-builtin {color: #30a;}
+.cm-s-sparqlab .cm-bracket {color: #997;}
+.cm-s-sparqlab .cm-tag {color: #170;}
+.cm-s-sparqlab .cm-attribute {color: #00c;}
+.cm-s-sparqlab .cm-hr {color: #999;}
+.cm-s-sparqlab .cm-link {color: #00c;}
+/* highlighted matching brackets */
+.cm-s-sparqlab .CodeMirror-matchingbracket {
+  color: #ff358b !important;
+}
+
+.cm-s-sparqlab .cm-error {color: #f00;} /* errors */
