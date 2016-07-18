@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 {% include "sparql_editor.html" %}
+<div class="control-buttons hidden">
+  <button id="run-query" type="button" class="btn btn-primary">Spustit dotaz</button>
+</div>
 {% include "sparql_results.html" %}
 {% endblock %}
 {% block page-scripts %}
-{% script "/js/yasqe.js" %}
+{% script "/js/editor.js" %}
 {% endblock %}

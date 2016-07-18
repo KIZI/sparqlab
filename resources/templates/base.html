@@ -7,9 +7,9 @@
     <link href="/favicon.ico" rel="shortcut icon"/>
 
     <!-- styles -->
-    <link href="https://fonts.googleapis.com/css?family=Rubik:400,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-    <!-- <link href="//cdn.jsdelivr.net/yasqe/2.10.0/yasqe.min.css" rel="stylesheet" type="text/css"/> -->
-    <link href='http://cdn.jsdelivr.net/g/yasqe@2.10(yasqe.min.css),yasr@2.7.5(yasr.min.css)' rel='stylesheet' type='text/css'/>
+    {% style "https://fonts.googleapis.com/css?family=Rubik:400,700&subset=latin,latin-ext" %}
+    {% style "https://fonts.googleapis.com/css?family=Ubuntu+Mono&subset=latin,latin-ext" %} 
+    {% style "http://cdn.jsdelivr.net/g/yasqe@2.10(yasqe.min.css),yasr@2.7.5(yasr.min.css)" %} 
     {% style "/assets/bootstrap/css/bootstrap.min.css" %}
     {% style "/assets/font-awesome/css/font-awesome.min.css" %}
 
@@ -52,9 +52,8 @@
     {% script "/assets/jquery/jquery.min.js" %}
     {% script "/assets/tether/dist/js/tether.min.js" %}
     {% script "/assets/bootstrap/js/bootstrap.min.js" %}
-
-    <script src='//cdn.jsdelivr.net/yasr/2.7.5/yasr.bundled.min.js'></script>
-    <script src="//cdn.jsdelivr.net/yasqe/2.10.0/yasqe.bundled.min.js"></script>
+    {% script "//cdn.jsdelivr.net/yasr/2.7.5/yasr.bundled.min.js" %}
+    {% script "//cdn.jsdelivr.net/yasqe/2.10.0/yasqe.bundled.min.js" %}
 
     <script type="text/javascript">
       var context = "{{servlet-context}}";
