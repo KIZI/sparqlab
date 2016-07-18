@@ -16,7 +16,19 @@
   };
 
   $(document).ready(function () {
-    var query = textAreaToYasqe("query");
-    var canonicalQuery = textAreaToYasqe("canonical-query");
+    var query = textAreaToYasqe("query"),
+        canonicalQuery = textAreaToYasqe("canonical-query"),
+        queryResults = YASR(document.getElementById("query-results")),
+        $results = $("#results"),
+        canonicalQueryResults = YASR(document.getElementById("canonical-query-results")),
+        $canonicalResults = $("#canonical-results");
+    queryResults.setResponse({
+      response: $results.val(),
+      contentType: $results.data("type")
+    });
+    canonicalQueryResults.setResponse({
+      response: $canonicalResults.val(),
+      contentType: $canonicalResults.data("type")
+    });
   });
 })(jQuery);

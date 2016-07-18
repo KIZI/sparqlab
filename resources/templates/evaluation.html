@@ -2,25 +2,43 @@
 {% block content %}
 <h1>{{name}}</h1>
 {{description|markdown}}
-<ul id="verdict" class="list-inline"> 
-  <li class="list-inline-item"><strong>Verdikt:</strong></li>
-  {% if verdict %}
-  <li class="bg-success list-inline-item"><i class="fa fa-check-circle-o" aria-hidden="true"></i>Správně</li>
-  {% else %}
-  <li class="list-inline-item"><i class="fa fa-times-circle-o" aria-hidden="true"></i>Špatně</li>
-  <li class="list-inline-item"><a type="button" class="btn btn-danger btn-sm" href="#">Prozradit řešení</a></li>
-  {% endif %}
-</ul>
 <div class="row">
   <div class="col-md-6">
-    <h2>Odpověď</h2>
-    <textarea id="query" class="form-control" readonly rows="10">{{query}}</textarea>
+    <div class="clearfix">
+      <h2 class="pull-left">Odpověď
+        {% if verdict %}
+        <i class="fa fa-check-circle-o correct" title="Správná odpověď" aria-hidden="true"></i>
+        {% else %}
+        <i class="fa fa-times-circle-o incorrect" title="Nesprávná odpověď" aria-hidden="true"></i>
+        {% endif %}
+      </h2>
+      {% if not verdict %}
+      <div class="pull-right">
+        <a type="button" class="btn btn-danger btn-sm" href="#">Prozradit řešení</a>
+      </div>
+      {% endif %}
+    </div>
+    <textarea id="query" class="form-control" readonly rows="10">{{query.query}}</textarea>
+    <textarea id="results" class="hidden" data-type="{{query.results-type}}"> 
+      {% safe %}
+      {{query.results}}
+      {% endsafe %}
+    </textarea>
+    <h3>Výsledky</h3>
+    <div id="query-results"></div>
   </div>
   <div class="col-md-6">
-    {% if verdict %}
     <h2>Řešení</h2>
-    <textarea id="canonical-query" class="form-control" readonly rows="10">{{canonical-query}}</textarea>
+    {% if verdict %}
+    <textarea id="canonical-query" class="form-control" readonly rows="10">{{canonical-query.query}}</textarea>
     {% endif %}
+    <h3>Výsledky</h3>
+    <textarea id="canonical-results" class="hidden" data-type="{{canonical-query.results-type}}">
+      {% safe %}
+      {{canonical-query.results}}
+      {% endsafe %}
+    </textarea>
+    <div id="canonical-query-results"></div>
   </div>
 </div>
 {% endblock %}

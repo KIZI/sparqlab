@@ -67,7 +67,12 @@ code {
   outline: 0;
 }
 
-#verdict {
+.correct {
+  color: #5cb85c; 
+}
+
+.incorrect {
+  color: #d9534f;
 }
 
 .fa {
