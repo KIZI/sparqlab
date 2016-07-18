@@ -13,6 +13,6 @@
                               seq
                               (filter query-file?)))]
     (doseq [[q1 q2] query-pairs]
-      (is (sparql/equal-query? q1 q2)))))
+      (is (:equal? (sparql/equal-query? q1 q2))))))
 
 (deftest equal-results?)
