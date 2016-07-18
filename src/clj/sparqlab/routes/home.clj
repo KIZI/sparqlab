@@ -55,7 +55,10 @@
   (let [{canonical-query :query
          :as exercise} (parse-exercise id)
         verdict (equal-query? query canonical-query)]
-    (layout/render "evaluation.html" (assoc exercise :verdict verdict))))
+    (layout/render "evaluation.html" (assoc exercise
+                                            :canonical-query canonical-query
+                                            :query query
+                                            :verdict verdict))))
 
 (defn show-exercise
   [id]
