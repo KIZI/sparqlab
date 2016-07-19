@@ -1,0 +1,30 @@
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sp:       <http://spinrdf.org/sp#> .
+
+@prefix exercise: <http://mynarz.net/sparqlab/resource/exercise/> .
+@prefix sparqlab: <http://mynarz.net/sparqlab/vocabulary#> .
+
+exercise:count-triples a sp:Query ;
+  rdfs:label "Počet trojic"@cs ;
+  rdfs:comment "Spočtěte trojice ve výchozím grafu."@cs ;
+  sp:text """
+SELECT (COUNT(*) AS ?count)
+WHERE {
+  [] ?p [] .
+}
+  """ .
+
+exercise:graph-sizes a sp:Query ;
+  rdfs:label "Velikost grafů"@cs ;
+  rdfs:comment "Spočtěte trojice v každém grafu a seřaďte výsledky sestupně dle velikosti."@cs ;
+  sp:text """
+SELECT ?graph (COUNT(*) AS ?size)
+WHERE {
+  GRAPH ?graph {
+    [] ?p [] .
+  }
+}
+GROUP BY ?graph
+ORDER BY DESC(?size)
+  """ .
