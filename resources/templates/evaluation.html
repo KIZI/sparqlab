@@ -6,13 +6,13 @@
   <div class="col-md-6">
     <div class="clearfix">
       <h2 class="pull-left">Odpověď
-        {% if verdict %}
+        {% if equal? %}
         <i class="fa fa-check-circle-o correct" title="Správná odpověď" aria-hidden="true"></i>
         {% else %}
         <i class="fa fa-times-circle-o incorrect" title="Nesprávná odpověď" aria-hidden="true"></i>
         {% endif %}
       </h2>
-      {% if not verdict %}
+      {% if not equal? %}
       <div class="pull-right">
         <button id="reveal-solution-button"
                 data-toggle="modal"
@@ -34,7 +34,7 @@
   <div class="col-md-6">
     <h2>Řešení</h2>
     <textarea id="canonical-query"
-              class="form-control {% if not verdict %}invisible{% endif %} yasqe-like"
+              class="form-control {% if not equal? %}invisible{% endif %} yasqe-like"
               readonly
               rows="10">{{canonical-query.query}}</textarea>
     <h3>Výsledky</h3>
