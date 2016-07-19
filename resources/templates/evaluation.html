@@ -14,7 +14,11 @@
       </h2>
       {% if not verdict %}
       <div class="pull-right">
-        <a type="button" class="btn btn-danger btn-sm" href="#">Prozradit řešení</a>
+        <button id="reveal-solution-button"
+                data-toggle="modal"
+                data-target="#confirm-reveal"
+                type="button"
+                class="btn btn-danger btn-sm">Prozradit řešení</button>
       </div>
       {% endif %}
     </div>
@@ -29,9 +33,10 @@
   </div>
   <div class="col-md-6">
     <h2>Řešení</h2>
-    {% if verdict %}
-    <textarea id="canonical-query" class="form-control" readonly rows="10">{{canonical-query.query}}</textarea>
-    {% endif %}
+    <textarea id="canonical-query"
+              class="form-control {% if not verdict %}invisible{% endif %} yasqe-like"
+              readonly
+              rows="10">{{canonical-query.query}}</textarea>
     <h3>Výsledky</h3>
     <textarea id="canonical-results" class="hidden" data-type="{{canonical-query.results-type}}">
       {% safe %}
@@ -40,6 +45,22 @@
     </textarea>
     <div id="canonical-query-results"></div>
   </div>
+</div>
+<div class="modal fade"
+  id="confirm-reveal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="Potvrdit prozrazení řešení"
+  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">Opravdu chcete prozradit řešení?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Ne</button>
+                <a id="reveal-solution" class="btn btn-danger btn-ok" data-dismiss="modal">Ano</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 {% block page-scripts %}
