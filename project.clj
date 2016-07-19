@@ -25,7 +25,8 @@
                  [luminus-nrepl "0.1.4"]
                  [clj-http "2.2.0"]
                  [org.apache.jena/jena-core "3.1.0"]
-                 [org.apache.jena/jena-arq "3.1.0"]]
+                 [org.apache.jena/jena-arq "3.1.0"]
+                 [cheshire "5.6.3"]]
 
   :min-lein-version "2.0.0"
 

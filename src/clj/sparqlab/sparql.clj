@@ -1,7 +1,9 @@
 (ns sparqlab.sparql
   (:require [sparqlab.config :refer [env]]
             [clj-http.client :as client]
-            [clojure.string :as string])
+            [clojure.tools.logging :as log]
+            [clojure.string :as string]
+            [cheshire.core :refer [parse-string]])
   (:import [org.apache.jena.query Query QueryFactory]))
 
 (derive ::describe ::construct)
@@ -27,13 +29,19 @@
 (defmulti normalize-query-results (fn [query-type _] query-type))
 
 (defmethod normalize-query-results ::ask
-  [_ query-results])
+  [_ query-results]
+  query-results)
 
 (defmethod normalize-query-results ::construct
-  [_ query-results])
+  [_ query-results]
+  query-results)
 
 (defmethod normalize-query-results ::select
-  [_ query-results])
+  [_ query-results]
+  (let [data (parse-string query-results keyword)]
+    (cond-> (get-in data [:results :bindings])
+      (not (get-in data [:results :ordered])) set ; Unordered bindings are compared as sets 
+      )))
 
 (defn sparql-query
   [endpoint query-type query]
@@ -63,4 +71,5 @@
              :results query-results
              :results-type (get-results-type query-type)}
      :equal? (or equal-syntax?
-                 (= canonical-results query-results))}))
+                 (= (normalize-query-results canonical-query-type canonical-results)
+                    (normalize-query-results query-type query-results)))}))
