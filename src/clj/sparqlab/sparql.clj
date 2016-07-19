@@ -39,7 +39,7 @@
 (defmethod normalize-query-results ::select
   [_ query-results]
   (let [data (parse-string query-results keyword)]
-    (cond-> (get-in data [:results :bindings])
+    (cond-> (map (partial map val) (get-in data [:results :bindings]))
       (not (get-in data [:results :ordered])) set ; Unordered bindings are compared as sets 
       )))
 
