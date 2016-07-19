@@ -1,6 +1,7 @@
 (ns sparqlab.sparql
   (:require [sparqlab.config :refer [env]]
-            [clj-http.client :as client])
+            [clj-http.client :as client]
+            [clojure.string :as string])
   (:import [org.apache.jena.query Query QueryFactory]))
 
 (derive ::describe ::construct)
@@ -17,6 +18,11 @@
   [query-type]
   (cond (or (= query-type ::ask) (= query-type ::select)) "application/json"
         (isa? query-type ::construct) "text/turtle"))
+
+(defn serialize-query
+  "Serialize SPARQL `query` to string."
+  [^Query query]
+  (string/trim (.serialize query)))
 
 (defmulti normalize-query-results (fn [query-type _] query-type))
 
@@ -41,17 +47,20 @@
   [canonical-query query]
   (let [canonical-query' (QueryFactory/create canonical-query)
         query' (QueryFactory/create query)
+        equal-syntax? (or (= canonical-query query)
+                          (= canonical-query' query'))
         endpoint (:sparql-endpoint env)
         canonical-query-type (get-query-type canonical-query')
         canonical-results (sparql-query endpoint canonical-query-type canonical-query)
         query-type (get-query-type query')
-        query-results (sparql-query endpoint query-type query)]
-    {:canonical-query {:query (.serialize canonical-query')
+        query-results (if equal-syntax?
+                        canonical-results
+                        (sparql-query endpoint query-type query))]
+    {:canonical-query {:query canonical-query
                        :results canonical-results
                        :results-type (get-results-type canonical-query-type)}
-     :query {:query (.serialize query')
+     :query {:query query
              :results query-results
              :results-type (get-results-type query-type)}
-     :equal? (or (= canonical-query query)
-                 (= canonical-query' query')
+     :equal? (or equal-syntax?
                  (= canonical-results query-results))}))
