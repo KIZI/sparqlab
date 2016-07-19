@@ -1,6 +1,6 @@
 # SPARQLab
 
-SPARQL koans and exercises
+Lab for exercising SPARQL
 
 ## License
 

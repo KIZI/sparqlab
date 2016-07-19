@@ -1,7 +1,0 @@
-# Počet trojic
-# Spočtěte trojice ve výchozím grafu.
-
-SELECT (COUNT(*) AS ?count)
-WHERE {
-  [] ?p [] .
-}

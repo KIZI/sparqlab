@@ -1,65 +1,60 @@
 (ns sparqlab.routes.home
   (:require [sparqlab.layout :as layout]
             [sparqlab.sparql :refer [equal-query?]]
+            [sparqlab.store :refer [select-query]]
+            [sparqlab.prefixes :as prefix]
             [sparqlab.util :refer [query-file?]]
             [compojure.core :refer [context defroutes GET POST]]
             [clojure.tools.logging :as log]
             [ring.util.http-response :as response]
-            [clojure.java.io :as io]
-            [clojure.string :as string]
             [markdown.core :refer [md-to-html-string]]
-            [selmer.filters :refer [add-filter!]]))
+            [selmer.filters :refer [add-filter!]]
+            [stencil.core :refer [render-file]]
+            [stencil.loader :refer [set-cache]]))
 
 (add-filter! :markdown (fn [s] [:safe (md-to-html-string s)]))
 
-(defn- remove-comment
-  "Remove SPARQL comment sign from `line`."
-  [line]
-  (string/replace-first line #"^#\s*" ""))
+; Disable caching for testing
+(set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
 
-(defn- remove-file-extension
-  "Remove file extension from `file-name`."
-  [file-name]
-  (string/replace-first file-name #"\.[^.]+$" ""))
+(defn ->plain-literals
+  [bindings]
+  (into {} (map (fn [[variable value]] [variable (get value "@value")]) bindings)))
 
-(defn parse-exercise
+(defn sparql-template
+  ([file-name]
+   (sparql-template file-name {}))
+  ([file-name data]
+   (render-file (str "sparql/" file-name ".mustache") data)))
+
+(defn get-exercise
   [id]
-  (letfn [(parse [[exercise-name exercise-description & query]]
-            {:name (remove-comment exercise-name)
-             :description (remove-comment exercise-description)
-             :id id
-             :query (string/trim (string/join \newline query))})]
-    (-> (str "exercises/" id ".rq")
-      io/resource
-      io/reader
-      line-seq
-      parse)))
+  (-> (sparql-template "get_exercise" {:exercise (prefix/exercise id)})
+      select-query
+      first
+      ->plain-literals))
 
-(def exercises
-  (letfn [(parse-file [file]
-            {:id (-> file .getName remove-file-extension)
-             :name (-> file io/reader line-seq first remove-comment)})]
-    (->> "exercises"
-      io/resource
-      io/as-file
-      file-seq
-      (filter query-file?)
-      (map parse-file))))
+(defn get-exercises
+  []
+  (->> "get_exercises"
+       sparql-template
+       select-query
+       (map ->plain-literals)))
 
 (defn home-page
   []
-  (layout/render "home.html" {:exercises exercises}))
+  (layout/render "home.html" {:exercises (get-exercises)}))
 
 (defn evaluate-exercise
   [id query]
   (let [{canonical-query :query
-         :as exercise} (parse-exercise id)
+         :as exercise} (get-exercise id)
         verdict (equal-query? canonical-query query)]
     (layout/render "evaluation.html" (merge exercise verdict))))
 
 (defn show-exercise
   [id]
-  (layout/render "exercise.html" (parse-exercise id)))
+  (layout/render "exercise.html" (get-exercise id)))
 
 (defn sparql-endpoint
   []

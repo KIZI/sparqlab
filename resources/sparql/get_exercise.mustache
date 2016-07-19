@@ -1,0 +1,16 @@
+{{!
+@param IRI exercise
+}}
+
+{{> sparql/prefixes.mustache }}
+
+SELECT (REPLACE(STR(<{{exercise}}>), "^.*\\/([^/]+)$", "$1") AS ?id)
+       ?name
+       (REPLACE(?_description, "^\\s+|\\s+$", "") AS ?description)
+       ?query
+WHERE {
+  <{{exercise}}> a sp:Query ;
+    rdfs:label ?name ;
+    rdfs:comment ?_description ;
+    sp:text ?query .
+}
