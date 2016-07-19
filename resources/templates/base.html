@@ -39,6 +39,12 @@
                       SPARQL endpoint
                       </a>
                   </li>
+                  <li class="nav-item">
+                      <a href="{{servlet-context}}/about"
+                         class="nav-link{% ifequal page "about.html" %} active{%endifequal%}">
+                      O aplikaci
+                      </a>
+                  </li>
               </ul>
           </div>
       </nav>
@@ -54,6 +60,7 @@
     {% script "/assets/bootstrap/js/bootstrap.min.js" %}
     {% script "//cdn.jsdelivr.net/yasr/2.7.5/yasr.bundled.min.js" %}
     {% script "//cdn.jsdelivr.net/yasqe/2.10.0/yasqe.bundled.min.js" %}
+    {% script "/js/script.js" %}
 
     <script type="text/javascript">
       var context = "{{servlet-context}}";
