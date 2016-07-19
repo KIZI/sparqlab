@@ -1,8 +1,6 @@
 (defproject sparqlab "0.1.0-SNAPSHOT"
-
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-
+  :description "Lab for exercising SPARQL" 
+  :url "http://github.com/jindrichmynarz/sparqlab"
   :dependencies [[ring/ring-servlet "1.4.0"]
                  [luminus/ring-ttl-session "0.3.1"]
                  [org.clojure/clojure "1.8.0"]
@@ -26,7 +24,8 @@
                  [clj-http "2.2.0"]
                  [org.apache.jena/jena-core "3.1.0"]
                  [org.apache.jena/jena-arq "3.1.0"]
-                 [cheshire "5.6.3"]]
+                 [cheshire "5.6.3"]
+                 [stencil "0.5.0"]]
 
   :min-lein-version "2.0.0"
 
