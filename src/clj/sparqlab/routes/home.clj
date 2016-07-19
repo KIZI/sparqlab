@@ -65,6 +65,10 @@
   []
   (layout/render "endpoint.html"))
 
+(defn about-page
+  []
+  (layout/render "about.html"))
+
 (defroutes home-routes
   (GET "/" [] (home-page))
   (context "/exercise" []
@@ -72,4 +76,5 @@
            (POST "/evaluate/:id" [id :as request]
                  (let [query (get-in request [:form-params "query"])]
                    (evaluate-exercise id query))))
-  (GET "/endpoint" [] (sparql-endpoint)))
+  (GET "/endpoint" [] (sparql-endpoint))
+  (GET "/about" [] (about-page)))
