@@ -67,6 +67,10 @@ code {
   outline: 0;
 }
 
+h3 {
+  margin-top: .5em;
+}
+
 .correct {
   color: #5cb85c; 
 }
@@ -77,6 +81,10 @@ code {
 
 .fa {
   padding-right: 5px;
+}
+
+.yasqe-like {
+  height: 300px;
 }
 
 /* SPARQLab theme for CodeMirror */
