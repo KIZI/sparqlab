@@ -411,3 +411,91 @@ WHERE {
   }
 }
   """ .
+
+exercise:dataset-dimensions a sp:Query ;
+  rdfs:label "Dimenze důchodových ročenek"@cs ;
+  rdfs:comment "Vyberte dimenze (instance `qb:DimensionProperty`) ze struktury datasetu důchodových ročenek (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Dimenze se nebudou ve výsledcích opakovat."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+
+SELECT DISTINCT ?dimension
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure/qb:component/(qb:dimension|qb:componentProperty) ?dimension .
+    ?dimension a qb:DimensionProperty .
+  }
+}
+  """ .
+
+exercise:dataset-measures a sp:Query ;
+  rdfs:label "Míry důchodových ročenek"@cs ;
+  rdfs:comment "Vyberte míry (instance `qb:MeasureProperty`) ze struktury datasetu důchodových ročenek (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Míry se nebudou ve výsledcích opakovat."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+
+SELECT DISTINCT ?measure
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure/qb:component/(qb:measure|qb:componentProperty) ?measure .
+    ?measure a qb:MeasureProperty .
+  }
+}
+  """ .
+
+exercise:datasets a sp:Query ;
+  rdfs:label "Datasety důchodových ročenek"@cs ;
+  rdfs:comment "Vyberte datasety (instance `qb:DataSet`) důchodových ročenek (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Výsledné datasety uveďte bez opakování."@cs ;
+  sp:text """
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+SELECT DISTINCT ?dataset 
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    ?dataset a qb:DataSet .
+  }
+}
+  """ .
+
+exercise:vocabularies a sp:Query ;
+  rdfs:label "Slovníky"@cs ;
+  rdfs:comment "Vyberte slovníky použité v datech důchodových ročenek (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Jako slovník berte jmenný prostor termínu instanciované třídy nebo použitého predikátu. Za jmenný prostor považujte část IRI termínů po poslední lomítko (`/`) nebo hash (`#`). Pro každý slovník vraťte počet rozdílných termínů a výsledky seřaďte sestupně dle tohoto počtu."@cs ;
+  sp:text """
+SELECT ?vocabulary (COUNT(*) AS ?count)
+WHERE {
+  {
+    # Instanciované třídy
+    SELECT DISTINCT ?term
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+        [] a ?term .
+      }
+    }
+  } UNION {
+    # Použité predikáty
+    SELECT DISTINCT ?term
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+        [] ?term [] .
+      }
+    }
+  }
+  BIND (IRI(REPLACE(STR(?term), "^(.+)(#|\\/).+$", "$1")) AS ?vocabulary)
+}
+GROUP BY ?vocabulary
+ORDER BY DESC(?count)
+  """ .
+
+exercise:most-common-class-data a sp:Query ;
+  rdfs:label "Nejčastěji instanciovaná třída v důchodových ročenkách"@cs ;
+  rdfs:comment "Vyberte třídu s nejvyšším počtem instancí v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`)."@cs ;
+  sp:text """
+SELECT ?class 
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    ?s a ?class .
+  }
+}
+GROUP BY ?class
+ORDER BY DESC(?count)
+LIMIT 1
+  """ .
