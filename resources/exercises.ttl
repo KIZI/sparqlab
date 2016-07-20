@@ -133,6 +133,140 @@ WHERE {
 LIMIT 1
   """ .
 
+exercise:properties a sp:Query ;
+  rdfs:label "Predikáty"@cs ;
+  rdfs:comment "Vyberte predikáty použité v datech (bez opakování)."@cs ;
+  sp:text """
+SELECT DISTINCT ?property
+WHERE {
+  [] ?property [] .
+}
+  """ .
+
+exercise:properties-histogram a sp:Query ;
+  rdfs:label "Histogram predikátů"@cs ;
+  rdfs:comment "Spočítejte histogram predikátů použitých v datech. Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
+  sp:text """
+SELECT ?property (COUNT(*) AS ?count)
+WHERE {
+  [] ?property [] .
+}
+GROUP BY ?property
+ORDER BY DESC(?count)
+  """ .
+
+exercise:properties-histogram-code-lists a sp:Query ;
+  rdfs:label "Histogram predikátů v číselnících"@cs ;
+  rdfs:comment "Spočítejte histogram predikátů použitých v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně    podle tohoto počtu."@cs ;
+  sp:text """
+SELECT ?property (COUNT(*) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    [] ?property [] .
+  }
+}
+GROUP BY ?property
+ORDER BY DESC(?count)
+  """ . 
+
+exercise:properties-histogram-data a sp:Query ;
+  rdfs:label "Histogram predikátů v důchodových ročenkách"@cs ;
+  rdfs:comment "Spočítejte histogram predikátů použitých v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
+  sp:text """
+SELECT ?property (COUNT(*) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    [] ?property [] .
+  }
+}
+GROUP BY ?property
+ORDER BY DESC(?count)
+  """ .
+
+exercise:properties-histogram-metadata a sp:Query ;
+  rdfs:label "Histogram predikátů v metadatech důchodových ročenek"@cs ;
+  rdfs:comment "Spočítejte histogram predikátů použitých v metadatech k důchodovým ročenkám (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
+  sp:text """
+SELECT ?property (COUNT(*) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata> {
+    [] ?property [] .
+  }
+}
+GROUP BY ?property
+ORDER BY DESC(?count)
+  """ .
+
+exercise:properties-qb-observation-cardinality-data a sp:Query ;
+  rdfs:label "Kardinality predikátů qb:Observation v důchodových ročenkách"@cs ;
+  rdfs:comment "Spočítejte minimální a maximální kardinality predikátů použitých pro popis instance `qb:Observation` v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Výsledky seřaďte sestupně podle maximální kardinality."@cs ;
+  sp:text """
+PREFIX qb: <http://purl.org/linked-data/cube#> 
+
+SELECT ?p (MIN(?cardinality) AS ?minCardinality) (MAX(?cardinality) AS ?maxCardinality)
+WHERE {
+  {
+    SELECT ?p (COUNT(?o) AS ?cardinality)
+    WHERE {
+      {
+        SELECT DISTINCT ?p
+        WHERE {
+          GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+            [] a qb:Observation ;
+              ?p [] .
+          }
+        }
+      }
+      GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+        ?s a qb:Observation .
+        OPTIONAL {
+          ?s ?p ?o .
+        }
+      }
+    }
+    GROUP BY ?s ?p
+  }
+}
+GROUP BY ?p
+ORDER BY DESC(?maxCardinality)
+  """ .
+
+exercise:properties-qb-observation-data a sp:Query ;
+  rdfs:label "Predikáty pozorování v důchodových ročenkách"@cs ;
+  rdfs:comment "Vyberte predikáty pozorování (tj. instancí `qb:Observation`) v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Výsledky budou obsahovat každý predikát pouze jednou."@cs ;
+  sp:text """
+PREFIX qb: <http://purl.org/linked-data/cube#> 
+
+SELECT DISTINCT ?property 
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    [] a qb:Observation ; 
+      ?property [] .
+  }
+}
+  """ .
+
+exercise:some-data a sp:Query ;
+  rdfs:label "Jsou v úložišti data?"@cs ;
+  rdfs:comment "Zjistěte, zdali jsou v dotazovaném úložišti data."@cs ;
+  sp:text """
+ASK {
+  [] ?p [] .
+}
+  """ .
+
+exercise:some-named-graphs a sp:Query ;
+  rdfs:label "Jsou v úložišti pojmenované grafy?"@cs ;
+  rdfs:comment "Zjistěte, zdali jsou v dotazovaném úložišti pojmenované grafy."@cs ;
+  sp:text """
+ASK
+WHERE {
+  GRAPH ?g {
+    [] ?p [] .
+  }
+}
+  """ .
+
 exercise:count-triples a sp:Query ;
   rdfs:label "Počet trojic"@cs ;
   rdfs:comment "Spočtěte trojice ve výchozím grafu."@cs ;
@@ -155,4 +289,125 @@ WHERE {
 }
 GROUP BY ?graph
 ORDER BY DESC(?size)
+  """ .
+
+exercise:component-property-subproperties a sp:Query ;
+  rdfs:label "Predikáty odvozené z qb:componentProperty"@cs ;
+  rdfs:comment "Vyberte predikáty z Data Cube Vocabulary (pojmenovaný graf `http://purl.org/linked-data/cube`), které jsou odvozené z `qb:componentProperty` pomocí `rdfs:subPropertyOf`."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?property
+WHERE {
+  GRAPH <http://purl.org/linked-data/cube> {
+    ?property rdfs:subPropertyOf qb:componentProperty .
+  }
+}
+  """ .
+
+exercise:count-datasets a sp:Query ;
+  rdfs:label "Počet datasetů"@cs ;
+  rdfs:comment "Spočtěte instance `qb:DataSet` v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`)."@cs ;
+  sp:text """
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+SELECT (COUNT(DISTINCT ?dataSet) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    ?dataSet a qb:DataSet .
+  }
+}
+  """ .
+
+exercise:dataset-attributes a sp:Query ;
+  rdfs:label "Atributy v důchodových ročenkách"@cs ;
+  rdfs:comment "Vyberte atributy (tj. instance `qb:AttributeProperty`), které jsou použity ve struktuře důchodových ročenek (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`)."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+
+SELECT ?attribute
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure ?dsd .
+    ?dsd qb:component [
+      ?property ?attribute
+    ] .
+    ?attribute a qb:AttributeProperty .
+  }
+}
+  """ .
+
+exercise:dataset-component-labels-czech a sp:Query ;
+  rdfs:label "Názvy komponent datasetu důchodových ročenek v češtině"@cs ;
+  rdfs:comment "Vyberte názvy komponent datasetu důchodových ročenek (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) v češtině. Výsledky seřaďte vzestupně dle volitelně uvedeného pořadí komponent (`qb:order`) ve struktuře datasetu. Názvy se nebudou opakovat."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?componentLabel
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure ?dsd .
+    ?dsd qb:component ?component .
+    ?component rdfs:label ?componentLabel .
+    FILTER langMatches(lang(?componentLabel), "cs")
+    OPTIONAL {
+      ?component qb:order ?order .
+    }
+  }
+}
+ORDER BY ?order
+  """ .
+
+exercise:dataset-component-properties-with-classes a sp:Query ;
+  rdfs:label "Komponenty datasetu důchodových ročenek s třídami"@cs ;
+  rdfs:comment "Vyberte komponenty datasetu důchodových ročenek (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) spolu s volitelně uvedenými třídami predikátů, na něž komponenty odkazují přes predikát odvozený z `qb:componentProperty` pomocí `rdfs:subPropertyOf` v Data Cube Vocabulary (pojmenovaný graf `http://purl.org/linked-data/cube`)."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?componentProperty ?class
+WHERE {
+  GRAPH <http://purl.org/linked-data/cube> {
+    ?property rdfs:subPropertyOf qb:componentProperty .
+  } 
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure ?dsd .
+    ?dsd qb:component [
+      ?property ?componentProperty
+    ] .
+    OPTIONAL {
+      ?componentProperty a ?class .
+    }
+  }
+}
+ORDER BY ?componentProperty
+  """ .
+
+exercise:dataset-component-properties-with-most-specific-classes a sp:Query ;
+  rdfs:label "Komponenty datasetu důchodových ročenek s nejspecifičtějšími třídami"@cs ;
+  rdfs:comment "Vyberte komponenty datasetu důchodových ročenek (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) spolu s volitelně uvedenými třídami predikátů, na něž komponenty odkazují přes predikát odvozený z `qb:componentProperty` pomocí `rdfs:subPropertyOf` v Data Cube Vocabulary (pojmenovaný graf `http://purl.org/linked-data/cube`). Vybere pouze nejspecifičtější třídy, které nemají žádné podtřídy odkazované pomocí `rdfs:subClassOf`."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?componentProperty ?class
+WHERE {
+  GRAPH <http://purl.org/linked-data/cube> {
+    ?property rdfs:subPropertyOf* qb:componentProperty .
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure ?dsd .
+    ?dsd qb:component [
+      ?property ?componentProperty
+    ] .
+    OPTIONAL {
+      ?componentProperty a ?class .
+    }
+  }
+  FILTER NOT EXISTS {
+    [] rdfs:subClassOf ?class .
+  }
+}
   """ .
