@@ -499,3 +499,62 @@ GROUP BY ?class
 ORDER BY DESC(?count)
 LIMIT 1
   """ .
+
+exercise:ambiguous-notation-references a sp:Query ;
+  rdfs:label "Jsou notace číselníkových konceptů víceznačné?"@cs ;
+  rdfs:comment "Zjistěte, zdali jsou číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`) různé koncepty, které sdílí stejnou notaci (hodnotu `skos:notation`)."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?a skos:inScheme ?scheme ;
+      skos:notation ?notation .
+    ?b skos:inScheme ?scheme ;
+      skos:notation ?notation .
+    FILTER (!sameTerm(?a, ?b))
+  }
+}
+  """ .
+
+exercise:ambiguous-notation-references-construct a sp:Query ;
+  rdfs:label "Víceznačné notace číselníkových konceptů"@cs ;
+  rdfs:comment """Vyberte různé koncepty číselníků (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`), které sdílí stejnou notaci (hodnotu `skos:notation`). Výsledkem bude RDF graf s následující podobou, kde `?a` a `?b` jsou koncepty číselníku a `?notation` je notace, kterou sdílí:
+```sparql
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX spin: <http://spinrdf.org/spin#>
+
+CONSTRUCT {
+  [] a spin:ConstraintViolation ;
+    spin:violationRoot ?a, ?b ;
+    spin:violationPath skos:notation ;
+    spin:violationValue ?notation ;
+    rdfs:comment "Concepts within the same concept scheme should not have identical skos:notation literals."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#ambiguous-notation-references> .
+}
+```"""@cs ;
+  sp:text """
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX spin: <http://spinrdf.org/spin#>
+
+CONSTRUCT {
+  [] a spin:ConstraintViolation ;
+    spin:violationRoot ?a, ?b ;
+    spin:violationPath skos:notation ;
+    spin:violationValue ?notation ;
+    rdfs:comment "Concepts within the same concept scheme should not have identical skos:notation literals."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#ambiguous-notation-references> .
+}
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?a skos:inScheme ?scheme ;
+      skos:notation ?notation .
+    ?b skos:inScheme ?scheme ;
+      skos:notation ?notation .
+    FILTER (!sameTerm(?a, ?b))
+  }
+}
+  """ .
