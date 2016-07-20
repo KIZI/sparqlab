@@ -5,6 +5,134 @@
 @prefix exercise: <http://mynarz.net/sparqlab/resource/exercise/> .
 @prefix sparqlab: <http://mynarz.net/sparqlab/vocabulary#> .
 
+exercise:classes a sp:Query ;
+  rdfs:label "Instanciované třídy"@cs ;
+  rdfs:comment "Vyberte třídy instanciované v datech (bez opakování)."@cs ;
+  sp:text """
+SELECT DISTINCT ?class
+WHERE {
+  [] a ?class .
+}
+  """ .
+
+exercise:classes-histogram a sp:Query ;
+  rdfs:label "Histogram instanciovaných tříd"@cs ;
+  rdfs:comment "Spočítejte histogram tříd instanciovaných v datech. Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  sp:text """
+SELECT ?class (COUNT(?s) AS ?count)
+WHERE {
+  ?s a ?class .
+}
+GROUP BY ?class
+ORDER BY DESC(?count)
+  """ .
+
+exercise:classes-histogram-code-lists a sp:Query ;
+  rdfs:label "Histogram tříd instanciovaných v číselnících"@cs ;
+  rdfs:comment "Spočítejte histogram tříd instanciovaných v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  sp:text """
+SELECT ?class (COUNT(?s) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?s a ?class .
+  }
+}
+GROUP BY ?class
+ORDER BY DESC(?count)
+  """ .
+
+exercise:classes-histogram-data a sp:Query ;
+  rdfs:label "Histogram tříd instanciovaných v důchodových ročenkách"@cs ;
+  rdfs:comment "Spočítejte histogram tříd instanciovaných v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  sp:text """
+SELECT ?class (COUNT(?s) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    ?s a ?class .
+  }
+}
+GROUP BY ?class
+ORDER BY DESC(?count)
+  """ .
+
+exercise:classes-histogram-metadata a sp:Query ;
+  rdfs:label "Histogram tříd instanciovaných v metadatech"@cs ;
+  rdfs:comment "Spočítejte histogram tříd instanciovaných v metadatech k důchodovým ročenkám (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  sp:text """
+SELECT ?class (COUNT(?s) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata> {
+    ?s a ?class .
+  }
+}
+GROUP BY ?class
+ORDER BY DESC(?count)
+  """ .
+
+exercise:datatypes a sp:Query ;
+  rdfs:label "Datové typy"@cs ;
+  rdfs:comment "Pro každý datový typ literálů v datech uveďte počet literálů anotovaných tímto datovým typem. Výsledky seřaďte sestupně podle počtu literálů."@cs ;
+  sp:text """
+SELECT ?datatype (COUNT(*) AS ?count) 
+WHERE {
+  [] ?p ?literal .
+  FILTER (isLiteral(?literal) && datatype(?literal) != "")
+  BIND (datatype(?literal) AS ?datatype)
+}
+GROUP BY ?datatype
+ORDER BY DESC(?count)
+  """ .
+
+exercise:named-graphs a sp:Query ;
+  rdfs:label "Pojmenované grafy"@cs ;
+  rdfs:comment "Vyberte pojmenované grafy v datech (bez opakování)."@cs ;
+  sp:text """
+SELECT DISTINCT ?graph
+WHERE {
+  GRAPH ?graph {
+    [] ?p [] .
+  }
+}
+  """ .
+
+exercise:object-property-path a sp:Query ;
+  rdfs:label "Cesty mezi instancemi tříd"@cs ;
+  rdfs:comment "Vyberte predikáty spojující instance tříd v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každou kombinaci tříd a predikátu uveďte počet spojení a výsledky podle tohoto počtu seřaďte sestupně."@cs ;
+  sp:text """
+SELECT ?class1 ?p ?class2 (COUNT(*) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    [ a ?class1 ] ?p [ a ?class2 ] .
+  }
+}
+GROUP BY ?class1 ?p ?class2
+ORDER BY DESC(?count)
+  """ .
+
+exercise:one-quad a sp:Query ;
+  rdfs:label "Jedna čtveřice"@cs ;
+  rdfs:comment "Vyberte jednu čtveřici z dat."@cs ;
+  sp:text """
+SELECT *
+WHERE {
+  GRAPH ?g {
+    ?s ?p ?o .
+  }
+}
+LIMIT 1
+  """ .
+
+exercise:one-triple a sp:Query ;
+  rdfs:label "Jedna trojice"@cs ;
+  rdfs:comment "Vyberte jednu trojici v dat."@cs ;
+  sp:text """
+SELECT *
+WHERE {
+  ?s ?p ?o .
+}
+LIMIT 1
+  """ .
+
 exercise:count-triples a sp:Query ;
   rdfs:label "Počet trojic"@cs ;
   rdfs:comment "Spočtěte trojice ve výchozím grafu."@cs ;
