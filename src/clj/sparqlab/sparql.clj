@@ -3,8 +3,12 @@
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [clojure.string :as string]
-            [cheshire.core :refer [parse-string]])
-  (:import [org.apache.jena.query Query QueryFactory]))
+            [cheshire.core :refer [parse-string]]
+            [clojure.java.io :as io])
+  (:import [org.apache.jena.query Query QueryFactory]
+           [org.apache.jena.rdf.model Model]
+           [org.apache.jena.query DatasetFactory]
+           [org.apache.jena.riot Lang RDFDataMgr]))
 
 (derive ::describe ::construct)
 
@@ -21,27 +25,51 @@
   (cond (or (= query-type ::ask) (= query-type ::select)) "application/json"
         (isa? query-type ::construct) "text/turtle"))
 
+(defn turtle-string->model
+  [turtle]
+  (let [input-stream (io/input-stream (.getBytes turtle))
+        dataset (DatasetFactory/create)]
+    (RDFDataMgr/read dataset input-stream Lang/TURTLE)
+    (.getDefaultModel dataset)))
+
 (defn serialize-query
   "Serialize SPARQL `query` to string."
   [^Query query]
   (string/trim (.serialize query)))
 
-(defmulti normalize-query-results (fn [query-type _] query-type))
-
-(defmethod normalize-query-results ::ask
-  [_ query-results]
-  query-results)
-
-(defmethod normalize-query-results ::construct
-  [_ query-results]
-  query-results)
-
-(defmethod normalize-query-results ::select
-  [_ query-results]
+(defn normalize-select-results
+  [query-results]
   (let [data (parse-string query-results keyword)]
     (cond-> (map (partial map val) (get-in data [:results :bindings]))
       (not (get-in data [:results :ordered])) set ; Unordered bindings are compared as sets 
       )))
+
+(defn parse-ask-result
+  [query-result]
+  (:boolean (parse-string query-result keyword)))
+
+(defmulti equal-query-results? (fn [type-1 results-1 type-2 results-2] (when (= type-1 type-2) type-1)))
+
+(defmethod equal-query-results? ::ask
+  [_ results-1 _ results-2]
+  (= (parse-ask-result results-1)
+     (parse-ask-result results-2)))
+
+(defmethod equal-query-results? ::construct
+  [_ results-1 _ results-2]
+  (with-open [results-1' (turtle-string->model results-1)
+              results-2' (turtle-string->model results-2)]
+    (.isIsomorphicWith results-1' results-2')))
+
+(defmethod equal-query-results? ::select
+  [_ results-1 _ results-2]
+  (= (normalize-select-results results-1)
+     (normalize-select-results results-2)))
+
+; Queries of different type don't have equal results.
+(defmethod equal-query-results? :default
+  [& _]
+  false)
 
 (defn sparql-query
   [endpoint query-type query]
@@ -71,5 +99,4 @@
              :results query-results
              :results-type (get-results-type query-type)}
      :equal? (or equal-syntax?
-                 (= (normalize-query-results canonical-query-type canonical-results)
-                    (normalize-query-results query-type query-results)))}))
+                 (equal-query-results? canonical-results query-results))}))
