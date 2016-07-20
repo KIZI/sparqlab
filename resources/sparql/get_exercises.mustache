@@ -4,5 +4,7 @@ SELECT (REPLACE(STR(?exercise), "^.*\\/([^/]+)$", "$1") AS ?id)
        ?name
 WHERE {
   ?exercise a sp:Query ;
-    rdfs:label ?name .
+    rdfs:label ?name ;
+    sp:text ?query .    
 }
+ORDER BY STRLEN(?query) {{! Complexity ~ query length }}
