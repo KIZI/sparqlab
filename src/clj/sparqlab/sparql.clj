@@ -91,7 +91,7 @@
   [^String query]
   (let [parsed-query (QueryFactory/create query)]
     {:query parsed-query
-     :query-string query
+     :query-string (serialize-query parsed-query)
      :query-type (get-query-type parsed-query)}))
 
 (defn equal-query?
