@@ -5,11 +5,11 @@
 <div class="row">
   <div class="col-md-6">
     <div class="clearfix">
-      <h2 class="pull-left">Odpověď
+      <h2 class="pull-left">
         {% if equal? %}
-        <i class="fa fa-check-circle-o correct" title="Správná odpověď" aria-hidden="true"></i>
+        Správná odpověď<i class="fa fa-check correct" title="Správná odpověď" aria-hidden="true"></i>
         {% else %}
-        <i class="fa fa-times-circle-o incorrect" title="Nesprávná odpověď" aria-hidden="true"></i>
+        Nesprávná odpověď<i class="fa fa-times incorrect" title="Nesprávná odpověď" aria-hidden="true"></i>
         {% endif %}
       </h2>
       {% if not equal? %}
