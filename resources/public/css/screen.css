@@ -71,6 +71,10 @@ h3 {
   margin-top: .5em;
 }
 
+#exercises a:visited {
+  color: #aeaeae;
+}
+
 .correct {
   color: #5cb85c; 
 }
@@ -79,12 +83,16 @@ h3 {
   color: #d9534f;
 }
 
-.fa {
-  padding-right: 5px;
+.fa.right {
+  padding-left: .3em;
 }
 
 .yasqe-like {
   height: 300px;
+}
+
+.done-icon {
+  color: #ddd;
 }
 
 /* SPARQLab theme for CodeMirror */

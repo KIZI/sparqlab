@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<ul>
+<ul id="exercises">
   {% for exercise in exercises %}
-  <li><a href="/exercise/show/{{exercise.id}}">{{exercise.name}}</a></li>
+  <li>
+    <a href="/exercise/show/{{exercise.id}}">{{exercise.name}}</a>
+    {% if exercise.done %}
+    <i class="fa fa-check right done-icon" title="Vyřešeno" aria-hidden="true"></i>
+    {% endif %}
+  </li>
   {% endfor %}
 </ul>
 {% endblock %}
