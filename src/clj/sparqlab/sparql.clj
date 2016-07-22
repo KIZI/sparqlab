@@ -118,4 +118,7 @@
      :query {:query query-string
              :results query-results
              :results-type (get-results-type (:query-type query))}
-     :equal? (or equal-query-result (equal-query-results? canonical-results query-results))}))
+     :equal? (or equal-query-result (equal-query-results? (:query-type canonical-query)
+                                                          canonical-results
+                                                          (:query-type query)
+                                                          query-results))}))
