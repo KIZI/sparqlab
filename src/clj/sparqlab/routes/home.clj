@@ -1,6 +1,6 @@
 (ns sparqlab.routes.home
   (:require [sparqlab.layout :as layout]
-            [sparqlab.sparql :refer [equal-query?]]
+            [sparqlab.sparql :as sparql]
             [sparqlab.store :refer [select-query]]
             [sparqlab.prefixes :as prefix]
             [sparqlab.util :refer [query-file?]]
@@ -49,7 +49,7 @@
   [id query]
   (let [{canonical-query :query
          :as exercise} (get-exercise id)
-        verdict (equal-query? canonical-query query)]
+        verdict (sparql/evaluate-exercise canonical-query query)]
     (layout/render "evaluation.html" (merge exercise verdict))))
 
 (defn show-exercise
