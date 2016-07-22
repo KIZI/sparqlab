@@ -44,7 +44,9 @@
    :destroy sparqlab.handler/destroy
    :name "sparqlab.war"}
   
-
+  :test-selectors {:default (complement :integration)
+                   :integration :integration
+                   :all (constantly true)}
   :profiles
   {:uberjar {:omit-source true
              
