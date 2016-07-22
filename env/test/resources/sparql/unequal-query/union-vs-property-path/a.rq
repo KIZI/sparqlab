@@ -1,0 +1,10 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT *
+WHERE {
+  {
+    ?concept skos:broader ?broader .
+  } UNION {
+    ?concept skos:broaderTransitive ?broader .
+  }
+}
