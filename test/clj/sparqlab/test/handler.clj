@@ -4,6 +4,8 @@
             [ring.mock.request :refer :all]
             [sparqlab.handler :refer :all]))
 
+(use-fixtures :once (fn [f] (init) (f) (destroy)))
+
 (deftest ^:integration test-app
   (testing "main route"
     (let [response (app (request :get "/"))]
