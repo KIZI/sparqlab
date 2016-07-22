@@ -1,7 +1,7 @@
 (defproject sparqlab "0.1.0-SNAPSHOT"
   :description "Lab for exercising SPARQL" 
   :url "http://github.com/jindrichmynarz/sparqlab"
-  :dependencies [[ring/ring-servlet "1.4.0"]
+  :dependencies [[ring/ring-servlet "1.5.0"]
                  [luminus/ring-ttl-session "0.3.1"]
                  [org.clojure/clojure "1.8.0"]
                  [selmer "1.0.7"]
@@ -11,8 +11,8 @@
                  [bouncer "1.0.0"]
                  [org.webjars/bootstrap "4.0.0-alpha.2"]
                  [org.webjars/font-awesome "4.6.3"]
-                 [org.webjars.bower/tether "1.3.2"]
-                 [org.webjars/jquery "2.2.4"]
+                 [org.webjars.bower/tether "1.3.3"]
+                 [org.webjars/jquery "3.0.0"]
                  [org.clojure/tools.logging "0.3.1"]
                  [compojure "1.5.1"]
                  [ring-webjars "0.1.1"]
@@ -21,11 +21,12 @@
                  [cprop "0.1.8"]
                  [org.clojure/tools.cli "0.3.5"]
                  [luminus-nrepl "0.1.4"]
-                 [clj-http "2.2.0"]
+                 [clj-http "3.1.0"]
                  [org.apache.jena/jena-core "3.1.0"]
                  [org.apache.jena/jena-arq "3.1.0"]
                  [cheshire "5.6.3"]
-                 [stencil "0.5.0"]]
+                 [stencil "0.5.0"]
+                 [com.cemerick/url "0.1.1"]]
 
   :min-lein-version "2.0.0"
 
