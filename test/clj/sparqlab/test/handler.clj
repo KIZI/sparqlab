@@ -1,9 +1,10 @@
 (ns sparqlab.test.handler
   (:require [clojure.test :refer :all]
+            [clojure.tools.logging :as log]
             [ring.mock.request :refer :all]
             [sparqlab.handler :refer :all]))
 
-(deftest test-app
+(deftest ^:integration test-app
   (testing "main route"
     (let [response (app (request :get "/"))]
       (is (= 200 (:status response)))))
