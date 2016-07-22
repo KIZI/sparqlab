@@ -112,10 +112,10 @@
         canonical-results (sparql-query endpoint canonical-query)
         ; If the queries are the same, retrieve only the canonical results.
         query-results (if equal-query-result canonical-results (sparql-query endpoint query))]
-    {:canonical-query {:query canonical-query-string
+    {:canonical-query {:query (:query-string canonical-query)
                        :results canonical-results
                        :results-type (get-results-type (:query-type canonical-query))}
-     :query {:query query-string
+     :query {:query (:query-string query)
              :results query-results
              :results-type (get-results-type (:query-type query))}
      :equal? (or equal-query-result (equal-query-results? (:query-type canonical-query)
