@@ -153,5 +153,12 @@
                                                           query-results))}))
 
 (defn extract-language-constructs
-  [query]
-  #{:sparqlab.sparql/ask})
+  [^Query query]
+  (with-open [model (query->spin query)]
+    (->> "sparql/extract_language_constructs.rq"
+         io/resource
+         slurp
+         (select-query model)
+         (map #(get-in % [:construct "@id"]))
+         (into #{})
+         doall)))

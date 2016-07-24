@@ -1,0 +1,5 @@
+#{"http://spinrdf.org/sp#Select"
+  "http://spinrdf.org/sp#Count"
+  "http://spinrdf.org/sp#groupBy"
+  "http://spinrdf.org/sp#orderBy"
+  "http://spinrdf.org/sp#Desc"}

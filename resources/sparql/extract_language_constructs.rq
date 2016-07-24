@@ -1,0 +1,24 @@
+PREFIX sp: <http://spinrdf.org/sp#>
+
+SELECT DISTINCT ?construct
+WHERE {
+  {
+    [] a ?construct .
+    FILTER STRSTARTS(STR(?construct), STR(sp:))
+  } UNION {
+    VALUES ?construct {
+      sp:distinct
+      sp:from
+      sp:fromNamed
+      sp:groupBy
+      sp:having
+      sp:limit
+      sp:offset
+      sp:orderBy
+      sp:reduced
+      sp:subPath
+      sp:values
+    }
+    [] ?construct [] .
+  }
+}
