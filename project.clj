@@ -26,8 +26,10 @@
                  [org.apache.jena/jena-arq "3.1.0"]
                  [cheshire "5.6.3"]
                  [stencil "0.5.0"]
-                 [com.cemerick/url "0.1.1"]]
+                 [com.cemerick/url "0.1.1"]
+                 [org.topbraid/spin "2.0.0"]]
 
+  :repositories [["org.topbraid" "http://topquadrant.com/repository/spin"]]
   :min-lein-version "2.0.0"
 
   :jvm-opts ["-server" "-Dconf=.lein-env"]
