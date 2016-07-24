@@ -6,11 +6,18 @@
             [clojure.tools.logging :as log]
             [clojure.string :as string]
             [cheshire.core :refer [parse-string]]
-            [clojure.java.io :as io])
-  (:import [org.apache.jena.query DatasetFactory Query QueryExecutionFactory QueryFactory]
+            [clojure.java.io :as io]
+            [stencil.core :refer [render-file]]
+            [stencil.loader :refer [set-cache]])
+  (:import [org.apache.jena.query DatasetFactory Query QueryExecutionFactory
+                                  QueryFactory QueryParseException]
+           [org.apache.jena.update UpdateAction UpdateFactory]
            [org.apache.jena.rdf.model Model ModelFactory]
            [org.apache.jena.riot Lang RDFDataMgr]
            [org.topbraid.spin.arq ARQ2SPIN]))
+
+; Disable Stencil's caching for testing
+(set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
 
 (derive ::describe ::construct)
 
@@ -162,3 +169,21 @@
          (map #(get-in % [:construct "@id"]))
          (into #{})
          doall)))
+
+(defn ^Model update-operation
+  "Execute SPARQL Update `operation` on `model`."
+  [^Model model
+   ^String operation]
+  (UpdateAction/execute (UpdateFactory/create operation) model)
+  model)
+
+(defn sparql-template
+  "Render a SPARQL template from `file-name` using optional `data`."
+  ([file-name]
+   (sparql-template file-name {}))
+  ([file-name data]
+   (render-file (str "sparql/" file-name ".mustache") data)))
+
+(defn ->plain-literals
+  [bindings]
+  (into {} (map (fn [[variable value]] [variable (get value "@value")]) bindings)))

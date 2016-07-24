@@ -9,14 +9,9 @@
             [ring.util.http-response :as response]
             [markdown.core :refer [md-to-html-string]]
             [selmer.filters :refer [add-filter!]]
-            [stencil.core :refer [render-file]]
-            [stencil.loader :refer [set-cache]]
             [clojure.string :as string]))
 
 (add-filter! :markdown (fn [s] [:safe (md-to-html-string s)]))
-
-; Disable caching for testing
-(set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
 
 (def a-year
   "One year in seconds"
@@ -46,30 +41,19 @@
            exercise))
        exercises))
 
-(defn ->plain-literals
-  [bindings]
-  (into {} (map (fn [[variable value]] [variable (get value "@value")]) bindings)))
-
-(defn sparql-template
-  "Render a SPARQL template from `file-name` using optional `data`."
-  ([file-name]
-   (sparql-template file-name {}))
-  ([file-name data]
-   (render-file (str "sparql/" file-name ".mustache") data)))
-
 (defn get-exercise
   [id]
-  (-> (sparql-template "get_exercise" {:exercise (prefix/exercise id)})
+  (-> (sparql/sparql-template "get_exercise" {:exercise (prefix/exercise id)})
       select-query
       first
-      ->plain-literals))
+      sparql/->plain-literals))
 
 (defn get-exercises
   []
   (->> "get_exercises"
-       sparql-template
+       sparql/sparql-template
        select-query
-       (map ->plain-literals)))
+       (map sparql/->plain-literals)))
 
 (defn get-exercises-done
   [request]
