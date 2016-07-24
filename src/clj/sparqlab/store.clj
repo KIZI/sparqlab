@@ -6,8 +6,7 @@
             [clojure.string :as string])
   (:import [org.apache.jena.rdf.model Literal ModelFactory Resource]
            [org.apache.jena.query QueryExecutionFactory]
-           [org.apache.jena.datatypes BaseDatatype$TypedValue DatatypeFormatException]
-           [org.apache.jena.datatypes.xsd XSDDatatype]))
+           [org.apache.jena.datatypes BaseDatatype$TypedValue DatatypeFormatException]))
 
 (defn xml-schema-data-type?
   "Predicate testing if `data-type` is from XML Schema."
@@ -35,6 +34,10 @@
   literal)
 
 (defmethod literal->clj ::xsd/decimal
+  [literal]
+  (update literal "@value" double))
+
+(defmethod literal->clj ::xsd/float
   [literal]
   (update literal "@value" double))
 
