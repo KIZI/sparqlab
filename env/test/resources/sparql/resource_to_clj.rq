@@ -1,0 +1,41 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?resource
+WHERE {
+  VALUES ?resource {
+    true
+    "true"^^xsd:boolean
+    123
+    "123"^^xsd:integer
+    -1.1
+    "-1.1"^^xsd:decimal
+    "+100000.00"^^xsd:decimal
+    "INF"^^xsd:float
+    "12.78e-2"^^xsd:float
+    "1267.43233E12"^^xsd:float
+    "-1E4"^^xsd:float
+    "-0"^^xsd:float
+    1.663E-4
+    "12.78e-2"^^xsd:double
+    "word"
+    "word"@en
+    "word"^^xsd:string
+    "http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI
+    "P5Y"^^xsd:duration
+    "P1347M"^^xsd:duration
+    "2016-01-01"^^xsd:date
+    "2002-10-10T12:00:00Z"^^xsd:dateTime
+    "13:20:00"^^xsd:time
+    "1999-05"^^xsd:gYearMonth
+    "1999"^^xsd:gYear
+    "--09-14"^^xsd:gMonthDay
+    "---14"^^xsd:gDay
+    "--09"^^xsd:gMonth
+    "0FB7"^^xsd:hexBinary
+    "d29yZA=="^^xsd:base64Binary
+    "xsd:string"^^xsd:QName
+
+    xsd:decimal
+    <http://www.w3.org/2001/XMLSchema#decimal>
+  }
+}
