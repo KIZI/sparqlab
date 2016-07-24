@@ -1,16 +1,35 @@
 (ns sparqlab.sparql
   (:require [sparqlab.config :refer [env]]
+            [sparqlab.prefixes :refer [uuid-iri]]
+            [sparqlab.rdf :refer [resource->clj]]
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [clojure.string :as string]
             [cheshire.core :refer [parse-string]]
             [clojure.java.io :as io])
-  (:import [org.apache.jena.query Query QueryFactory]
-           [org.apache.jena.rdf.model Model]
-           [org.apache.jena.query DatasetFactory]
-           [org.apache.jena.riot Lang RDFDataMgr]))
+  (:import [org.apache.jena.query DatasetFactory Query QueryExecutionFactory QueryFactory]
+           [org.apache.jena.rdf.model Model ModelFactory]
+           [org.apache.jena.riot Lang RDFDataMgr]
+           [org.topbraid.spin.arq ARQ2SPIN]))
 
 (derive ::describe ::construct)
+
+; ----- Private functions -----
+
+(defn- process-select-binding
+  [sparql-binding variable]
+  [(keyword variable) (resource->clj (.get sparql-binding variable))])
+
+(defn- process-select-solution
+  "Process SPARQL SELECT `solution` for `result-vars`."
+  [result-vars solution]
+  (into {} (mapv (partial process-select-binding solution) result-vars)))
+
+(defn query->spin
+  "Convert SPARQL `query` to SPIN RDF model."
+  [^Query query]
+  (let [model (ModelFactory/createDefaultModel)]
+    (.. (ARQ2SPIN. model) (createQuery query (uuid-iri)) (getModel))))
 
 (defn get-query-type
   [^Query query]
@@ -94,6 +113,16 @@
      :query-string (serialize-query parsed-query)
      :query-type (get-query-type parsed-query)}))
 
+(defn select-query 
+  "Execute SPARQL SELECT `query` in the `model`."
+  [^Model model
+   ^String query]
+  (with-open [qexec (QueryExecutionFactory/create query model)]
+    (let [results (.execSelect qexec)
+          result-vars (.getResultVars results)]
+      (mapv (partial process-select-solution result-vars)
+            (iterator-seq results)))))
+
 (defn equal-query?
   "Test if queries `a` and `b` are equal. Starts by testing string equality, then tests equality
   of the parsed queries."
@@ -122,3 +151,7 @@
                                                           canonical-results
                                                           (:query-type query)
                                                           query-results))}))
+
+(defn extract-language-constructs
+  [query]
+  #{:sparqlab.sparql/ask})
