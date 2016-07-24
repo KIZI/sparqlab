@@ -479,7 +479,7 @@ WHERE {
       }
     }
   }
-  BIND (IRI(REPLACE(STR(?term), "^(.+)(#|\\/).+$", "$1")) AS ?vocabulary)
+  BIND (IRI(REPLACE(STR(?term), "^(.+)(#|\\\\/).+$", "$1")) AS ?vocabulary)
 }
 GROUP BY ?vocabulary
 ORDER BY DESC(?count)
