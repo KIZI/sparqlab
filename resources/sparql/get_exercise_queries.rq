@@ -1,0 +1,7 @@
+PREFIX sp:   <http://spinrdf.org/sp#>
+
+SELECT ?exercise ?query
+WHERE {
+  ?exercise a sp:Query ;
+    sp:text ?query .
+}

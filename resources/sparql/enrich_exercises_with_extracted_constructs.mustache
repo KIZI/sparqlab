@@ -1,0 +1,11 @@
+{{!
+@param Array<Array<IRI, IRI>> constructs
+}}
+
+{{> sparql/prefixes.mustache}}
+
+INSERT DATA {
+  {{#constructs}}
+  <{{exercise}}> dcterms:subject <{{construct}}> .
+  {{/constructs}}
+}
