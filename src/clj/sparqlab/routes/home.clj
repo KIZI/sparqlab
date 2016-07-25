@@ -80,6 +80,12 @@
     (cond-> (layout/render "evaluation.html" (merge exercise verdict))
       (:equal? verdict) (mark-exercise-as-done id))))
 
+(defn search-exercises
+  [search-term]
+  (->> (sparql/sparql-template "find_exercises" {:search-term search-term})
+       select-query
+       (map sparql/->plain-literals)))
+
 (defn show-exercise
   [id]
   (layout/render "exercise.html" (get-exercise id)))
@@ -92,10 +98,23 @@
   []
   (layout/render "about.html"))
 
+(defn data-page
+  []
+  (layout/render "data.html"))
+
+(defn search-results
+  [search-term]
+  (let [exercises-found (search-exercises search-term)]
+    (log/info exercises-found)
+    (layout/render "search_results.html" {:search-term search-term
+                                          :exercises exercises-found})))
+
 (defroutes home-routes
   (GET "/" request (home-page request))
   (context "/exercise" []
            (GET "/show/:id" [id] (show-exercise id))
            (POST "/evaluate/:id" [id :as request] (evaluate-exercise request id)))
   (GET "/endpoint" [] (sparql-endpoint))
-  (GET "/about" [] (about-page)))
+  (GET "/data" [] (data-page))
+  (GET "/about" [] (about-page))
+  (GET "/search" {{search-term :q} :params} (search-results search-term)))

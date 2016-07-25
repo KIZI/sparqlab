@@ -1,0 +1,14 @@
+{{!
+@param str search-term
+}}
+
+{{> sparql/prefixes.mustache }}
+
+SELECT DISTINCT (REPLACE(STR(?exercise), "^.*\\/([^/]+)$", "$1") AS ?id)
+                ?name
+WHERE {
+  ?exercise a sp:Query ;
+    rdfs:label ?name ;
+    dcterms:subject ?subject .
+    FILTER STRENDS(LCASE(STR(?subject)), LCASE("{{search-term}}")) 
+}

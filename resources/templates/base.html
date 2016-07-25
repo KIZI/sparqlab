@@ -40,12 +40,31 @@
                       </a>
                   </li>
                   <li class="nav-item">
+                      <a href="{{servlet-context}}/data"
+                         class="nav-link{% ifequal page "data.html" %} active{%endifequal%}">
+                      O datech
+                      </a>
+                  </li>
+                  <li class="nav-item">
                       <a href="{{servlet-context}}/about"
                          class="nav-link{% ifequal page "about.html" %} active{%endifequal%}">
                       O aplikaci
                       </a>
                   </li>
-              </ul>
+                </ul>
+                <form class="navbar-form form-inline pull-right" role="search" action="/search" method="GET">
+                  <div class="form-group">
+                    <label class="sr-only" for="search">Hledaný výraz:</label>
+                    <input id="search-term"
+                           name="q"
+                           type="text"
+                           class="form-control form-control-sm"
+                           placeholder="Hledat">
+                  </div>
+                  <button type="submit" class="btn btn-sm btn-default">
+                    <i class="fa fa-search" title="Hledat" aria-hidden="true"></i> 
+                  </button>
+                </form>
           </div>
       </nav>
 
