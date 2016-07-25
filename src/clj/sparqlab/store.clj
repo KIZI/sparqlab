@@ -3,13 +3,14 @@
             [mount.core :as mount]
             [clojure.tools.logging :as log]
             [clojure.java.io :as io])
-  (:import [org.apache.jena.rdf.model ModelFactory]
+  (:import [org.apache.jena.rdf.model Model ModelFactory]
            [org.apache.jena.query QueryFactory]))
 
 ; ----- Data pre-processing -----
 
 (defn enrich-exercises-with-extracted-constructs
-  [store]
+  "Enrich exercises in the `store` with extracted SPARQL language constructs."
+  [^Model store]
   (let [exercise-queries (->> "sparql/get_exercise_queries.rq"
                               io/resource
                               slurp
@@ -38,5 +39,7 @@
   :start (open-store)
   :stop (close-store store))
 
-(def select-query
-  (partial sparql/select-query store))
+(defn select-query
+  "Execute SELECT `query` on the store."
+  [query]
+  (sparql/select-query store query))
