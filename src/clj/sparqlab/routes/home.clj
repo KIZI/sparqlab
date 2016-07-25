@@ -46,10 +46,17 @@
 
 (defn get-exercise
   [id]
-  (-> (sparql/sparql-template "get_exercise" {:exercise (prefix/exercise id)})
+  (-> "get_exercise"
+      (sparql/sparql-template {:exercise (prefix/exercise id)})
       select-query
       first
       sparql/->plain-literals))
+
+(defn get-prerequisites
+  [id]
+  (->> (sparql/sparql-template "get_prerequisites" {:exercise (prefix/exercise id)})
+       select-query
+       (map sparql/->plain-literals)))
 
 (defn get-exercises
   []
@@ -88,7 +95,9 @@
 
 (defn show-exercise
   [id]
-  (layout/render "exercise.html" (get-exercise id)))
+  (let [exercise (get-exercise id)
+        prerequisites (get-prerequisites id)]
+    (layout/render "exercise.html" (assoc exercise :prerequisites prerequisites))))
 
 (defn sparql-endpoint
   []
@@ -105,7 +114,6 @@
 (defn search-results
   [search-term]
   (let [exercises-found (search-exercises search-term)]
-    (log/info exercises-found)
     (layout/render "search_results.html" {:search-term search-term
                                           :exercises exercises-found})))
 

@@ -3,7 +3,21 @@
 <div class="row">
   <div class="col-md-12">
     <h1>{{name}}</h1>
-    {{description|markdown}}
+    <div class="row">
+      <div class="col-md-8">
+        {{description|markdown}}
+      </div>
+      <div class="col-md-4">
+        {% if prerequisites|not-empty %}
+        <small class="text-muted">
+          <strong>Podobná cvičení:</strong>
+          {% for prerequisite in prerequisites %}
+          <a href="/exercise/show/{{prerequisite.id}}">{{prerequisite.name}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+          {% endfor %}
+        </small>
+        {% endif %}
+      </div>
+    </div>
     <form action="/exercise/evaluate/{{id}}" method="POST">
       {% csrf-field %}
       {% include "sparql_editor.html" %}

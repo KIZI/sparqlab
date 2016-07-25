@@ -1,0 +1,19 @@
+{{!
+@param IRI exercise
+}}
+
+{{> sparql/prefixes.mustache }}
+
+SELECT (REPLACE(STR(?prerequisite), "^.*\\/([^/]+)$", "$1") AS ?id)
+       ?name
+WHERE {
+  ?prerequisite a sp:Query .
+  FILTER (!sameTerm(<{{exercise}}>, ?prerequisite))
+  FILTER NOT EXISTS {
+    ?prerequisite dcterms:subject ?languageConstruct .
+    FILTER NOT EXISTS {
+      <{{exercise}}> dcterms:subject ?languageConstruct .
+    }
+  }
+  ?prerequisite rdfs:label ?name .
+}

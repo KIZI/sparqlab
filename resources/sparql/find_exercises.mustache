@@ -9,6 +9,12 @@ SELECT DISTINCT (REPLACE(STR(?exercise), "^.*\\/([^/]+)$", "$1") AS ?id)
 WHERE {
   ?exercise a sp:Query ;
     rdfs:label ?name ;
+    rdfs:comment ?description ;
     dcterms:subject ?subject .
-    FILTER STRENDS(LCASE(STR(?subject)), LCASE("{{search-term}}")) 
+    BIND (LCASE("{{search-term}}") AS ?searchTerm)
+    FILTER (STRENDS(LCASE(STR(?subject)), ?searchTerm)
+            ||
+            CONTAINS(LCASE(?name), ?searchTerm)
+            ||
+            CONTAINS(LCASE(?description), ?searchTerm)) 
 }

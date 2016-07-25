@@ -8,8 +8,8 @@
 
     <!-- styles -->
     {% style "https://fonts.googleapis.com/css?family=Rubik:400,700&subset=latin,latin-ext" %}
-    {% style "https://fonts.googleapis.com/css?family=Ubuntu+Mono&subset=latin,latin-ext" %} 
-    {% style "http://cdn.jsdelivr.net/g/yasqe@2.10(yasqe.min.css),yasr@2.7.5(yasr.min.css)" %} 
+    {% style "https://fonts.googleapis.com/css?family=Ubuntu+Mono&subset=latin,latin-ext" %}
+    {% style "http://cdn.jsdelivr.net/g/yasqe@2.10(yasqe.min.css),yasr@2.7.5(yasr.min.css)" %}
     {% style "/assets/bootstrap/css/bootstrap.min.css" %}
     {% style "/assets/font-awesome/css/font-awesome.min.css" %}
 
@@ -53,17 +53,19 @@
                   </li>
                 </ul>
                 <form class="navbar-form form-inline pull-right" role="search" action="/search" method="GET">
-                  <div class="form-group">
+                  <div class="input-group">
                     <label class="sr-only" for="search">Hledaný výraz:</label>
                     <input id="search-term"
                            name="q"
                            type="text"
                            class="form-control form-control-sm"
                            placeholder="Hledat">
+                    <span class="input-group-btn">
+                      <button type="submit" class="btn btn-sm btn-default">
+                        <i class="fa fa-search" title="Hledat" aria-hidden="true"></i>
+                      </button>
+                    </span>
                   </div>
-                  <button type="submit" class="btn btn-sm btn-default">
-                    <i class="fa fa-search" title="Hledat" aria-hidden="true"></i> 
-                  </button>
                 </form>
           </div>
       </nav>

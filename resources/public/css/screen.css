@@ -95,6 +95,10 @@ h3 {
   color: #ddd;
 }
 
+#editor {
+  margin-top: 1em !important;
+}
+
 /* SPARQLab theme for CodeMirror */
 
 .cm-s-sparqlab * { font-family: "Ubuntu Mono", monospace; }

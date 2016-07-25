@@ -2,9 +2,13 @@
 {% block content %}
 <h1>Nalezená cvičení</h1>
 <p><strong>Hledaný výraz:</strong> {{search-term}}</p>
+{% if exercises|not-empty %}
 <ul>
   {% for exercise in exercises %}
   <li><a href="/exercise/show/{{exercise.id}}">{{exercise.name}}</a></li>
   {% endfor %}
 </ul>
+{% else %}
+<p>Žádná cvičení nebyla nalezena.</p>
+{% endif %}
 {% endblock %}
