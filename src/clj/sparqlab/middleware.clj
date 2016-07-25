@@ -1,15 +1,13 @@
 (ns sparqlab.middleware
   (:require [sparqlab.env :refer [defaults]]
             [sparqlab.config :refer [env]]
-            [clojure.tools.logging :as log]
             [sparqlab.layout :refer [*app-context* error-page]]
+            [clojure.tools.logging :as log]
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.middleware.format :refer [wrap-restful-format]]
             [ring-ttl-session.core :refer [ttl-memory-store]]
-            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
-            [ring.util.request :refer [request-url]]
-            [cemerick.url :refer [map->URL url]])
+            [ring.middleware.defaults :refer [site-defaults wrap-defaults]])
   (:import [javax.servlet ServletContext]))
 
 (defn wrap-context [handler]
@@ -54,18 +52,6 @@
       ;; since they're not compatible with this middleware
       ((if (:websocket? request) handler wrapped) request))))
 
-(defn wrap-base-url
-  "Add base URL to Ring request."
-  [handler]
-  (fn [request]
-    (let [base-url (-> request
-                       request-url
-                       url
-                       (dissoc :query :path)
-                       (assoc :path (:context request))
-                       map->URL)]
-      (handler (assoc request :base-url base-url)))))
-
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
       wrap-webjars
@@ -74,5 +60,4 @@
             (assoc-in [:security :anti-forgery] false)
             (assoc-in [:session :store] (ttl-memory-store (* 60 30)))))
       wrap-context
-      wrap-internal-error
-      wrap-base-url))
+      wrap-internal-error))

@@ -21,16 +21,19 @@
   "sparqlab-exercise-")
 
 (defn set-cookie
-  [response k value & {:keys [max-age]
-                       :or {max-age a-year}
-                       :as data}]
+  [response k value & {:as data}]
   (assoc-in response
             [:cookies k]
-            (assoc data :value value)))
+            (merge {:max-age a-year
+                    :path "/"}
+                   data
+                   {:value value})))
 
 (defn mark-exercise-as-done
-  [response base-url id]
-  (set-cookie response (str cookie-ns id) true :domain base-url :path "/"))
+  [response id]
+  (set-cookie response
+              (str cookie-ns id)
+              true))
 
 (defn mark-exercises-as-done
   [exercises exercises-done]
@@ -52,7 +55,7 @@
   []
   (->> "get_exercises"
        sparql/sparql-template
-       select-query
+       select-query 
        (map sparql/->plain-literals)))
 
 (defn get-exercises-done
@@ -69,14 +72,13 @@
     (layout/render "home.html" {:exercises (mark-exercises-as-done (get-exercises) exercises-done)})))
 
 (defn evaluate-exercise
-  [{{query "query"} :form-params
-    {base-url :host} :base-url}
+  [{{query "query"} :form-params}
    id]
   (let [{canonical-query :query
          :as exercise} (get-exercise id)
         verdict (sparql/evaluate-exercise canonical-query query)]
     (cond-> (layout/render "evaluation.html" (merge exercise verdict))
-      (:equal? verdict) (mark-exercise-as-done base-url id))))
+      (:equal? verdict) (mark-exercise-as-done id))))
 
 (defn show-exercise
   [id]
