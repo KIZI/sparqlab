@@ -520,21 +520,7 @@ WHERE {
 
 exercise:ambiguous-notation-references-construct a sp:Query ;
   rdfs:label "Víceznačné notace číselníkových konceptů"@cs ;
-  rdfs:comment """Vyberte různé koncepty číselníků (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`), které sdílí stejnou notaci (hodnotu `skos:notation`). Výsledkem bude RDF graf s následující podobou, kde `?a` a `?b` jsou koncepty číselníku a `?notation` je notace, kterou sdílí:
-```sparql
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX spin: <http://spinrdf.org/spin#>
-
-CONSTRUCT {
-  [] a spin:ConstraintViolation ;
-    spin:violationRoot ?a, ?b ;
-    spin:violationPath skos:notation ;
-    spin:violationValue ?notation ;
-    rdfs:comment "Concepts within the same concept scheme should not have identical skos:notation literals."@en ;
-    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#ambiguous-notation-references> .
-}
-```"""@cs ;
+  rdfs:comment """Vyberte různé koncepty číselníků (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`), které sdílí stejnou notaci (hodnotu `skos:notation`). Výsledkem bude RDF graf, v němž `?a` a `?b` jsou koncepty číselníku a `?notation` je notace, kterou sdílí."""@cs ;
   sp:text """
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -558,3 +544,21 @@ WHERE {
   }
 }
   """ .
+
+exercise:cyclic-hierchical-relations a sp:Query ;
+  rdfs:label "Jsou v číselnících cyklické hierarchické vztahy?"@cs ;
+  rdfs:comment "Zjistěte, zdali jsou v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) cykly v transitivních hierarchických vztazích vyjádřených predikáty `skos:broaderTransitive` nebo `skos:narrowerTransitive`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    {
+      ?concept skos:broaderTransitive+ ?concept .
+    } UNION {
+      ?concept skos:narrowerTransitive+ ?concept .
+    }
+  }
+}
+"""@cs .
