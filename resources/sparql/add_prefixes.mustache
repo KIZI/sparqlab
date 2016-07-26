@@ -1,0 +1,11 @@
+{{!
+@param Array<Map<str, str>> prefixes
+}}
+
+{{> sparql/prefixes.mustache }}
+
+INSERT DATA {
+  {{#prefixes}}
+  <{{namespace}}> vann:preferredNamespacePrefix "{{prefix}}" .
+  {{/prefixes}}
+}

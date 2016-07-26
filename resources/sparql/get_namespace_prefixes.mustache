@@ -1,0 +1,7 @@
+{{> sparql/prefixes.mustache }}
+
+SELECT ?prefix ?namespace
+WHERE {
+  ?namespace vann:preferredNamespacePrefix ?prefix .
+}
+ORDER BY ?prefix

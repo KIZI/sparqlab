@@ -48,6 +48,10 @@ a {
   color: #01b0f0;
 }
 
+pre, code, tt {
+  font-family: "Ubuntu Mono", monospace;
+}
+
 code {
   color: #ff358b;
 }

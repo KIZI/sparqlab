@@ -73,6 +73,16 @@
        (map (comp #(subs % (count cookie-ns)) key))
        (into #{})))
 
+(defn get-namespace-prefixes
+  []
+  (->> "get_namespace_prefixes"
+       sparql/sparql-template
+       select-query
+       (map (fn [{{prefix "@value"} :prefix
+                  {nspace "@id"} :namespace}]
+              {:prefix prefix
+               :namespace nspace}))))
+
 (defn home-page
   [request]
   (let [exercises-done (get-exercises-done request)]
@@ -109,7 +119,8 @@
 
 (defn data-page
   []
-  (layout/render "data.html"))
+  (let [prefixes (get-namespace-prefixes)]
+    (layout/render "data.html" {:prefixes prefixes})))
 
 (defn search-results
   [search-term]
