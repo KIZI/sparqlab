@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Nalezená cvičení</h1>
-<p><strong>Hledaný výraz:</strong> {{search-term}}</p>
+<p><strong>Hledaný výraz:</strong> &ldquo;{{search-term}}&rdquo;</p>
 {% if exercises|not-empty %}
 <ul>
   {% for exercise in exercises %}
