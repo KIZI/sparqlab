@@ -13,6 +13,8 @@
 
 (add-filter! :markdown (fn [s] [:safe (md-to-html-string s)]))
 
+(add-filter! :dec dec)
+
 (def a-year
   "One year in seconds"
   (* 60 60 24 365))
