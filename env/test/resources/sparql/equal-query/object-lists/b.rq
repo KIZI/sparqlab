@@ -1,0 +1,7 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT *
+WHERE {
+  ?concept skos:altLabel ?label1, ?label2 .
+  FILTER (!sameTerm(?label1, ?label2))
+}
