@@ -121,8 +121,18 @@
 
 (defn data-page
   []
-  (let [prefixes (get-namespace-prefixes)]
-    (layout/render "data.html" {:prefixes prefixes})))
+  (let [prefixes (get-namespace-prefixes)
+        longest-prefix-length (->> prefixes
+                                   (map (comp count :prefix))
+                                   (sort #(compare %2 %1))
+                                   first)
+        padded-prefixes (map (fn [{:keys [prefix]
+                                   :as m}]
+                               (assoc m :padding (apply str (repeat (inc (- longest-prefix-length
+                                                                            (count prefix)))
+                                                                    " "))))
+                             prefixes)]
+    (layout/render "data.html" {:prefixes padded-prefixes})))
 
 (defn search-results
   [search-term]
