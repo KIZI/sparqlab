@@ -10,11 +10,27 @@
             [stencil.core :refer [render-file]]
             [stencil.loader :refer [set-cache]])
   (:import [org.apache.jena.query DatasetFactory Query QueryExecutionFactory
-                                  QueryFactory QueryParseException]
+                                  QueryFactory QueryParseException Syntax]
            [org.apache.jena.update UpdateAction UpdateFactory]
            [org.apache.jena.rdf.model Model ModelFactory]
            [org.apache.jena.riot Lang RDFDataMgr]
+           [org.apache.jena.sparql.algebra Algebra]
+           [org.apache.jena.sparql.util NodeIsomorphismMap]
+           [org.apache.jena.sparql.core Var]
+           [org.apache.jena.graph Node]
            [org.topbraid.spin.arq ARQ2SPIN]))
+
+(def node-isomorphism-map
+  (let [m (atom {})]
+    (proxy [NodeIsomorphismMap] []
+      (makeIsomorphic [^Node n1 ^Node n2]
+        (if (and (or (Var/isBlankNodeVar n1) (.isBlank n1))
+                 (or (Var/isBlankNodeVar n2) (.isBlank n2)))
+          (let [other (@m n1)]
+            (if-not other
+              (do (swap! m #(assoc % n1 n2)) true)
+              (.equals other n2)))
+          (.equals n1 n2))))))
 
 ; Disable Stencil's caching for testing
 (set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
@@ -63,6 +79,18 @@
   "Serialize SPARQL `query` to string."
   [^Query query]
   (string/trim (.serialize query)))
+
+(defn validate-query-syntax
+  [^String query]
+  (try (QueryFactory/create query Syntax/syntaxSPARQL_11)
+       (catch QueryParseException ex
+         {:message (.getMessage ex)
+          :line (.getLine ex)
+          :column (.getColumn ex)})))
+
+(defn normalize-query
+  [^Query query]
+  (Algebra/optimize (Algebra/compile query)))
 
 (defn normalize-select-results
   "Normalize results of a SPARQL SELECT query."
@@ -132,10 +160,11 @@
 
 (defn equal-query?
   "Test if queries `a` and `b` are equal. Starts by testing string equality, then tests equality
-  of the parsed queries."
+  of the parsed queries, then tests equality of the parsed algebras."
   [a b]
   (or (= (:query-string a) (:query-string b))
-      (= (:query a) (:query b))))
+      (= (:query a) (:query b))
+      (.equalTo (normalize-query (:query a)) (normalize-query (:query b)) node-isomorphism-map)))
 
 (defn evaluate-exercise
   "Test if `query-string` is equal to the `canonical-query-string`."

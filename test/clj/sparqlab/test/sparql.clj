@@ -17,19 +17,23 @@
        .listFiles
        seq))
 
+(defn load-query-pairs
+  [dir]
+  (->> (files-in-dir dir)
+       (map (juxt #(.getName %)
+                  (comp (partial map slurp)
+                        (partial filter util/query-file?)
+                        seq
+                        #(.listFiles %))))
+       (into {})))
+
 (deftest equal-query?
-  (letfn [(load-query-pairs [dir]
-            (map (comp (partial map slurp)
-                       (partial filter util/query-file?)
-                       seq
-                       #(.listFiles %))
-                 (files-in-dir dir)))]
-    (testing "Equal queries"
-      (doseq [[q1 q2] (load-query-pairs "sparql/equal-query")]
-        (is (sparql/equal-query? (sparql/parse-query q1) (sparql/parse-query q2)))))
-    (testing "Unequal queries"
-      (doseq [[q1 q2] (load-query-pairs "sparql/unequal-query")]
-        (is (not (sparql/equal-query? (sparql/parse-query q1) (sparql/parse-query q2))))))))
+  (testing "Equal queries"
+    (doseq [[test-name [q1 q2]] (load-query-pairs "sparql/equal-query")]
+      (is (sparql/equal-query? (sparql/parse-query q1) (sparql/parse-query q2)) test-name)))
+  (testing "Unequal queries"
+    (doseq [[test-name [q1 q2]] (load-query-pairs "sparql/unequal-query")]
+      (is (not (sparql/equal-query? (sparql/parse-query q1) (sparql/parse-query q2))) test-name))))
 
 (deftest equal-results?)
 
