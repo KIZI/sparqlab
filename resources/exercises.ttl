@@ -825,3 +825,71 @@ WHERE {
   }
 }
   """ .
+
+exercise:unidirectionally-related-concepts a sp:Query ;
+  rdfs:label "Jsou v číselnících jednosměrně propojené koncepty?"@cs ;
+  rdfs:comment "Zjistěte, zdali v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) jsou jednosměrně propojené koncept. Například, pokud jsou koncepty `A` a `B` jednosměrně propojeny predikátem `skos:broader`, pak neexistuje propojení `B skos:narrower A`. Použijte páry inverzních predikátů `skos:broader` a `skos:narrower`, `skos:broaderTransitive` a `skos:narrowerTransitive`, `skos:topConceptOf` a `skos:hasTopConcept`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    VALUES (?property ?inverseProperty) {
+      (skos:broader skos:narrower)
+      (skos:broaderTransitive skos:narrowerTransitive)
+      (skos:topConceptOf skos:hasTopConcept)
+    }
+    {
+      ?a ?property ?b .
+      FILTER NOT EXISTS {
+        ?b ?inverseProperty ?a .
+      }
+    } UNION {
+      ?a ?inverseProperty ?b .
+      FILTER NOT EXISTS {
+        ?b ?property ?a .
+      }
+    }
+  }
+}
+  """ .
+
+exercise:unprintable-characters-in-labels a sp:Query ;
+  rdfs:label "Jsou ve štítcích konceptů netisknutelné znaky?"@cs ;
+  rdfs:comment "Zjistěte, zdali v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) jsou štítky s obsahující netisknutelné znaky. Jako štítky berte objekty predikátů `skos:prefLabel`, `skos:altLabel` a `skos:hiddenLabel`. Netisknutelné znaky jsou v Unicode kategoriích `Zl`, `Zp` a `C`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    VALUES ?labelProperty {
+      skos:prefLabel
+      skos:altLabel
+      skos:hiddenLabel
+    }
+    [] ?labelProperty ?label .
+    FILTER REGEX(?label, "^.*\\\\p{Zl}|\\\\p{Zp}|\\\\p{C}.*$")
+  }
+}
+  """ .
+
+exercise:valueless-associative-relations a sp:Query ;
+  rdfs:label "Jsou v číselnících nadbytečné asociativní vztahy?"@cs ;
+  rdfs:comment "Zjistěte, zdali v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) jsou sourozenci sdílející nadřazený koncept nadbytečně propojeni asociativní vazbou `skos:related`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    [] skos:narrower ?a, ?b .
+    {
+      ?a skos:related ?b .
+    } UNION {
+      ?b skos:related ?a .
+    }
+  }
+}
+  """ .
