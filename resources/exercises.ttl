@@ -561,4 +561,127 @@ WHERE {
     }
   }
 }
-"""@cs .
+""" .
+
+exercise:empty-labels a sp:Query ;
+  rdfs:label "Jsou v číselnících prázdné štítky?"@cs ;
+  rdfs:comment "Zjistěte, zdali jsou v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) prázdné štítky; tj. objekty predikátů `skos:prefLabel`, `skos:altLabel` nebo `skos:hiddenLabel`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    VALUES ?labelProperty {
+      skos:prefLabel
+      skos:altLabel
+      skos:hiddenLabel
+    }
+    [] ?labelProperty ?label .
+    FILTER (STRLEN(?label) = 0)
+  }
+}
+  """ .
+
+exercise:incomplete-language-coverage a sp:Query ;
+  rdfs:label "Mají číselníky neúplné pokrytí štítků dle jazyků?"@cs ;
+  rdfs:comment "Zjistěte, zdali v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) je neúplné pokrytí štítků dle jazyků. Pokud je v určitém číselníku koncept se štítkem v určitém jazyce a existuje koncept téhož číselníku, který štítek v tomto jazyce postrádá, pak hovoříme o neúplném pokrytí dle jazyků. Jako štítky berte objekty predikátů `skos:prefLabel`, `skos:altLabel` a `skos:hiddenLabel`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  {
+    SELECT ?scheme ?labelProperty ?language
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+        VALUES ?labelProperty {
+          skos:prefLabel
+          skos:altLabel
+          skos:hiddenLabel
+        }
+        [] skos:inScheme ?scheme ;
+          ?labelProperty ?label .
+        BIND (lang(?label) AS ?language)
+      }
+    }
+    GROUP BY ?scheme ?labelProperty ?language
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?concept skos:inScheme ?scheme .
+    FILTER NOT EXISTS {
+      ?concept ?labelProperty ?label .
+      FILTER (lang(?label) = ?language)
+    }
+  }
+}
+  """ .
+
+exercise:label-without-language a sp:Query ;
+  rdfs:label "Jsou v číselnících štítky bez určení jazyka?"@cs ;
+  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) vyskytují štítky s chybějícím tagem jazyka. Jako štítky berte objekty predikátů `skos:prefLabel`, `skos:altLabel` a `skos:hiddenLabel`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    VALUES ?labelProperty {
+      skos:prefLabel
+      skos:altLabel
+      skos:hiddenLabel
+    }
+    [] ?labelProperty ?label .
+    FILTER (lang(?label) = "")
+  }
+}
+  """ .
+
+exercise:omitted-top-concepts a sp:Query ;
+  rdfs:label "Chybí v číselnících vrcholové koncepty?"@cs ;
+  rdfs:comment "Zjistěte, zdali některé číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) postrádají vrcholové koncepty. Ty jsou buď odkázány z číselníku (instance `skos:ConceptScheme`) pomocí predikátu `skos:hasTopConcept` nebo naopak vrcholové koncepty odkazují na číselník pomocí inverzního predikátu `skos:topConceptOf`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?conceptScheme a skos:ConceptScheme .
+    FILTER NOT EXISTS {
+      ?conceptScheme skos:hasTopConcept|^skos:topConceptOf [] .
+    }
+  }
+}
+  """ .
+
+exercise:orphan-concepts a sp:Query ;
+  rdfs:label "Jsou v číselnících sirotci?"@cs ;
+  rdfs:comment "Zjistěte, zdali číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) obsahují sirotčí koncepty. Sirotci jsou instance `skos:Concept`, které nejsou spojeny žádným sémantickým vztahem pomocí predikátů `skos:broader`, `skos:narrower`, `skos:related`, `skos:broaderTransitive`, `skos:narrowerTransitive`, `skos:topConceptOf` nebo `skos:hasTopConcept`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?concept a skos:Concept .
+    FILTER NOT EXISTS {
+      {
+        VALUES ?semanticRelation {
+          skos:broader
+          skos:narrower
+          skos:related
+          skos:broaderTransitive
+          skos:narrowerTransitive
+        }
+        {
+          ?concept ?semanticRelation [] .
+        } UNION {
+          [] ?semanticRelation ?concept .
+        }
+      } UNION {
+        ?concept skos:topConceptOf|^skos:hasTopConcept [] .
+      }
+    }
+  }
+}
+  """ .
