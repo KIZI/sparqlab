@@ -685,3 +685,143 @@ WHERE {
   }
 }
   """ .
+
+exercise:pairwise-disjoint-skos-label-properties a sp:Query ;
+  rdfs:label "Mají koncepty číselníků překrývající se štítky?"@cs ;
+  rdfs:comment "Zjistěte, zdali číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) obsahují koncepty s překrývajícími se štítky. Tyto koncepty mají stejnou hodnotu pro kterýkoli pár predikáty `skos:prefLabel`, `skos:altLabel` nebo `skos:hiddenLabel`. Jde o integritní omezení [S13](https://www.w3.org/TR/skos-reference/#S13) slovníku SKOS."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    {
+      ?concept skos:prefLabel ?label ;
+        skos:altLabel ?label .
+    } UNION {
+      ?concept skos:altLabel ?label ;
+        skos:hiddenLabel ?label .
+    } UNION {
+      ?concept skos:prefLabel ?label ;
+        skos:hiddenLabel ?label .
+    }
+  }
+}
+  """ .
+
+exercise:multiple-pref-labels-per-language a sp:Query ;
+  rdfs:label "Mají číselníkové koncepty více preferovaných štítků ve stejném jazyce?"@cs ;
+  rdfs:comment "Zjistěte, zdali číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) obsahují koncepty s více hodnotami predikátu `skos:prefLabel` ve stejném jazyce. Jde o integritní omezení [S14](https://www.w3.org/TR/skos-reference/#S14) slovníku SKOS."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  {
+    SELECT ?concept ?language 
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+        ?concept skos:prefLabel ?prefLabel .
+        BIND (lang(?prefLabel) AS ?language)
+      }
+    }
+    GROUP BY ?concept ?language
+    HAVING (COUNT(?prefLabel) > 1)
+  }
+}
+  """ .
+
+exercise:overlapping-associative-and-hierarchical-relations a sp:Query ;
+  rdfs:label "Překrývají se v číselnících asociativní a hierarchické vztahy?"@cs ;
+  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) překrývají asociativní (`skos:related`) a hierarchické (`skos:broaderTransitive` a `skos:narrowerTransitive`) vztahy. Pokud jsou koncepty propojeny asociativní vazbou, pak nemohou být propojeny hierarchickou vazbou, a to ani tranzitivně. Jde o integritní omezení [S27](https://www.w3.org/TR/skos-reference/#S27) slovníku SKOS."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?a skos:related ?b ;
+      skos:broaderTransitive+|skos:narrowerTransitive+ ?b .
+  }
+}
+  """ .
+
+exercise:collection-disjoint-with-concept-and-concept-scheme a sp:Query ;
+  rdfs:label "Překrývají se kolekce s koncepty a konceptuálními schématy?"@cs ;
+  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) překrývají instance `skos:Collection` s instancemi `skos:Concept` nebo `skos:ConceptScheme`. Jde o integritní omezení [S37](https://www.w3.org/TR/skos-reference/#S37) slovníku SKOS."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    VALUES ?disjointClass {
+      skos:Concept
+      skos:ConceptScheme
+    }
+    ?collection a skos:Collection, ?disjointClass .
+  }
+}
+  """ .
+
+exercise:pairwise-disjoint-skos-match-properties a sp:Query ;
+  rdfs:label "Překrývají se v číselnících linkovací predikáty?"@cs ;
+  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) překrývají linkovací predikáty `skos:exactMatch`, `skos:broadMatch`, `skos:narrowMatch` a `skos:relatedMatch`. Pokud jsou koncepty propojeny pomocí predikátu `skos:exactMatch`, pak nemohou být současně propojeny pomocí `skos:broadMatch`, `skos:narrowMatch` nebo `skos:relatedMatch`. Jde o integritní omezení [S46](https://www.w3.org/TR/skos-reference/#S46) slovníku SKOS."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    VALUES ?disjointProperty {
+      skos:broadMatch
+      skos:narrowMatch
+      skos:relatedMatch
+    }
+    ?a skos:exactMatch ?b ;
+      ?disjointProperty ?b .
+  }
+}
+  """ .
+
+exercise:disjoint-concept-and-concept-scheme a sp:Query ;
+  rdfs:label "Překrývají se koncepty a konceptuální schémata?"@cs ;
+  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) překrývají instance `skos:Concept` a `skos:ConceptScheme`. Jde o integritní omezení [S9](https://www.w3.org/TR/skos-reference/#S9) slovníku SKOS."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?s a skos:Concept, skos:ConceptScheme .
+  }
+}
+  """ .
+
+exercise:top-concept-has-no-broader-concept a sp:Query ;
+  rdfs:label "Mají vrcholové koncepty nadřazené koncepty?"@cs ;
+  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) objevují chybné vrcholové koncepty, které mají nadřazené koncepty ve stejném konceptuálním schématu. Jako vrcholové koncepty berte ty, které odkazují na své schéma pomocí predikátu `skos:topConceptOf` nebo jsou ze schématu odkazovány pomocí predikátu `skos:hasTopConcept`. Nadřazené koncepty hledejte přes hierarchické predikáty `skos:broader`, `skos:broaderTransitive`, `skos:narrower` nebo `skos:narrowerTransitive`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?topConcept skos:topConceptOf|^skos:hasTopConcept ?scheme .
+    {
+      VALUES ?broaderProperty {
+        skos:broader
+        skos:broaderTransitive
+      }
+      ?topConcept ?broaderProperty ?broader .
+    } UNION {
+      VALUES ?narrowerProperty {
+        skos:narrower
+        skos:narrowerTransitive
+      }
+      ?broader ?narrowerProperty ?topConcept .
+    }
+    ?broader skos:inScheme ?scheme .
+  }
+}
+  """ .
