@@ -942,3 +942,79 @@ WHERE {
   }
 }
   """ .
+
+exercise:understanding-from a sp:Query ;
+  rdfs:label "Spočtěte trojice ve slovníku důchodových ročenek pomocí FROM"@cs ;
+  rdfs:comment "Spočtěte trojice ve slovníku důchodových ročenek (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`)."@cs ;
+  dcterms:requires sp:from ;
+  sparqlab:prohibits sp:fromNamed, sp:NamedGraph;
+  sp:text """
+SELECT (COUNT(*) AS ?count)
+FROM <https://data.cssz.cz/resource/dataset/rocenka/vocabulary>
+WHERE {
+  [] ?p [] .
+}
+  """ .
+
+exercise:understanding-from-named a sp:Query ;
+  rdfs:label "Spočtěte trojice ve slovníku důchodových ročenek pomocí FROM NAMED"@cs ;
+  rdfs:comment "Spočtěte trojice ve slovníku důchodových ročenek (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`)"@cs ;
+  dcterms:requires sp:fromNamed ;
+  sparqlab:prohibits sp:from ;
+  sp:text """
+SELECT (COUNT(*) AS ?count)
+FROM NAMED <https://data.cssz.cz/resource/dataset/rocenka/vocabulary>
+WHERE {
+  GRAPH ?g {
+    [] ?p [] .
+  }
+}
+  """ .
+
+exercise:understanding-graph a sp:Query ;
+  rdfs:label "Spočtěte trojice ve slovníku důchodových ročenek pomocí GRAPH"@cs ;
+  rdfs:comment "Spočtěte trojice ve slovníku důchodových ročenek (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`)"@cs ;
+  dcterms:requires sp:NamedGraph ;
+  sparqlab:prohibits sp:from, sp:fromNamed ;
+  sp:text """
+SELECT (COUNT(*) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/rocenka/vocabulary> {
+    [] ?p [] .
+  }
+}
+  """ .
+
+exercise:comparing-from-and-graph a sp:Query ;
+  rdfs:label "Jsou počty trojic ve slovníků důchodových ročenek shodné při použití FROM, FROM NAMED a GRAPH?"@cs ;
+  rdfs:comment "Spočtěte trojice ve slovníku důchodových ročenek (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`) třemi způsoby pomocí FROM, FROM NAMED a GRAPH a ověřte, že se součty rovnají."@cs ;
+  dcterms:requires sp:NamedGraph, sp:from, sp:fromNamed ;
+  sp:text """
+ASK
+FROM <https://data.cssz.cz/resource/dataset/rocenka/vocabulary>
+FROM NAMED <https://data.cssz.cz/resource/dataset/rocenka/vocabulary>
+WHERE {
+  {
+    SELECT (COUNT(*) AS ?count)
+    WHERE {
+      [] ?p [] .
+    }
+  }
+  {
+    SELECT (COUNT(*) AS ?count)
+    WHERE {
+      GRAPH ?g {
+        [] ?p [] .
+      }
+    }
+  }
+  {
+    SELECT (COUNT(*) AS ?count)
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/rocenka/vocabulary> {
+        [] ?p [] .
+      }
+    }
+  }
+}
+  """ .
