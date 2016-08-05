@@ -5,6 +5,52 @@
 @prefix exercise: <http://mynarz.net/sparqlab/resource/exercise/> .
 @prefix sparqlab: <http://mynarz.net/sparqlab/vocabulary#> .
 
+###################
+### SPIN labels ###
+###################
+
+sp:Aggregation  skos:prefLabel  "Agregace"@cs .
+sp:AltPath  skos:prefLabel  "Alternativní cesta"@cs .
+sp:Asc  skos:prefLabel  "ASC" .
+sp:Ask  skos:prefLabel  "ASK" .
+sp:Avg  skos:prefLabel  "AVG" .
+sp:Bind  skos:prefLabel  "BIND" .
+sp:Construct  skos:prefLabel  "CONSTRUCT" .
+sp:Count  skos:prefLabel  "COUNT" .
+sp:Desc  skos:prefLabel  "DESC" .
+sp:Describe  skos:prefLabel  "DESCRIBE" .
+sp:Exists  skos:prefLabel  "EXISTS" .
+sp:Filter  skos:prefLabel  "FILTER" .
+sp:GroupConcat  skos:prefLabel  "GROUP_CONCAT" .
+sp:Max  skos:prefLabel  "MAX" .
+sp:Min  skos:prefLabel  "MIN" .
+sp:Minus  skos:prefLabel  "MINUS" .
+sp:NamedGraph  skos:prefLabel  "GRAPH" .
+sp:NotExists  skos:prefLabel  "NOT EXISTS" .
+sp:Optional  skos:prefLabel  "OPTIONAL" .
+sp:Path  skos:prefLabel  "Cesta" .
+sp:ReversePath  skos:prefLabel  "Reverzní cesta"@cs .
+sp:Sample  skos:prefLabel  "SAMPLE" .
+sp:Select  skos:prefLabel  "SELECT" .
+sp:SubQuery  skos:prefLabel  "Vnořený dotaz" .
+sp:Sum  skos:prefLabel  "SUM" .
+sp:Union  skos:prefLabel  "UNION" .
+sp:Values  skos:prefLabel  "VALUES" .
+sp:distinct  skos:prefLabel  "DISTINCT" .
+sp:from  skos:prefLabel  "FROM" .
+sp:fromNamed  skos:prefLabel  "FROM NAMED" .
+sp:groupBy  skos:prefLabel  "GROUP BY" .
+sp:having  skos:prefLabel  "HAVING" .
+sp:limit  skos:prefLabel  "LIMIT" .
+sp:offset  skos:prefLabel  "OFFSET" .
+sp:orderBy  skos:prefLabel  "ORDER BY" .
+sp:reduced  skos:prefLabel  "REDUCED" .
+sp:where  skos:prefLabel  "WHERE" .
+
+#################
+### Exercises ###
+#################
+
 exercise:classes a sp:Query ;
   rdfs:label "Instanciované třídy"@cs ;
   rdfs:comment "Vyberte třídy instanciované v datech (bez opakování)."@cs ;
