@@ -7,6 +7,9 @@
   [iri]
   (partial str iri))
 
+(def dcterms
+  (prefix "http://purl.org/dc/terms/"))
+
 (def exercise
   (prefix "http://mynarz.net/sparqlab/resource/exercise/"))
 
@@ -15,6 +18,12 @@
 
 (def rdfs
   (prefix "http://www.w3.org/2000/01/rdf-schema#"))
+
+(def skos
+  (prefix "http://www.w3.org/2004/02/skos/core#"))
+
+(def sparqlab
+  (prefix "http://mynarz.net/sparqlab/vocabulary#"))
 
 (def xsd
   (prefix "http://www.w3.org/2001/XMLSchema#"))
