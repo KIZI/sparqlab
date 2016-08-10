@@ -6,6 +6,22 @@
     <div class="row">
       <div class="col-md-8">
         {{description|markdown}}
+        {% if requires|not-empty %}
+        <p>
+        <strong>Povinné konstrukty:</strong>
+          {% for require in requires %}
+          <code>{{require.label}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+          {% endfor %}
+        </p>
+        {% endif %}
+        {% if prohibits|not-empty %}
+        <p>
+        <strong>Zakázané konstrukty:</strong>
+          {% for prohibit in prohibits %}
+          <code>{{prohibit.label}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+          {% endfor %}
+        </p>
+        {% endif %}
       </div>
       <div class="col-md-4">
         {% if prerequisites|not-empty %}

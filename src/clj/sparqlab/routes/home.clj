@@ -1,15 +1,17 @@
 (ns sparqlab.routes.home
   (:require [sparqlab.layout :as layout]
             [sparqlab.sparql :as sparql]
-            [sparqlab.store :refer [select-query]]
+            [sparqlab.store :refer [construct-query select-query]]
             [sparqlab.prefixes :as prefix]
             [sparqlab.util :refer [query-file?]]
+            [sparqlab.rdf :as rdf]
             [compojure.core :refer [context defroutes GET POST]]
             [clojure.tools.logging :as log]
             [ring.util.http-response :as response]
             [markdown.core :refer [md-to-html-string]]
             [selmer.filters :refer [add-filter!]]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clojure.walk :refer [postwalk]]))
 
 (add-filter! :markdown (fn [s] [:safe (md-to-html-string s)]))
 
@@ -31,6 +33,14 @@
                    data
                    {:value value})))
 
+(defn localize-json-ld-context
+  "Set all non-empty languages in `context` to `language`."
+  [context language]
+  (postwalk (fn [x] (if (and (map? x) (not (empty? (:language x))))
+                      (assoc x :language language)
+                      x))
+            context))
+
 (defn mark-exercise-as-done
   [response id]
   (set-cookie response
@@ -49,10 +59,9 @@
 (defn get-exercise
   [id]
   (-> "get_exercise"
-      (sparql/sparql-template {:exercise (prefix/exercise id)})
-      select-query
-      first
-      sparql/->plain-literals))
+      (sparql/sparql-template {:exercise (prefix/exercise id) :language "cs"})
+      construct-query
+      (rdf/frame-model "exercise")))
 
 (defn get-prerequisites
   [id]
@@ -105,11 +114,30 @@
        select-query
        (map sparql/->plain-literals)))
 
+(defn pick-literal
+  [picked-language literals & {:keys [allow-empty-language?]
+                               :or {allow-empty-language? true}}]
+  (->> literals
+       (filter (fn [{language "@language"}]
+                 (or (= language picked-language)
+                     (and allow-empty-language? (nil? language)))))
+       (map (fn [{value "@value"}] value))
+       first))
+
+(defn pick-labels
+  [picked-language objects]
+  (map (comp (partial pick-literal picked-language)
+             (fn [{label (prefix/skos "prefLabel")}] label))
+       objects))
+
 (defn show-exercise
   [id]
   (let [exercise (get-exercise id)
         prerequisites (get-prerequisites id)]
-    (layout/render "exercise.html" (assoc exercise :prerequisites prerequisites))))
+    (log/info exercise)
+    (layout/render "exercise.html" (assoc exercise
+                                          :id id
+                                          :prerequisites prerequisites))))
 
 (defn sparql-endpoint
   []
