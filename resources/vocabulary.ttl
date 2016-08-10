@@ -1,0 +1,26 @@
+@prefix :        <http://mynarz.net/sparqlab/vocabulary#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sp:      <http://spinrdf.org/sp#> .
+@prefix vann:    <http://purl.org/vocab/vann/> .
+@prefix voaf:    <http://purl.org/vocommons/voaf#> .
+
+<http://mynarz.net/sparqlab/vocabulary> a voaf:Vocabulary ;
+  rdfs:label "SPARQLab vocabulary"@en ;
+  rdfs:comment "An internal RDF vocabulary for the SPARQLab application."@en ;
+  vann:preferredNamespaceUri "http://mynarz.net/sparqlab/vocabulary#" ;
+  vann:preferredNamespacePrefix "sparqlab" ;
+  dcterms:creator <http://mynarz.net/#jindrich> ;
+  dcterms:license <https://www.eclipse.org/legal/epl-v10.html> .
+
+:prohibits a rdf:Property, owl:ObjectProperty ;
+  rdfs:label "Prohibits"@en ;
+  rdfs:comment "The property links prohibited SPARQL language constructs that may not appear in a SPARQL query."@en ;
+  rdfs:domain sp:Query ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf ( sp:SystemClass sp:systemProperty )
+  ] ;
+  rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
