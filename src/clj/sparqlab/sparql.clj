@@ -1,7 +1,7 @@
 (ns sparqlab.sparql
   (:require [sparqlab.config :refer [env]]
             [sparqlab.prefixes :refer [uuid-iri]]
-            [sparqlab.rdf :refer [resource->clj]]
+            [sparqlab.rdf :refer [model->json-ld resource->clj]]
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [clojure.string :as string]
@@ -9,16 +9,20 @@
             [clojure.java.io :as io]
             [stencil.core :refer [render-file]]
             [stencil.loader :refer [set-cache]])
-  (:import [org.apache.jena.query DatasetFactory Query QueryExecutionFactory
+  (:import [org.apache.jena.query ARQ DatasetFactory Query QueryExecutionFactory
                                   QueryFactory QueryParseException Syntax]
            [org.apache.jena.update UpdateAction UpdateFactory]
            [org.apache.jena.rdf.model Model ModelFactory]
            [org.apache.jena.riot Lang RDFDataMgr]
            [org.apache.jena.sparql.algebra Algebra]
-           [org.apache.jena.sparql.util NodeIsomorphismMap]
+           [org.apache.jena.sparql.util Context NodeIsomorphismMap]
            [org.apache.jena.sparql.core Var]
            [org.apache.jena.graph Node]
            [org.topbraid.spin.arq ARQ2SPIN]))
+
+(def arq-context
+  (doto (.copy (ARQ/getContext))
+    (.set ARQ/optInlineAssignmentsAggressive true)))
 
 (def node-isomorphism-map
   (let [m (atom {})]
@@ -90,7 +94,7 @@
 
 (defn normalize-query
   [^Query query]
-  (Algebra/optimize (Algebra/compile query)))
+  (Algebra/optimize (Algebra/compile query) arq-context))
 
 (defn normalize-select-results
   "Normalize results of a SPARQL SELECT query."
@@ -149,7 +153,7 @@
      :query-type (get-query-type parsed-query)}))
 
 (defn select-query 
-  "Execute SPARQL SELECT `query` in the `model`."
+  "Execute SPARQL SELECT `query` on the `model`."
   [^Model model
    ^String query]
   (with-open [qexec (QueryExecutionFactory/create query model)]
@@ -157,6 +161,14 @@
           result-vars (.getResultVars results)]
       (mapv (partial process-select-solution result-vars)
             (iterator-seq results)))))
+
+(defn ^Model construct-query
+  "Execute SPARQL CONSTRUCT `query` on the `model`.
+  Returns expanded JSON-LD."
+  [^Model model
+   ^String query]
+  (with-open [qexec (QueryExecutionFactory/create query model)]
+    (.execConstruct qexec)))
 
 (defn equal-query?
   "Test if queries `a` and `b` are equal. Starts by testing string equality, then tests equality
@@ -214,5 +226,6 @@
    (render-file (str "sparql/" file-name ".mustache") data)))
 
 (defn ->plain-literals
+  "Convert `bindings` to plain literals."
   [bindings]
   (into {} (map (fn [[variable value]] [variable (get value "@value")]) bindings)))

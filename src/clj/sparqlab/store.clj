@@ -68,6 +68,11 @@
   :start (open-store)
   :stop (close-store store))
 
+(defn construct-query
+  "Execute CONSTRUCT `query` on the store."
+  [query]
+  (sparql/construct-query store query))
+
 (defn select-query
   "Execute SELECT `query` on the store."
   [query]
