@@ -66,3 +66,6 @@ Session.vim
 *~
 # auto-generated tag files
 tags
+
+# Ignore scratchpad for new ideas
+src/clj/sparqlab/scratchpad.clj
