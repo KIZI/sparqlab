@@ -3,6 +3,7 @@
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 @prefix sp:      <http://spinrdf.org/sp#> .
 @prefix vann:    <http://purl.org/vocab/vann/> .
 @prefix voaf:    <http://purl.org/vocommons/voaf#> .
@@ -15,6 +16,17 @@
   dcterms:creator <http://mynarz.net/#jindrich> ;
   dcterms:license <https://www.eclipse.org/legal/epl-v10.html> .
 
+# ----- Classes -----
+
+:DifficultyLevel a rdfs:Class ;
+  rdfs:label "Difficulty level"@en ;
+  rdfs:comment "The relative difficulty of completing a task or objective."@en ;
+  rdfs:seeAlso <https://en.wiktionary.org/wiki/difficulty_level> ;
+  rdfs:subClassOf skos:Concept ;
+  rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
+
+# ----- Properties -----
+
 :prohibits a rdf:Property, owl:ObjectProperty ;
   rdfs:label "Prohibits"@en ;
   rdfs:comment "The property links prohibited SPARQL language constructs that may not appear in a SPARQL query."@en ;
@@ -23,4 +35,31 @@
     a owl:Class ;
     owl:unionOf ( sp:SystemClass sp:systemProperty )
   ] ;
+  rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
+
+:hasDifficulty a rdf:Property, owl:ObjectProperty ;
+  rdfs:label "Has difficulty"@en ;
+  rdfs:comment "Assigns difficulty to an exercise."@en ;
+  rdfs:domain sp:Query ;
+  rdfs:range :DifficultyLevel ;
+  rdfs:subPropertyOf dcterms:educationLevel ;
+  rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
+
+# ----- Individuals -----
+
+:difficultyLevels a skos:OrderedCollection ;
+  rdfs:label "Difficulty levels"@en ;
+  skos:memberList ( :easy :normal :hard ) ;
+  rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
+
+:easy a :DifficultyLevel ;
+  skos:prefLabel "Easy"@en ;
+  rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
+
+:normal a :DifficultyLevel ;
+  skos:prefLabel "Normal"@en ;
+  rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
+
+:hard a :DifficultyLevel ;
+  skos:prefLabel "Hard"@en ;
   rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
