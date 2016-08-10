@@ -7,6 +7,7 @@
 @prefix sp:      <http://spinrdf.org/sp#> .
 @prefix vann:    <http://purl.org/vocab/vann/> .
 @prefix voaf:    <http://purl.org/vocommons/voaf#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 
 <http://mynarz.net/sparqlab/vocabulary> a voaf:Vocabulary ;
   rdfs:label "SPARQLab vocabulary"@en ;
@@ -43,6 +44,13 @@
   rdfs:domain sp:Query ;
   rdfs:range :DifficultyLevel ;
   rdfs:subPropertyOf dcterms:educationLevel ;
+  rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
+
+:revealConstructClause a rdf:Property, owl:DatatypeProperty ;
+  rdfs:label "Reveal CONSTRUCT clause"@en ;
+  rdfs:comment "Indicates whether a query's CONSTRUCT clause should be revealed. Defaults to true."@en ;
+  rdfs:domain sp:Query ;
+  rdfs:range xsd:boolean ;
   rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
 
 # ----- Individuals -----
