@@ -4,6 +4,10 @@
   <div class="col-md-12">
     <p class="lead">SPARQLab slouží k procvičování <a href="https://www.w3.org/TR/sparql11-query/">dotazovacího jazyka <abbr title="SPARQL Protocol And RDF Query Language" class="initialism">SPARQL</abbr></a>.</p>
 
+    <p>Cvičení používají tyto prvky jazyka SPARQL:
+    {% for sparql-construct in sparql-constructs %}
+    <a href="{{servlet-context}}/search?q={{sparql-construct.label|urlescape}}">{{sparql-construct.label}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}{% endfor %}.</p>
+
     <h2>Autoři</h2>
 
     <ul>
