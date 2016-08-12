@@ -6,7 +6,7 @@
 
     <p>Cvičení používají tyto prvky jazyka SPARQL:
     {% for sparql-construct in sparql-constructs %}
-    <a href="{{servlet-context}}/search?q={{sparql-construct.label|urlescape}}">{{sparql-construct.label}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}{% endfor %}.</p>
+    <a href="{{servlet-context}}/search?q={{sparql-construct.construct|urlescape}}">{{sparql-construct.label}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}{% endfor %}.</p>
 
     <h2>Autoři</h2>
 

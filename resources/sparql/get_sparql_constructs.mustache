@@ -1,0 +1,19 @@
+{{!
+@param str language
+}}
+
+{{> sparql/prefixes.mustache }}
+
+SELECT ?construct ?label
+WHERE {
+  {
+    SELECT DISTINCT ?construct 
+    WHERE {
+      [] a sp:Query ;
+        dcterms:subject ?construct .
+    }
+  }
+  ?construct skos:prefLabel ?label .
+  FILTER (langMatches(lang(?label), "{{language}}") || lang(?label) = "")
+}
+ORDER BY ?label
