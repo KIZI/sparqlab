@@ -1,0 +1,8 @@
+{{> sparql/prefixes.mustache }}
+
+SELECT ?label
+WHERE {
+  [] a sp:Query ;
+    dcterms:requires/skos:prefLabel ?label .
+}
+ORDER BY ?label

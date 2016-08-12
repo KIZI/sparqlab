@@ -24,6 +24,7 @@
                  [clj-http "3.1.0"]
                  [org.apache.jena/jena-core "3.1.0"]
                  [org.apache.jena/jena-arq "3.1.0"]
+                 [org.apache.jena/jena-querybuilder "3.1.0"]
                  [cheshire "5.6.3"]
                  [stencil "0.5.0"]
                  [org.topbraid/spin "2.0.0"]
@@ -68,13 +69,13 @@
                                  [luminus-immutant "0.2.2"]
                                  [pjstadig/humane-test-output "0.8.0"]
                                  [directory-naming/naming-java "0.8"]]
-                  :plugins      [[com.jakemccrary/lein-test-refresh "0.14.0"]]
-                  
                   :source-paths ["env/dev/clj" "test/clj"]
                   :resource-paths ["env/dev/resources"]
                   :repl-options {:init-ns user}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]}
-   :project/test {:resource-paths ["env/dev/resources" "env/test/resources"]}
+   :project/test {:dependencies   [[org.clojure/test.check "0.9.0"]]
+                  :plugins        [[com.jakemccrary/lein-test-refresh "0.14.0"]]
+                  :resource-paths ["env/dev/resources" "env/test/resources"]}
    :profiles/dev {}
    :profiles/test {}})

@@ -58,10 +58,26 @@
 
 (defn get-exercise
   [id]
-  (-> "get_exercise"
-      (sparql/sparql-template {:exercise (prefix/exercise id) :language "cs"})
-      construct-query
-      (rdf/frame-model "exercise")))
+  (let [model (-> "get_exercise"
+                  (sparql/sparql-template {:exercise (prefix/exercise id) :language "cs"})
+                  construct-query)
+        select-fn (comp (partial sparql/select-query model) sparql/sparql-template)
+        description (->> "get_exercise_description"
+                         select-fn
+                         first
+                         sparql/->plain-literals)
+        prohibits (->> "get_prohibits"
+                       select-fn
+                       (map sparql/->plain-literals))
+        requires (->> "get_requires"
+                      select-fn 
+                      (map sparql/->plain-literals))
+        construct-template (and (:reveal description)
+                                (sparql/get-construct-template (:query description)))]
+    (assoc description
+           :prohibits prohibits
+           :requires requires
+           :construct-template construct-template)))
 
 (defn get-prerequisites
   [id]
@@ -134,7 +150,6 @@
   [id]
   (let [exercise (get-exercise id)
         prerequisites (get-prerequisites id)]
-    (log/info exercise)
     (layout/render "exercise.html" (assoc exercise
                                           :id id
                                           :prerequisites prerequisites))))
@@ -145,21 +160,28 @@
 
 (defn about-page
   []
-  (layout/render "about.html"))
+  (let [sparql-constructs (->> (sparql/sparql-template "get_sparql_constructs" {:language "cs"})
+                               select-query
+                               (map sparql/->plain-literals))]
+    (layout/render "about.html" {:sparql-constructs sparql-constructs})))
+
+(defn pad-prefixes
+  "Pad `prefixes` by prepending spaces to have the same width."
+  [prefixes]
+  (let [longest-prefix-length (->> prefixes
+                                   (map (comp count :prefix))
+                                   (sort #(compare %2 %1))
+                                   first)
+        get-padding (fn [prefix]
+                      (apply str (repeat (inc (- longest-prefix-length (count prefix))) " ")))
+        pad-prefix (fn [{:keys [prefix] :as m}]
+                     (assoc m :padding (get-padding prefix)))]
+    (map pad-prefix prefixes)))
 
 (defn data-page
   []
   (let [prefixes (get-namespace-prefixes)
-        longest-prefix-length (->> prefixes
-                                   (map (comp count :prefix))
-                                   (sort #(compare %2 %1))
-                                   first)
-        padded-prefixes (map (fn [{:keys [prefix]
-                                   :as m}]
-                               (assoc m :padding (apply str (repeat (inc (- longest-prefix-length
-                                                                            (count prefix)))
-                                                                    " "))))
-                             prefixes)]
+        padded-prefixes (pad-prefixes prefixes)]
     (layout/render "data.html" {:prefixes padded-prefixes})))
 
 (defn search-results

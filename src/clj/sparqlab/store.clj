@@ -13,17 +13,12 @@
     {query "@value"} :query}]
   [exercise (QueryFactory/create query)])
 
-(defn- extract-prefixes
-  "Extract namespace prefixes used in exercise `query`."
-  [^Query query]
-  (into {} (.. query getPrologue getPrefixMapping getNsPrefixMap)))
-
 (defn add-prefixes
   "Add namespace prefixes used in `exercise-queries` to the `store`."
   [^Model store
    exercise-queries]
   (let [prefixes (->> exercise-queries
-                      (reduce (fn [a b] (merge a (extract-prefixes (val b)))) {})
+                      (reduce (fn [a b] (merge a (sparql/extract-prefixes (val b)))) {})
                       (map (fn [[k v]] {:prefix k :namespace v})))
         update-operation (sparql/sparql-template "add_prefixes" {:prefixes prefixes})]
     (sparql/update-operation store update-operation)))

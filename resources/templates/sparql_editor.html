@@ -1,1 +1,5 @@
-<textarea id="editor" class="hidden form-control" name="query"></textarea>
+<textarea id="editor" class="hidden form-control" name="query">
+{% if construct-template %}
+{{construct-template}}
+{% endif %}
+</textarea>

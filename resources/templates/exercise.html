@@ -8,7 +8,10 @@
         {{description|markdown}}
         {% if requires|not-empty %}
         <p>
-        <strong>Povinné konstrukty:</strong>
+        <strong>
+          <i class="fa fa-check left" aria-hidden="true"></i>
+          Povinné konstrukty:
+        </strong>
           {% for require in requires %}
           <code>{{require.label}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
           {% endfor %}
@@ -16,7 +19,10 @@
         {% endif %}
         {% if prohibits|not-empty %}
         <p>
-        <strong>Zakázané konstrukty:</strong>
+        <strong>
+          <i class="fa fa-ban left" aria-hidden="true"></i>
+          Zakázané konstrukty:
+         </strong>
           {% for prohibit in prohibits %}
           <code>{{prohibit.label}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
           {% endfor %}

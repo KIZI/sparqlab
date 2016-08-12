@@ -23,8 +23,12 @@
     var yasr = YASR($results[0], jQuery.extend(yasrConfig, {
       getUsedPrefixes: yasqe.getPrefixesFromQuery
     }));
-    //yasqe.setValue("\nSELECT * \nWHERE {\n  ?s ?p ?o .\n}\nLIMIT 10");
-    yasqe.addPrefixes(prefixes);
+    var prefilledQuery = yasqe.getTextArea().value.trim();
+    if (prefilledQuery !== "") {
+      yasqe.setValue(yasqe.getTextArea().value.trim());
+    } else {
+      yasqe.addPrefixes(prefixes);
+    }
 
     // Event handlers
     $codeMirror.ready(function (e) {

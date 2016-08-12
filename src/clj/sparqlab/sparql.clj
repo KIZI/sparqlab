@@ -18,6 +18,7 @@
            [org.apache.jena.sparql.util Context NodeIsomorphismMap]
            [org.apache.jena.sparql.core Var]
            [org.apache.jena.graph Node]
+           [org.apache.jena.arq.querybuilder ConstructBuilder]
            [org.topbraid.spin.arq ARQ2SPIN]))
 
 (def arq-context
@@ -58,11 +59,17 @@
   (let [model (ModelFactory/createDefaultModel)]
     (.. (ARQ2SPIN. model) (createQuery query (uuid-iri)) (getModel))))
 
+(defn extract-prefixes
+  "Extract namespace prefixes used in exercise `query`."
+  [^Query query]
+  (into {} (.. query getPrologue getPrefixMapping getNsPrefixMap)))
+
 (defn get-query-type
   [^Query query]
   (let [query-type (.getQueryType query)]
     (condp = query-type
       Query/QueryTypeAsk ::ask
+      Query/QueryTypeConstruct ::construct
       Query/QueryTypeSelect ::select
       Query/QueryTypeDescribe ::describe)))
 
@@ -143,6 +150,20 @@
                      (isa? query-type ::construct) "text/turtle,*/*;q=0.9")]
     (:body (client/get endpoint {:headers {:accept accept}
                                  :query-params {"query" query-string}}))))
+
+(defn get-construct-template
+  "Extract CONSTRUCT template from `query`.
+  Returns nil for non-CONSTRUCT queries."
+  [^String query]
+  (let [parsed-query (QueryFactory/create query)]
+    (when (= (get-query-type parsed-query) ::construct)
+      (let [construct-builder (ConstructBuilder.)
+            construct-template (.getConstructTemplate parsed-query)]
+        (doseq [triple (.getTriples construct-template)]
+          (.addConstruct construct-builder triple))
+        (doseq [[prefix nspace] (extract-prefixes parsed-query)]
+          (.addPrefix construct-builder prefix nspace))
+        (.buildString construct-builder)))))
 
 (defn parse-query
   "Parse a query string."
@@ -228,4 +249,4 @@
 (defn ->plain-literals
   "Convert `bindings` to plain literals."
   [bindings]
-  (into {} (map (fn [[variable value]] [variable (get value "@value")]) bindings)))
+  (into {} (map (fn [[variable value]] [variable (get value "@value" (get value "@id"))]) bindings)))
