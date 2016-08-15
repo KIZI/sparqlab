@@ -15,5 +15,12 @@ WHERE {
       <{{exercise}}> dcterms:subject ?languageConstruct .
     }
   }
-  ?prerequisite rdfs:label ?name .
+  # Prerequisite must have the same or easier difficulty than the selected exercise.
+  <{{exercise}}> sparqlab:hasDifficulty ?difficulty .
+  sparqlab:difficultyLevels skos:memberList/rdf:rest* [
+    rdf:first ?prerequisiteDifficulty ;
+    rdf:rest*/rdf:first ?difficulty
+  ] .
+  ?prerequisite rdfs:label ?name ;
+    sparqlab:hasDifficulty ?prerequisiteDifficulty .
 }

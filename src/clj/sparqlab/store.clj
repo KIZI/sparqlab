@@ -38,6 +38,7 @@
 (defn initialize-store
   [^Model store]
   (.read store "exercises.ttl") ; Fixture with exercises
+  (.read store "vocabulary.ttl") ; SPARQLab vocabulary
   (let [exercise-queries (->> "sparql/get_exercise_queries.rq"
                               io/resource
                               slurp
