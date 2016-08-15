@@ -21,3 +21,5 @@ WHERE {
   FILTER (?prerequisiteDifficulty <= ?difficulty)
   ?prerequisite rdfs:label ?name .
 }
+ORDER BY ?prerequisiteDifficulty
+LIMIT 10
