@@ -60,7 +60,8 @@ SELECT DISTINCT ?class
 WHERE {
   [] a ?class .
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:classes-histogram a sp:Query ;
   rdfs:label "Histogram instanciovaných tříd"@cs ;
@@ -72,7 +73,8 @@ WHERE {
 }
 GROUP BY ?class
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:classes-histogram-code-lists a sp:Query ;
   rdfs:label "Histogram tříd instanciovaných v číselnících"@cs ;
@@ -86,7 +88,8 @@ WHERE {
 }
 GROUP BY ?class
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:classes-histogram-data a sp:Query ;
   rdfs:label "Histogram tříd instanciovaných v důchodových ročenkách"@cs ;
@@ -100,7 +103,8 @@ WHERE {
 }
 GROUP BY ?class
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:classes-histogram-metadata a sp:Query ;
   rdfs:label "Histogram tříd instanciovaných v metadatech"@cs ;
@@ -114,7 +118,8 @@ WHERE {
 }
 GROUP BY ?class
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:datatypes a sp:Query ;
   rdfs:label "Datové typy"@cs ;
@@ -128,7 +133,8 @@ WHERE {
 }
 GROUP BY ?datatype
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:named-graphs a sp:Query ;
   rdfs:label "Pojmenované grafy"@cs ;
@@ -140,7 +146,8 @@ WHERE {
     [] ?p [] .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:object-property-path a sp:Query ;
   rdfs:label "Cesty mezi instancemi tříd"@cs ;
@@ -154,7 +161,8 @@ WHERE {
 }
 GROUP BY ?class1 ?p ?class2
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:one-quad a sp:Query ;
   rdfs:label "Jedna čtveřice"@cs ;
@@ -167,7 +175,8 @@ WHERE {
   }
 }
 LIMIT 1
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:one-triple a sp:Query ;
   rdfs:label "Jedna trojice"@cs ;
@@ -178,7 +187,8 @@ WHERE {
   ?s ?p ?o .
 }
 LIMIT 1
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties a sp:Query ;
   rdfs:label "Predikáty"@cs ;
@@ -188,7 +198,8 @@ SELECT DISTINCT ?property
 WHERE {
   [] ?property [] .
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties-histogram a sp:Query ;
   rdfs:label "Histogram predikátů"@cs ;
@@ -200,7 +211,8 @@ WHERE {
 }
 GROUP BY ?property
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties-histogram-code-lists a sp:Query ;
   rdfs:label "Histogram predikátů v číselnících"@cs ;
@@ -214,7 +226,8 @@ WHERE {
 }
 GROUP BY ?property
 ORDER BY DESC(?count)
-  """ . 
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties-histogram-data a sp:Query ;
   rdfs:label "Histogram predikátů v důchodových ročenkách"@cs ;
@@ -228,7 +241,8 @@ WHERE {
 }
 GROUP BY ?property
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties-histogram-metadata a sp:Query ;
   rdfs:label "Histogram predikátů v metadatech důchodových ročenek"@cs ;
@@ -242,7 +256,8 @@ WHERE {
 }
 GROUP BY ?property
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties-qb-observation-cardinality-data a sp:Query ;
   rdfs:label "Kardinality predikátů qb:Observation v důchodových ročenkách"@cs ;
@@ -276,7 +291,8 @@ WHERE {
 }
 GROUP BY ?p
 ORDER BY DESC(?maxCardinality)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:hard .
 
 exercise:properties-qb-observation-data a sp:Query ;
   rdfs:label "Predikáty pozorování v důchodových ročenkách"@cs ;
@@ -291,7 +307,8 @@ WHERE {
       ?property [] .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:some-data a sp:Query ;
   rdfs:label "Jsou v úložišti data?"@cs ;
@@ -300,7 +317,8 @@ exercise:some-data a sp:Query ;
 ASK {
   [] ?p [] .
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:some-named-graphs a sp:Query ;
   rdfs:label "Jsou v úložišti pojmenované grafy?"@cs ;
@@ -312,7 +330,8 @@ WHERE {
     [] ?p [] .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:count-triples a sp:Query ;
   rdfs:label "Počet trojic"@cs ;
@@ -322,7 +341,8 @@ SELECT (COUNT(*) AS ?count)
 WHERE {
   [] ?p [] .
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:graph-sizes a sp:Query ;
   rdfs:label "Velikost grafů"@cs ;
@@ -336,7 +356,8 @@ WHERE {
 }
 GROUP BY ?graph
 ORDER BY DESC(?size)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:component-property-subproperties a sp:Query ;
   rdfs:label "Predikáty odvozené z qb:componentProperty"@cs ;
@@ -351,7 +372,8 @@ WHERE {
     ?property rdfs:subPropertyOf qb:componentProperty .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:count-datasets a sp:Query ;
   rdfs:label "Počet datasetů"@cs ;
@@ -365,7 +387,8 @@ WHERE {
     ?dataSet a qb:DataSet .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:dataset-attributes a sp:Query ;
   rdfs:label "Atributy v důchodových ročenkách"@cs ;
@@ -383,7 +406,8 @@ WHERE {
     ?attribute a qb:AttributeProperty .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:dataset-component-labels-czech a sp:Query ;
   rdfs:label "Názvy komponent datasetu důchodových ročenek v češtině"@cs ;
@@ -405,7 +429,8 @@ WHERE {
   }
 }
 ORDER BY ?order
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:dataset-component-properties-with-classes a sp:Query ;
   rdfs:label "Komponenty datasetu důchodových ročenek s třídami"@cs ;
@@ -430,7 +455,8 @@ WHERE {
   }
 }
 ORDER BY ?componentProperty
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:dataset-component-properties-with-most-specific-classes a sp:Query ;
   rdfs:label "Komponenty datasetu důchodových ročenek s nejspecifičtějšími třídami"@cs ;
@@ -457,7 +483,8 @@ WHERE {
     [] rdfs:subClassOf ?class .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:dataset-dimensions a sp:Query ;
   rdfs:label "Dimenze důchodových ročenek"@cs ;
@@ -472,7 +499,8 @@ WHERE {
     ?dimension a qb:DimensionProperty .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:dataset-measures a sp:Query ;
   rdfs:label "Míry důchodových ročenek"@cs ;
@@ -487,7 +515,8 @@ WHERE {
     ?measure a qb:MeasureProperty .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:datasets a sp:Query ;
   rdfs:label "Datasety důchodových ročenek"@cs ;
@@ -501,7 +530,8 @@ WHERE {
     ?dataset a qb:DataSet .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:vocabularies a sp:Query ;
   rdfs:label "Slovníky"@cs ;
@@ -530,7 +560,8 @@ WHERE {
 }
 GROUP BY ?vocabulary
 ORDER BY DESC(?count)
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:most-common-class-data a sp:Query ;
   rdfs:label "Nejčastěji instanciovaná třída v důchodových ročenkách"@cs ;
@@ -545,7 +576,8 @@ WHERE {
 GROUP BY ?class
 ORDER BY DESC(?count)
 LIMIT 1
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:ambiguous-notation-references a sp:Query ;
   rdfs:label "Jsou notace číselníkových konceptů víceznačné?"@cs ;
@@ -563,7 +595,8 @@ WHERE {
     FILTER (!sameTerm(?a, ?b))
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:ambiguous-notation-references-construct a sp:Query ;
   rdfs:label "Víceznačné notace číselníkových konceptů"@cs ;
@@ -590,7 +623,8 @@ WHERE {
     FILTER (!sameTerm(?a, ?b))
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:cyclic-hierchical-relations a sp:Query ;
   rdfs:label "Jsou v číselnících cyklické hierarchické vztahy?"@cs ;
@@ -608,7 +642,8 @@ WHERE {
     }
   }
 }
-""" .
+""" ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:empty-labels a sp:Query ;
   rdfs:label "Jsou v číselnících prázdné štítky?"@cs ;
@@ -628,7 +663,8 @@ WHERE {
     FILTER (STRLEN(?label) = 0)
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:incomplete-language-coverage a sp:Query ;
   rdfs:label "Mají číselníky neúplné pokrytí štítků dle jazyků?"@cs ;
@@ -662,7 +698,8 @@ WHERE {
     }
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:hard .
 
 exercise:label-without-language a sp:Query ;
   rdfs:label "Jsou v číselnících štítky bez určení jazyka?"@cs ;
@@ -682,7 +719,8 @@ WHERE {
     FILTER (lang(?label) = "")
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:omitted-top-concepts a sp:Query ;
   rdfs:label "Chybí v číselnících vrcholové koncepty?"@cs ;
@@ -699,7 +737,8 @@ WHERE {
     }
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:orphan-concepts a sp:Query ;
   rdfs:label "Jsou v číselnících sirotci?"@cs ;
@@ -731,7 +770,8 @@ WHERE {
     }
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:pairwise-disjoint-skos-label-properties a sp:Query ;
   rdfs:label "Mají koncepty číselníků překrývající se štítky?"@cs ;
@@ -754,7 +794,8 @@ WHERE {
     }
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:multiple-pref-labels-per-language a sp:Query ;
   rdfs:label "Mají číselníkové koncepty více preferovaných štítků ve stejném jazyce?"@cs ;
@@ -776,7 +817,8 @@ WHERE {
     HAVING (COUNT(?prefLabel) > 1)
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:overlapping-associative-and-hierarchical-relations a sp:Query ;
   rdfs:label "Překrývají se v číselnících asociativní a hierarchické vztahy?"@cs ;
@@ -791,7 +833,8 @@ WHERE {
       skos:broaderTransitive+|skos:narrowerTransitive+ ?b .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:collection-disjoint-with-concept-and-concept-scheme a sp:Query ;
   rdfs:label "Překrývají se kolekce s koncepty a konceptuálními schématy?"@cs ;
@@ -809,7 +852,8 @@ WHERE {
     ?collection a skos:Collection, ?disjointClass .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:pairwise-disjoint-skos-match-properties a sp:Query ;
   rdfs:label "Překrývají se v číselnících linkovací predikáty?"@cs ;
@@ -829,7 +873,8 @@ WHERE {
       ?disjointProperty ?b .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:disjoint-concept-and-concept-scheme a sp:Query ;
   rdfs:label "Překrývají se koncepty a konceptuální schémata?"@cs ;
@@ -843,7 +888,8 @@ WHERE {
     ?s a skos:Concept, skos:ConceptScheme .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:top-concept-has-no-broader-concept a sp:Query ;
   rdfs:label "Mají vrcholové koncepty nadřazené koncepty?"@cs ;
@@ -871,7 +917,8 @@ WHERE {
     ?broader skos:inScheme ?scheme .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:unidirectionally-related-concepts a sp:Query ;
   rdfs:label "Jsou v číselnících jednosměrně propojené koncepty?"@cs ;
@@ -900,7 +947,8 @@ WHERE {
     }
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:unprintable-characters-in-labels a sp:Query ;
   rdfs:label "Jsou ve štítcích konceptů netisknutelné znaky?"@cs ;
@@ -920,7 +968,8 @@ WHERE {
     FILTER REGEX(?label, "^.*\\\\p{Zl}|\\\\p{Zp}|\\\\p{C}.*$")
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:valueless-associative-relations a sp:Query ;
   rdfs:label "Jsou v číselnících nadbytečné asociativní vztahy?"@cs ;
@@ -939,7 +988,8 @@ WHERE {
     }
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:has-dsd a sp:Query ;
   rdfs:label "Chybějící popis struktury dat"@cs ;
@@ -968,7 +1018,8 @@ WHERE {
     }
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:dsd-has-normal-form a sp:Query ;
   rdfs:label "Mají datové struktury popsané DCV normalizovanou podobu?"@cs ;
@@ -988,7 +1039,8 @@ WHERE {
     }
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:understanding-from a sp:Query ;
   rdfs:label "Spočtěte trojice ve slovníku důchodových ročenek pomocí FROM"@cs ;
@@ -1001,7 +1053,8 @@ FROM <https://data.cssz.cz/resource/dataset/rocenka/vocabulary>
 WHERE {
   [] ?p [] .
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:understanding-from-named a sp:Query ;
   rdfs:label "Spočtěte trojice ve slovníku důchodových ročenek pomocí FROM NAMED"@cs ;
@@ -1016,7 +1069,8 @@ WHERE {
     [] ?p [] .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:understanding-graph a sp:Query ;
   rdfs:label "Spočtěte trojice ve slovníku důchodových ročenek pomocí GRAPH"@cs ;
@@ -1030,7 +1084,8 @@ WHERE {
     [] ?p [] .
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:comparing-from-and-graph a sp:Query ;
   rdfs:label "Jsou počty trojic ve slovníků důchodových ročenek shodné při použití FROM, FROM NAMED a GRAPH?"@cs ;
@@ -1064,4 +1119,5 @@ WHERE {
     }
   }
 }
-  """ .
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
