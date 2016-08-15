@@ -2,7 +2,6 @@
   (:require [sparqlab.prefixes :as prefix]
             [sparqlab.xml-schema :as xsd]
             [clojure.string :as string]
-            [cheshire.core :as json]
             [clojure.java.io :as io]
             [clojure.walk :refer [keywordize-keys]])
   (:import [org.apache.jena.rdf.model Literal Model Resource]

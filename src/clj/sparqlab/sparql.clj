@@ -109,7 +109,7 @@
   [^ParseException exception]
   (let [token-images (.tokenImage exception)
         idxs (flatten (mapv vec (.expectedTokenSequences exception)))]
-    (map (partial aget token-images) idxs)))
+    (mapv (partial aget token-images) idxs)))
 
 (defn valid-query?
   "Validates syntax of `query`." 

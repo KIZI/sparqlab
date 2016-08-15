@@ -27,7 +27,8 @@
                  [org.apache.jena/jena-querybuilder "3.1.0"]
                  [cheshire "5.6.3"]
                  [stencil "0.5.0"]
-                 [org.topbraid/spin "2.0.0"]]
+                 [org.topbraid/spin "2.0.0"]
+                 [slingshot "0.12.2"]]
 
   :repositories [["org.topbraid" "http://topquadrant.com/repository/spin"]]
   :min-lein-version "2.0.0"
