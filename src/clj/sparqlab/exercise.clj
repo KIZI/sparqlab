@@ -11,7 +11,7 @@
   of the parsed queries, then tests equality of the parsed algebras."
   [a b]
   (or (= (:query-string a) (:query-string b))
-      (= (:query a) (:query b))
+      (and (= (:query-type a) (:query-type b)) (= (:query a) (:query b)))
       (.equalTo (sparql/normalize-query (:query a))
                 (sparql/normalize-query (:query b))
                 sparql/node-isomorphism-map)))
