@@ -16,11 +16,8 @@ WHERE {
     }
   }
   # Prerequisite must have the same or easier difficulty than the selected exercise.
-  <{{exercise}}> sparqlab:hasDifficulty ?difficulty .
-  sparqlab:difficultyLevels skos:memberList/rdf:rest* [
-    rdf:first ?prerequisiteDifficulty ;
-    rdf:rest*/rdf:first ?difficulty
-  ] .
-  ?prerequisite rdfs:label ?name ;
-    sparqlab:hasDifficulty ?prerequisiteDifficulty .
+  <{{exercise}}> sparqlab:hasDifficulty/skos:notation ?difficulty .
+  ?prerequisite sparqlab:hasDifficulty/skos:notation ?prerequisiteDifficulty .
+  FILTER (?prerequisiteDifficulty <= ?difficulty)
+  ?prerequisite rdfs:label ?name .
 }
