@@ -1,6 +1,9 @@
 (ns sparqlab.exercise
   (:require [sparqlab.sparql :as sparql]
-            [sparqlab.config :refer [env]])
+            [sparqlab.store :as store]
+            [sparqlab.config :refer [env local-language]]
+            [clojure.set :refer [union]]
+            [clojure.tools.logging :as log])
   (:import [org.apache.jena.rdf.model Model]))
 
 (defn equal-query?
@@ -13,21 +16,31 @@
                 (sparql/normalize-query (:query b))
                 sparql/node-isomorphism-map)))
 
+(defn test-constructs
+  "Test SPARQL constructs on `query-model` using `test-query`."
+  [^Model query-model
+   ^String test-query]
+  (let [constructs (map :construct (sparql/select-query query-model test-query))]
+    (when (seq constructs)
+      (->> (sparql/sparql-template "get_construct_labels" {:constructs constructs
+                                                           :language local-language})
+           store/select-query
+           (map :label)
+           (into #{})))))
+
 (defn test-prohibited
-  "Test if `prohibited` SPARQL language constructs are used in `query`."
+  "Test if `prohibited` SPARQL language constructs are used in `query-model`."
   [prohibited
-   ^Model query]
-  (when-let [results (->> (sparql/sparql-template "test_prohibited" {:prohibited prohibited})
-                          (sparql/select-query query))]
-    ))
+   ^Model query-model]
+  (let [test-query (sparql/sparql-template "test_prohibited" {:prohibited prohibited})]
+    (test-constructs query-model test-query)))
 
 (defn test-required
   "Test if `required` SPARQL language constructs are used in `query`."
   [required
-   ^Model query]
-  (when-let [results (->> (sparql/sparql-template "test_required" {:required required})
-                          (sparql/select-query query))]
-    ))
+   ^Model query-model]
+  (let [test-query (sparql/sparql-template "test_required" {:required required})]
+    (test-constructs query-model test-query)))
 
 (defn evaluate-exercise
   "Test if `query-string` is equal to the `canonical-query-string`."
@@ -47,10 +60,14 @@
     {:canonical-query {:query (:query-string canonical-query)
                        :results canonical-results
                        :results-type (sparql/get-results-type (:query-type canonical-query))}
-     :query {:query (:query-string query)
+     :query {:missing-required missing-required
+             :query (:query-string query)
              :results query-results
-             :results-type (sparql/get-results-type (:query-type query))}
-     :equal? (or equal-query-result (sparql/equal-query-results? (:query-type canonical-query)
-                                                                 canonical-results
-                                                                 (:query-type query)
-                                                                 query-results))}))
+             :results-type (sparql/get-results-type (:query-type query))
+             :superfluous-prohibits superfluous-prohibited}
+     :equal? (and (empty? (union superfluous-prohibited missing-required))
+                  (or equal-query-result
+                      (sparql/equal-query-results? (:query-type canonical-query)
+                                                   canonical-results
+                                                   (:query-type query)
+                                                   query-results)))}))

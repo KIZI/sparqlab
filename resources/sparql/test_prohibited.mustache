@@ -1,0 +1,19 @@
+{{!
+@param Array<IRI> prohibited
+}}
+
+{{> sparql/prefixes.mustache}}
+
+SELECT DISTINCT ?construct 
+WHERE {
+  VALUES ?construct {
+    {{#prohibited}}
+    <{{.}}>
+    {{/prohibited}}
+  }
+  {
+    [] a ?construct .
+  } UNION {
+    [] ?construct [] .
+  }
+}

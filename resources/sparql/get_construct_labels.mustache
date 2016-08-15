@@ -1,0 +1,18 @@
+{{!
+@param Array<IRI> constructs
+@param str        language
+}}
+
+{{> sparql/prefixes.mustache }}
+
+SELECT ?label
+WHERE {
+  VALUES ?construct {
+    {{#constructs}}
+    <{{.}}>
+    {{/constructs}}
+  }
+  ?construct skos:prefLabel ?label .
+  FILTER (langMatches(lang(?label), "{{language}}") || lang(?label) = "")
+}
+ORDER BY ?label

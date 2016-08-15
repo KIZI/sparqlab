@@ -5,6 +5,7 @@
             [sparqlab.prefixes :as prefix]
             [sparqlab.util :refer [query-file?]]
             [sparqlab.exercise :as exercise]
+            [sparqlab.config :refer [local-language]]
             [compojure.core :refer [context defroutes GET POST]]
             [clojure.tools.logging :as log]
             [ring.util.http-response :as response]
@@ -17,11 +18,6 @@
 (add-filter! :markdown (fn [s] [:safe (md-to-html-string s)]))
 
 (add-filter! :dec dec)
-
-(def local-language
-  "Local language of the application.
-  Fixed at the moment. To be obtained dynamically."
-  "cs")
 
 (def a-year
   "One year in seconds"

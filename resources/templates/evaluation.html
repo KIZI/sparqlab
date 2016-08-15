@@ -22,6 +22,24 @@
       </div>
       {% endif %}
     </div>
+    {% if query.missing-required|not-empty %}
+    <p>
+      <i class="fa fa-question left" aria-hidden="true"></i>
+      <strong>Chybějící konstrukty:</strong>
+      {% for required in query.missing-required %}
+      <code>{{required}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+      {% endfor %}
+    </p>
+    {% endif %}
+    {% if query.superfluous-prohibited|not-empty %}
+    <p>
+      <i class="fa fa-ban left" aria-hidden="true"></i>
+      <strong>Zakázané konstrukty:</strong>
+      {% for prohibited in query.superfluous-prohibited %}
+      <code>{{prohibited}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+      {% endfor %}
+    </p>
+    {% endif %}
     <textarea id="query" class="form-control" readonly rows="10">{{query.query}}</textarea>
     <textarea id="results" class="hidden" data-type="{{query.results-type}}"> 
       {% safe %}

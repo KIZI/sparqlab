@@ -1,0 +1,21 @@
+{{!
+@param Array<IRI> required
+}}
+
+{{> sparql/prefixes.mustache}}
+
+SELECT DISTINCT ?construct 
+WHERE {
+  VALUES ?construct {
+    {{#required}}
+    <{{.}}>
+    {{/required}}
+  }
+  FILTER NOT EXISTS {
+    {
+      [] a ?construct .
+    } UNION {
+      [] ?construct [] .
+    }
+  }
+}
