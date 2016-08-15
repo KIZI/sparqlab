@@ -155,15 +155,8 @@
   "Extract CONSTRUCT template from `query`.
   Returns nil for non-CONSTRUCT queries."
   [^String query]
-  (let [parsed-query (QueryFactory/create query)]
-    (when (= (get-query-type parsed-query) ::construct)
-      (let [construct-builder (ConstructBuilder.)
-            construct-template (.getConstructTemplate parsed-query)]
-        (doseq [triple (.getTriples construct-template)]
-          (.addConstruct construct-builder triple))
-        (doseq [[prefix nspace] (extract-prefixes parsed-query)]
-          (.addPrefix construct-builder prefix nspace))
-        (.buildString construct-builder)))))
+  (when-let [[_ construct-clause] (re-find (re-matcher #"(?is)^(.*CONSTRUCT\s*\{[^}]+\}).*$" query))]
+    (str construct-clause \newline "WHERE {\n}")))
 
 (defn parse-query
   "Parse a query string."
