@@ -9,7 +9,8 @@
             [clojure.java.io :as io]
             [stencil.core :refer [render-file]]
             [stencil.loader :refer [set-cache]])
-  (:import [org.apache.jena.query ARQ DatasetFactory Query QueryExecutionFactory
+  (:import [java.io StringReader]
+           [org.apache.jena.query ARQ DatasetFactory Query QueryExecutionFactory
                                   QueryFactory QueryParseException Syntax]
            [org.apache.jena.update UpdateAction UpdateFactory]
            [org.apache.jena.rdf.model Model ModelFactory]
@@ -19,7 +20,8 @@
            [org.apache.jena.sparql.core Var]
            [org.apache.jena.graph Node]
            [org.apache.jena.arq.querybuilder ConstructBuilder]
-           [org.topbraid.spin.arq ARQ2SPIN]))
+           [org.topbraid.spin.arq ARQ2SPIN]
+           [org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token]))
 
 (def arq-context
   (doto (.copy (ARQ/getContext))
@@ -91,13 +93,36 @@
   [^Query query]
   (string/trim (.serialize query)))
 
-(defn validate-query-syntax
+(defn- get-error-offset
+  "Compute offset of a syntax `exception` in `query` based on line and column numbers."
+  [^String query
+   ^ParseException exception]
+  (let [current-token (.currentToken exception)
+        query-lines (take (.beginLine current-token) (string/split-lines query))]
+    (+ (reduce + (map (comp inc count) (butlast query-lines))) ; Offset from the preceding lines
+       (count (take (+ (.beginColumn current-token) ; Offset from the preceding token
+                       (count (.image current-token)))
+                    (last query-lines))))))
+
+(defn- get-expected-tokens
+  "Get string representations of the tokens expected by `exception`."
+  [^ParseException exception]
+  (let [token-images (.tokenImage exception)
+        idxs (flatten (mapv vec (.expectedTokenSequences exception)))]
+    (map (partial aget token-images) idxs)))
+
+(defn valid-query?
+  "Validates syntax of `query`." 
   [^String query]
-  (try (QueryFactory/create query Syntax/syntaxSPARQL_11)
-       (catch QueryParseException ex
-         {:message (.getMessage ex)
-          :line (.getLine ex)
-          :column (.getColumn ex)})))
+  (let [empty-query (doto (Query.) (.setStrict true))
+        parser (doto (SPARQLParser11. (StringReader. query))
+                 (.setQuery empty-query))]
+    (try (do (.QueryUnit parser)
+             {:valid? true})
+         (catch ParseException ex
+           {:expected (get-expected-tokens ex)
+            :offset (get-error-offset query ex)
+            :valid? false}))))
 
 (defn normalize-query
   [^Query query]
