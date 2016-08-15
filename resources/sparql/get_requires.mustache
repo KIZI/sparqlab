@@ -1,8 +1,9 @@
 {{> sparql/prefixes.mustache }}
 
-SELECT ?label
+SELECT ?required ?label
 WHERE {
   [] a sp:Query ;
-    dcterms:requires/skos:prefLabel ?label .
+    dcterms:requires ?required .
+  ?required skos:prefLabel ?label .
 }
 ORDER BY ?label

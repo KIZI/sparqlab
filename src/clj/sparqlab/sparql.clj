@@ -1,6 +1,5 @@
 (ns sparqlab.sparql
-  (:require [sparqlab.config :refer [env]]
-            [sparqlab.prefixes :refer [uuid-iri]]
+  (:require [sparqlab.prefixes :refer [uuid-iri]]
             [sparqlab.rdf :refer [resource->clj]]
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
@@ -19,15 +18,16 @@
            [org.apache.jena.sparql.util Context NodeIsomorphismMap]
            [org.apache.jena.sparql.core Var]
            [org.apache.jena.graph Node]
-           [org.apache.jena.arq.querybuilder ConstructBuilder]
            [org.topbraid.spin.arq ARQ2SPIN]
            [org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token]))
 
 (def arq-context
+  "Context allowing more aggressive SPARQL query optimizations."
   (doto (.copy (ARQ/getContext))
     (.set ARQ/optInlineAssignmentsAggressive true)))
 
 (def node-isomorphism-map
+  "Make variables and blank nodes isomorphic."
   (let [m (atom {})]
     (proxy [NodeIsomorphismMap] []
       (makeIsomorphic [^Node n1 ^Node n2]
@@ -46,9 +46,15 @@
 
 ; ----- Private functions -----
 
+(defn ->plain-literal
+  "Convert `variable` to plain literal."
+  [{id "@id"
+    value "@value"}]
+  (or value id))
+
 (defn- process-select-binding
   [sparql-binding variable]
-  [(keyword variable) (resource->clj (.get sparql-binding variable))])
+  [(keyword variable) (->plain-literal (resource->clj (.get sparql-binding variable)))])
 
 (defn- process-select-solution
   "Process SPARQL SELECT `solution` for `result-vars`."
@@ -180,7 +186,7 @@
   "Extract CONSTRUCT template from `query`.
   Returns nil for non-CONSTRUCT queries."
   [^String query]
-  (when-let [[_ construct-clause] (re-find (re-matcher #"(?is)^(.*CONSTRUCT\s*\{[^}]+\}).*$" query))]
+  (when-let [[_ construct-clause] (re-find (re-matcher #"(?is)^(.*CONSTRUCT\s*(\{[^}]+\})?).*$" query))]
     (str construct-clause \newline "WHERE {\n}")))
 
 (defn parse-query
@@ -209,48 +215,6 @@
   (with-open [qexec (QueryExecutionFactory/create query model)]
     (.execConstruct qexec)))
 
-(defn equal-query?
-  "Test if queries `a` and `b` are equal. Starts by testing string equality, then tests equality
-  of the parsed queries, then tests equality of the parsed algebras."
-  [a b]
-  (or (= (:query-string a) (:query-string b))
-      (= (:query a) (:query b))
-      (.equalTo (normalize-query (:query a)) (normalize-query (:query b)) node-isomorphism-map)))
-
-(defn evaluate-exercise
-  "Test if `query-string` is equal to the `canonical-query-string`."
-  [^String canonical-query-string
-   ^String query-string]
-  (let [canonical-query (parse-query canonical-query-string)
-        query (parse-query query-string)
-        equal-query-result (equal-query? canonical-query query)
-        endpoint (:sparql-endpoint env)
-        canonical-results (sparql-query endpoint canonical-query)
-        ; If the queries are the same, retrieve only the canonical results.
-        query-results (if equal-query-result canonical-results (sparql-query endpoint query))]
-    {:canonical-query {:query (:query-string canonical-query)
-                       :results canonical-results
-                       :results-type (get-results-type (:query-type canonical-query))}
-     :query {:query (:query-string query)
-             :results query-results
-             :results-type (get-results-type (:query-type query))}
-     :equal? (or equal-query-result (equal-query-results? (:query-type canonical-query)
-                                                          canonical-results
-                                                          (:query-type query)
-                                                          query-results))}))
-
-(defn extract-language-constructs
-  "Extract SPARQL language constructs from the `query`."
-  [^Query query]
-  (with-open [model (query->spin query)]
-    (->> "sparql/extract_language_constructs.rq"
-         io/resource
-         slurp
-         (select-query model)
-         (map #(get-in % [:construct "@id"]))
-         (into #{})
-         doall)))
-
 (defn ^Model update-operation
   "Execute SPARQL Update `operation` on `model`."
   [^Model model
@@ -264,8 +228,3 @@
    (sparql-template file-name {}))
   ([file-name data]
    (render-file (str "sparql/" file-name ".mustache") data)))
-
-(defn ->plain-literals
-  "Convert `bindings` to plain literals."
-  [bindings]
-  (into {} (map (fn [[variable value]] [variable (get value "@value" (get value "@id"))]) bindings)))

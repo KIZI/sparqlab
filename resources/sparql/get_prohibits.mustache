@@ -1,8 +1,9 @@
 {{> sparql/prefixes.mustache }}
 
-SELECT ?label
+SELECT ?prohibited ?label
 WHERE {
   [] a sp:Query ;
-    sparqlab:prohibits/skos:prefLabel ?label .
+    sparqlab:prohibits ?prohibited .
+  ?prohibited skos:prefLabel ?label .
 }
 ORDER BY ?label

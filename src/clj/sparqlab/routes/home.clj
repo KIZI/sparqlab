@@ -4,6 +4,7 @@
             [sparqlab.store :refer [construct-query select-query]]
             [sparqlab.prefixes :as prefix]
             [sparqlab.util :refer [query-file?]]
+            [sparqlab.exercise :as exercise]
             [compojure.core :refer [context defroutes GET POST]]
             [clojure.tools.logging :as log]
             [ring.util.http-response :as response]
@@ -12,9 +13,15 @@
             [clojure.string :as string]
             [clojure.walk :refer [postwalk]]))
 
+; Selmer template filters
 (add-filter! :markdown (fn [s] [:safe (md-to-html-string s)]))
 
 (add-filter! :dec dec)
+
+(def local-language
+  "Local language of the application.
+  Fixed at the moment. To be obtained dynamically."
+  "cs")
 
 (def a-year
   "One year in seconds"
@@ -48,19 +55,13 @@
 (defn get-exercise
   [id]
   (let [model (-> "get_exercise"
-                  (sparql/sparql-template {:exercise (prefix/exercise id) :language "cs"})
+                  (sparql/sparql-template {:exercise (prefix/exercise id)
+                                           :language local-language})
                   construct-query)
         select-fn (comp (partial sparql/select-query model) sparql/sparql-template)
-        description (->> "get_exercise_description"
-                         select-fn
-                         first
-                         sparql/->plain-literals)
-        prohibits (->> "get_prohibits"
-                       select-fn
-                       (map sparql/->plain-literals))
-        requires (->> "get_requires"
-                      select-fn 
-                      (map sparql/->plain-literals))
+        description (first (select-fn "get_exercise_description"))
+        prohibits (select-fn "get_prohibits")
+        requires (select-fn "get_requires")
         construct-template (and (:reveal description)
                                 (sparql/get-construct-template (:query description)))]
     (assoc description
@@ -70,16 +71,13 @@
 
 (defn get-prerequisites
   [id]
-  (->> (sparql/sparql-template "get_prerequisites" {:exercise (prefix/exercise id)})
-       select-query
-       (map sparql/->plain-literals)))
+  (select-query (sparql/sparql-template "get_prerequisites" {:exercise (prefix/exercise id)})))
 
 (defn get-exercises
   []
   (->> "get_exercises"
        sparql/sparql-template
-       select-query 
-       (map sparql/->plain-literals)))
+       select-query))
 
 (defn get-exercises-done
   [request]
@@ -108,16 +106,18 @@
   [{{query "query"} :form-params}
    id]
   (let [{canonical-query :query
+         :keys [prohibits requires]
          :as exercise} (get-exercise id)
-        verdict (sparql/evaluate-exercise canonical-query query)]
+        verdict (exercise/evaluate-exercise canonical-query
+                                            query
+                                            :prohibited (map :prohibited prohibits)
+                                            :required (map :required requires))]
     (cond-> (layout/render "evaluation.html" (merge exercise verdict))
       (:equal? verdict) (mark-exercise-as-done id))))
 
 (defn search-exercises
   [search-term]
-  (->> (sparql/sparql-template "find_exercises" {:search-term search-term})
-       select-query
-       (map sparql/->plain-literals)))
+  (select-query (sparql/sparql-template "find_exercises" {:search-term search-term})))
 
 (defn show-exercise
   [id]
@@ -133,9 +133,8 @@
 
 (defn about-page
   []
-  (let [sparql-constructs (->> (sparql/sparql-template "get_sparql_constructs" {:language "cs"})
-                               select-query
-                               (map sparql/->plain-literals))]
+  (let [sparql-constructs (select-query (sparql/sparql-template "get_sparql_constructs"
+                                                                {:language local-language}))]
     (layout/render "about.html" {:sparql-constructs sparql-constructs})))
 
 (defn pad-prefixes

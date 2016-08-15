@@ -9,8 +9,7 @@
 ; ----- Data pre-processing -----
 
 (defn- parse-exercise
-  [{{exercise "@id"} :exercise
-    {query "@value"} :query}]
+  [{:keys [exercise query]}]
   [exercise (QueryFactory/create query)])
 
 (defn add-prefixes
@@ -23,6 +22,17 @@
         update-operation (sparql/sparql-template "add_prefixes" {:prefixes prefixes})]
     (sparql/update-operation store update-operation)))
 
+(defn extract-language-constructs
+  "Extract SPARQL language constructs from the `query`."
+  [^Query query]
+  (with-open [model (sparql/query->spin query)]
+    (->> "extract_language_constructs"
+         sparql/sparql-template
+         (sparql/select-query model)
+         (map :construct)
+         (into #{})
+         doall)))
+
 (defn enrich-exercises-with-extracted-constructs
   "Enrich exercises in the `store` with extracted SPARQL language constructs."
   [^Model store
@@ -30,7 +40,7 @@
   (let [extract-constructs (fn [[exercise query]]
                              (map (fn [construct] {:exercise exercise
                                                    :construct construct})
-                                  (sparql/extract-language-constructs query)))
+                                  (extract-language-constructs query)))
         update-operation (sparql/sparql-template "enrich_exercises_with_extracted_constructs"
                                                  {:constructs (mapcat extract-constructs exercise-queries)})]
     (sparql/update-operation store update-operation)))
@@ -39,9 +49,8 @@
   [^Model store]
   (.read store "exercises.ttl") ; Fixture with exercises
   (.read store "vocabulary.ttl") ; SPARQLab vocabulary
-  (let [exercise-queries (->> "sparql/get_exercise_queries.rq"
-                              io/resource
-                              slurp
+  (let [exercise-queries (->> "get_exercise_queries"
+                              sparql/sparql-template
                               (sparql/select-query store)
                               (map parse-exercise)
                               (into {}))]
