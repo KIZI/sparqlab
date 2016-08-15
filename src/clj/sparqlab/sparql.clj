@@ -1,7 +1,7 @@
 (ns sparqlab.sparql
   (:require [sparqlab.config :refer [env]]
             [sparqlab.prefixes :refer [uuid-iri]]
-            [sparqlab.rdf :refer [model->json-ld resource->clj]]
+            [sparqlab.rdf :refer [resource->clj]]
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [clojure.string :as string]
@@ -222,6 +222,7 @@
                                                           query-results))}))
 
 (defn extract-language-constructs
+  "Extract SPARQL language constructs from the `query`."
   [^Query query]
   (with-open [model (query->spin query)]
     (->> "sparql/extract_language_constructs.rq"

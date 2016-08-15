@@ -4,7 +4,6 @@
             [sparqlab.store :refer [construct-query select-query]]
             [sparqlab.prefixes :as prefix]
             [sparqlab.util :refer [query-file?]]
-            [sparqlab.rdf :as rdf]
             [compojure.core :refer [context defroutes GET POST]]
             [clojure.tools.logging :as log]
             [ring.util.http-response :as response]
@@ -33,19 +32,9 @@
                    data
                    {:value value})))
 
-(defn localize-json-ld-context
-  "Set all non-empty languages in `context` to `language`."
-  [context language]
-  (postwalk (fn [x] (if (and (map? x) (not (empty? (:language x))))
-                      (assoc x :language language)
-                      x))
-            context))
-
 (defn mark-exercise-as-done
   [response id]
-  (set-cookie response
-              (str cookie-ns id)
-              true))
+  (set-cookie response (str cookie-ns id) true))
 
 (defn mark-exercises-as-done
   [exercises exercises-done]
@@ -129,22 +118,6 @@
   (->> (sparql/sparql-template "find_exercises" {:search-term search-term})
        select-query
        (map sparql/->plain-literals)))
-
-(defn pick-literal
-  [picked-language literals & {:keys [allow-empty-language?]
-                               :or {allow-empty-language? true}}]
-  (->> literals
-       (filter (fn [{language "@language"}]
-                 (or (= language picked-language)
-                     (and allow-empty-language? (nil? language)))))
-       (map (fn [{value "@value"}] value))
-       first))
-
-(defn pick-labels
-  [picked-language objects]
-  (map (comp (partial pick-literal picked-language)
-             (fn [{label (prefix/skos "prefLabel")}] label))
-       objects))
 
 (defn show-exercise
   [id]
