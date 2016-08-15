@@ -5,6 +5,7 @@ SELECT (REPLACE(STR(?exercise), "^.*\\/([^/]+)$", "$1") AS ?id)
 WHERE {
   ?exercise a sp:Query ;
     rdfs:label ?name ;
-    sp:text ?query .    
+    sp:text ?query ;
+    sparqlab:hasDifficulty/skos:notation ?difficulty .
 }
-ORDER BY STRLEN(?query) {{! Complexity ~ query length }}
+ORDER BY ?difficulty STRLEN(?query) {{! Complexity ~ query length }}
