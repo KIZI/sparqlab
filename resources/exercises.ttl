@@ -1143,3 +1143,62 @@ WHERE {
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:count-distinct-classes a sp:Query ;
+  rdfs:label "Kolik různých tříd je instanciováno?"@cs ;
+  rdfs:comment "Spočtěte různé třídy, jejichž instance jsou v datech o důchodových ročenkách (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`)."@cs ;
+  sp:text """
+SELECT (COUNT(DISTINCT ?class) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    [] a ?class .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:count-distinct-classes-without-distinct a sp:Query ;
+  rdfs:label "Kolik různých tříd je instanciováno (bez DISTINCT)?"@cs ;
+  rdfs:comment "Spočtěte různé třídy, jejichž instance jsou v datech o důchodových ročenkách (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) bez použití modifikátoru `DISTINCT`."@cs ;
+  sparqlab:prohibits sp:distinct ;
+  sp:text """
+SELECT (COUNT(?class) AS ?count)
+WHERE {
+  {
+    SELECT ?class
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+        [] a ?class .
+      }
+    }
+    GROUP BY ?class
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:count-distinct-classes-with-reduced a sp:Query ;
+  rdfs:label "Kolik různých tříd je instanciováno (pomocí REDUCED)?"@cs ;
+  rdfs:comment "Spočtěte různé třídy, jejichž instance jsou v datech o důchodových ročenkách (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) s použitím modifikátoru `REDUCED`."@cs ;
+  dcterms:required sp:reduced ;
+  sparqlab:prohibited sp:distinct, sp:groupBy ;
+  sp:text """
+SELECT (COUNT(?class) AS ?count)
+WHERE {
+  {
+    SELECT REDUCED ?class
+    WHERE {
+      {
+        SELECT ?class
+        WHERE {
+          GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+            [] a ?class .
+          }
+        }
+        ORDER BY ?class
+      }
+    }
+  }
+}
+  """ ;
+  sparqlab:difficulty sparqlab:normal .
