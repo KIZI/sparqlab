@@ -22,6 +22,9 @@
 (def skos
   (prefix "http://www.w3.org/2004/02/skos/core#"))
 
+(def sp
+  (prefix "http://spinrdf.org/sp#"))
+
 (def sparqlab
   (prefix "http://mynarz.net/sparqlab/vocabulary#"))
 

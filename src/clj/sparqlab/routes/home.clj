@@ -3,7 +3,7 @@
             [sparqlab.sparql :as sparql]
             [sparqlab.store :refer [construct-query select-query]]
             [sparqlab.prefixes :as prefix]
-            [sparqlab.util :refer [query-file?]]
+            [sparqlab.util :refer [kahn-sort query-file?]]
             [sparqlab.exercise :as exercise]
             [sparqlab.config :refer [local-language]]
             [compojure.core :refer [context defroutes GET POST]]
@@ -12,7 +12,9 @@
             [markdown.core :refer [md-to-html-string]]
             [selmer.filters :refer [add-filter!]]
             [clojure.string :as string]
-            [clojure.walk :refer [postwalk]]))
+            [clojure.java.io :as io]
+            [clojure.edn :as edn])
+  (:import [java.io PushbackReader]))
 
 ; Selmer template filters
 (add-filter! :markdown (fn [s] [:safe (md-to-html-string s)]))
@@ -74,6 +76,27 @@
   (->> "get_exercises"
        sparql/sparql-template
        select-query))
+
+(def spin-dependencies
+  "Dependencies between SPIN SPARQL language constructs"
+  (let [deps (-> "spin_dependencies.edn" io/resource io/reader PushbackReader. edn/read)]
+    (into {} (map (fn [[k v]] [(prefix/sp k) (into #{} (map prefix/sp v))]) deps))))
+
+(defn sort-exercises-by-dependencies
+  "Sort exercises by the SPARQL language constructs they depend on by using them."
+  []
+  (letfn [(spin-term? [term] (string/starts-with? term (prefix/sp)))
+          (group-exercises-by-constructs [acc {:keys [exercise construct]}]
+            (if (contains? acc construct)
+              (update acc construct conj exercise)
+              (assoc acc construct #{exercise})))]
+    (->> "extract_exercise_constructs"
+         sparql/sparql-template 
+         select-query
+         (reduce group-exercises-by-constructs {}) 
+         (merge spin-dependencies)
+         kahn-sort
+         (remove spin-term?))))
 
 (defn get-exercises-done
   [request]
