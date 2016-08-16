@@ -10,43 +10,65 @@
 ### SPIN labels ###
 ###################
 
-sp:Aggregation  skos:prefLabel  "Agregace"@cs .
-sp:AltPath  skos:prefLabel  "Alternativní cesta"@cs .
-sp:Asc  skos:prefLabel  "ASC" .
-sp:Ask  skos:prefLabel  "ASK" .
-sp:Avg  skos:prefLabel  "AVG" .
-sp:Bind  skos:prefLabel  "BIND" .
-sp:Construct  skos:prefLabel  "CONSTRUCT" .
-sp:Count  skos:prefLabel  "COUNT" .
-sp:Desc  skos:prefLabel  "DESC" .
-sp:Describe  skos:prefLabel  "DESCRIBE" .
-sp:Exists  skos:prefLabel  "EXISTS" .
-sp:Filter  skos:prefLabel  "FILTER" .
-sp:GroupConcat  skos:prefLabel  "GROUP_CONCAT" .
-sp:Max  skos:prefLabel  "MAX" .
-sp:Min  skos:prefLabel  "MIN" .
-sp:Minus  skos:prefLabel  "MINUS" .
-sp:NamedGraph  skos:prefLabel  "GRAPH" .
-sp:NotExists  skos:prefLabel  "NOT EXISTS" .
-sp:Optional  skos:prefLabel  "OPTIONAL" .
-sp:Path  skos:prefLabel  "Cesta" .
-sp:ReversePath  skos:prefLabel  "Reverzní cesta"@cs .
-sp:Sample  skos:prefLabel  "SAMPLE" .
-sp:Select  skos:prefLabel  "SELECT" .
-sp:SubQuery  skos:prefLabel  "Vnořený dotaz" .
-sp:Sum  skos:prefLabel  "SUM" .
-sp:Union  skos:prefLabel  "UNION" .
-sp:Values  skos:prefLabel  "VALUES" .
-sp:distinct  skos:prefLabel  "DISTINCT" .
-sp:from  skos:prefLabel  "FROM" .
-sp:fromNamed  skos:prefLabel  "FROM NAMED" .
-sp:groupBy  skos:prefLabel  "GROUP BY" .
-sp:having  skos:prefLabel  "HAVING" .
-sp:limit  skos:prefLabel  "LIMIT" .
-sp:offset  skos:prefLabel  "OFFSET" .
-sp:orderBy  skos:prefLabel  "ORDER BY" .
-sp:reduced  skos:prefLabel  "REDUCED" .
-sp:where  skos:prefLabel  "WHERE" .
+sp:Aggregation skos:prefLabel "Agregace"@cs .
+sp:AltPath skos:prefLabel "Alternativní cesta"@cs .
+sp:Asc skos:prefLabel "ASC" .
+sp:Ask skos:prefLabel "ASK" .
+sp:Avg skos:prefLabel "AVG" .
+sp:Bind skos:prefLabel "BIND" .
+sp:Construct skos:prefLabel "CONSTRUCT" .
+sp:Count skos:prefLabel "COUNT" .
+sp:Desc skos:prefLabel "DESC" .
+sp:Describe skos:prefLabel "DESCRIBE" .
+sp:Exists skos:prefLabel "EXISTS" .
+sp:Filter skos:prefLabel "FILTER" .
+sp:GroupConcat skos:prefLabel "GROUP_CONCAT" .
+sp:Max skos:prefLabel "MAX" .
+sp:Min skos:prefLabel "MIN" .
+sp:Minus skos:prefLabel "MINUS" .
+sp:ModPath skos:prefLabel "Proměnná cesta"@cs .
+sp:NamedGraph skos:prefLabel "GRAPH" .
+sp:NotExists skos:prefLabel "NOT EXISTS" .
+sp:Optional skos:prefLabel "OPTIONAL" .
+sp:Path skos:prefLabel "Cesta" .
+sp:ReversePath skos:prefLabel "Reverzní cesta"@cs .
+sp:Sample skos:prefLabel "SAMPLE" .
+sp:Select skos:prefLabel "SELECT" .
+sp:SeqPath skos:prefLabel "Sekvence cest" .
+sp:SubQuery skos:prefLabel "Vnořený dotaz" .
+sp:Sum skos:prefLabel "SUM" .
+sp:TriplePath skos:prefLabel "Cesta"@cs .
+sp:Union skos:prefLabel "UNION" .
+sp:Values skos:prefLabel "VALUES" .
+sp:and skos:prefLabel "&&" .
+sp:datatype skos:prefLabel "datatype" .
+sp:distinct skos:prefLabel "DISTINCT" .
+sp:eq skos:prefLabel "=" .
+sp:from skos:prefLabel "FROM" .
+sp:fromNamed skos:prefLabel "FROM NAMED" .
+sp:groupBy skos:prefLabel "GROUP BY" .
+sp:ge skos:prefLabel ">=" .
+sp:gt skos:prefLabel ">" .
+sp:having skos:prefLabel "HAVING" .
+sp:iri skos:prefLabel "iri" .
+sp:isLiteral skos:prefLabel "isLiteral" .
+sp:lang skos:prefLabel "lang" .
+sp:langMatches skos:prefLabel "langMatches" .
+sp:limit skos:prefLabel "LIMIT" .
+sp:le skos:prefLabel "<=" .
+sp:lt skos:prefLabel "<" .
+sp:ne skos:prefLabel "!=" .
+sp:not skos:prefLabel "!" .
+sp:notExists skos:prefLabel "NOT EXISTS" .
+sp:offset skos:prefLabel "OFFSET" .
+sp:orderBy skos:prefLabel "ORDER BY" .
+sp:reduced skos:prefLabel "REDUCED" .
+sp:regex skos:prefLabel "regex" .
+sp:replace skos:prefLabel "replace" .
+sp:sameTerm skos:prefLabel "sameTerm" .
+sp:str skos:prefLabel "str" .
+sp:strlen skos:prefLabel "strlen" .
+sp:where skos:prefLabel "WHERE" .
 
 #################
 ### Exercises ###
