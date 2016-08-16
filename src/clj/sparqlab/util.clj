@@ -22,17 +22,19 @@
 ;; the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(defn without
+; ----- Private functions -----
+
+(defn- without
   "Returns set s with x removed."
   [s x] (difference s #{x}))
 
-(defn take-1
+(defn- take-1
   "Returns the pair [element, s'] where s' is set s with element removed."
   [s] {:pre [(not (empty? s))]}
   (let [item (first s)]
     [item (without s item)]))
 
-(defn no-incoming
+(defn- no-incoming
   "Returns the set of nodes in graph g for which there are no incoming
   edges, where g is a map of nodes to sets of nodes."
   [g]
@@ -40,12 +42,14 @@
         have-incoming (apply union (vals g))]
     (difference nodes have-incoming)))
 
-(defn normalize
+(defn- normalize
   "Returns g with empty outgoing edges added for nodes with incoming
   edges only.  Example: {:a #{:b}} => {:a #{:b}, :b #{}}"
   [g]
   (let [have-incoming (apply union (vals g))]
     (reduce #(if (get % %2) % (assoc % %2 #{})) g have-incoming)))
+
+; ----- Public functions -----
 
 (defn kahn-sort
   "Proposes a topological sort for directed graph g using Kahn's
