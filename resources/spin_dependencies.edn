@@ -1,0 +1,24 @@
+{"AltPath" #{"Path"}
+ "Asc" #{"orderBy"}
+ "Avg" #{"groupBy"}
+ "Count" #{"groupBy"}
+ "Desc" #{"orderBy"}
+ "Exists" #{"Filter"}
+ "GroupConcat" #{"groupBy"}
+ "Max" #{"groupBy"}
+ "Min" #{"groupBy"}
+ "NotExists" #{"Exists"}
+ "ReversePath" #{"Path"}
+ "Sample" #{"groupBy"}
+ "SeqPath" #{"TriplePath"}
+ "SubQuery" #{"Select"}
+ "Sum" #{"groupBy"}
+ "TriplePath" #{"Path"}
+ "distinct" #{"Select"}
+ "groupBy" #{"Select"}
+ "having" #{"groupBy"}
+ "langMatches" #{"lang"}
+ "limit" #{"Select"}
+ "offset" #{"Select"}
+ "orderBy" #{"Select"}
+ "reduced" #{"Select"}}
