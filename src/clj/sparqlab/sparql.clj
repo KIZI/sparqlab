@@ -1,14 +1,14 @@
 (ns sparqlab.sparql
   (:require [sparqlab.prefixes :refer [uuid-iri]]
             [sparqlab.rdf :refer [resource->clj]]
+            [sparqlab.util :as util]
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [clojure.string :as string]
             [cheshire.core :refer [parse-string]]
             [clojure.java.io :as io]
             [stencil.core :refer [render-file]]
-            [stencil.loader :refer [set-cache]]
-            [clojure.data :refer [diff]])
+            [stencil.loader :refer [set-cache]])
   (:import [java.io StringReader]
            [org.apache.jena.query ARQ DatasetFactory Query QueryExecutionFactory
                                   QueryFactory QueryParseException Syntax]
@@ -105,12 +105,11 @@
   "Compute offset of a syntax `exception` in `query` based on line and column numbers."
   [^String query
    ^ParseException exception]
-  (let [current-token (.currentToken exception)
-        query-lines (take (.beginLine current-token) (string/split-lines query))]
-    (+ (reduce + (map (comp inc count) (butlast query-lines))) ; Offset from the preceding lines
-       (count (take (+ (.beginColumn current-token) ; Offset from the preceding token
-                       (count (.image current-token)))
-                    (last query-lines))))))
+  (let [current-token (.currentToken exception)]
+    (+ (util/line-and-column->offset query
+                                     (.beginLine current-token)
+                                     (.beginColumn current-token))
+       (count (.image current-token))))) ; Number of characters in the preceding token
 
 (defn- get-expected-tokens
   "Get string representations of the tokens expected by `exception`."

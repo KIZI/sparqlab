@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Chyba syntaxe dotazu</h1>
+
+{% if message %}
+  <p>{{message}}</p>
+  <pre>{{query}}</pre>
+{% else %}
+  <pre>
+  {{head}}<span id="syntax-error" data-toggle="tooltip" data-placement="bottom" title="Očekáváno: {{expected}}">{{error}}</span>{{tail}}
+  </pre>
+{% endif %}
+{% endblock %}
+
+{% block page-scripts %}
+<script>
+(function ($) {
+  $(document).ready(function () {
+    $("#syntax-error").tooltip("show");
+  });
+})(jQuery);
+</script>
+{% endblock %}

@@ -14,6 +14,20 @@
   "Predicate testing if file is named *.rq."
   (every-pred is-file? (partial has-suffix? ".rq")))
 
+(defn ^Integer line-and-column->offset
+  "Convert `line` and `column` in string `s` to offset."
+  [^String s
+   ^Integer line
+   ^Integer column]
+  (+ (->> s
+          string/split-lines
+          (take line)
+          butlast
+          (map (comp (partial + 2) count)) ; FIXME: Why does newline take 2 characters instead of 1?
+          (reduce +)
+          dec)
+     column))
+
 ;; Kahn's topological sort. <https://gist.github.com/alandipert/1263783>
 ;; Copyright (c) Alan Dipert. All rights reserved.
 ;; The use and distribution terms for this software are covered by the

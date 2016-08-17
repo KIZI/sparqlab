@@ -121,18 +121,32 @@
   (let [exercises-done (get-exercises-done request)]
     (layout/render "home.html" {:exercises (mark-exercises-as-done (get-exercises) exercises-done)})))
 
+(defn format-invalid-query
+  "Render invalid query using syntax validation result."
+  [{:keys [expected message offset query]}]
+  (if message
+    {:message message
+     :query query}
+    {:head (subs query 0 offset)
+     :error "   " ; Error placeholder
+     :tail (subs query offset)
+     :expected (string/join \newline expected)}))
+
 (defn evaluate-exercise
   [{{query "query"} :form-params}
    id]
-  (let [{canonical-query :query
-         :keys [prohibits requires]
-         :as exercise} (get-exercise id)
-        verdict (exercise/evaluate-exercise canonical-query
-                                            query
-                                            :prohibited (map :prohibited prohibits)
-                                            :required (map :required requires))]
-    (cond-> (layout/render "evaluation.html" (merge exercise verdict))
-      (:equal? verdict) (mark-exercise-as-done id))))
+  (let [{:keys [valid?] :as validation-result} (sparql/valid-query? query)]
+    (if valid?
+      (let [{canonical-query :query
+             :keys [prohibits requires]
+             :as exercise} (get-exercise id)
+            verdict (exercise/evaluate-exercise canonical-query
+                                                query
+                                                :prohibited (map :prohibited prohibits)
+                                                :required (map :required requires))]
+        (cond-> (layout/render "evaluation.html" (merge exercise verdict))
+          (:equal? verdict) (mark-exercise-as-done id)))
+      (layout/render "sparql_syntax_error.html" (format-invalid-query validation-result)))))
 
 (defn search-exercises
   [search-term]

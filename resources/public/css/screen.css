@@ -113,6 +113,11 @@ h3 {
   margin-top: 1em !important;
 }
 
+#syntax-error {
+  color: red;
+  border-bottom: 2px dotted red;
+}
+
 /* SPARQLab theme for CodeMirror */
 
 .cm-s-sparqlab * { font-family: "Ubuntu Mono", monospace; }
