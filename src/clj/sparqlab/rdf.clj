@@ -74,4 +74,7 @@
   (resource->clj [resource]
     {"@id" (if (.isAnon resource)
              (str "_:" (.getId resource))
-             (.getURI resource))}))
+             (.getURI resource))})
+
+  nil
+  (resource->clj [_] nil))
