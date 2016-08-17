@@ -1,6 +1,6 @@
 {{> sparql/prefixes.mustache }}
 
-SELECT ?name ?description ?query ?reveal
+SELECT ?name ?description ?query ?reveal ?note
 WHERE {
   ?exercise a sp:Query ;
     rdfs:label ?name ;
@@ -11,4 +11,8 @@ WHERE {
     ?exercise sparqlab:revealConstructClause ?_revealConstructClause .
   }
   BIND (COALESCE(?_revealConstructClause, true) AS ?reveal)
+
+  OPTIONAL {
+    ?exercise skos:note ?note .
+  }
 }

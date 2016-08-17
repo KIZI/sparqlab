@@ -1201,4 +1201,5 @@ WHERE {
   }
 }
   """ ;
-  sparqlab:difficulty sparqlab:normal .
+  sparqlab:hasDifficulty sparqlab:normal ;
+  skos:note "Implementace `REDUCED` je do značné míry ponechána na RDF úložištích. Můžete proto získat odlišné výsledky pro stejný dotaz s `REDUCED` v různých úložištích."@cs .

@@ -11,7 +11,8 @@ CONSTRUCT {
     rdfs:comment ?description ;
     sp:text ?query ;
     dcterms:requires ?required ;
-    sparqlab:prohibits ?prohibited .
+    sparqlab:prohibits ?prohibited ;
+    skos:note ?note .
   ?required skos:prefLabel ?requiredLabel .
   ?prohibited skos:prefLabel ?prohibitedLabel .
 }
@@ -36,5 +37,9 @@ WHERE {
     <{{exercise}}> sparqlab:prohibits ?prohibited .
     ?prohibited skos:prefLabel ?prohibitedLabel .
     FILTER (langMatches(lang(?prohibitedLabel), "{{language}}") || lang(?prohibitedLabel) = "")
+  }
+  OPTIONAL {
+    <{{exercise}}> skos:note ?note .
+    FILTER (langMatches(lang(?note), "{{language}}") || lang(?note) = "")
   }
 }
