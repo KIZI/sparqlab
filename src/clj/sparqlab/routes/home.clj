@@ -71,29 +71,34 @@
   [id]
   (select-query (sparql/sparql-template "get_prerequisites" {:exercise (prefix/exercise id)})))
 
-(defn get-exercises
+(defn get-exercises-by-difficulty
   []
-  (->> "get_exercises"
-       sparql/sparql-template
-       select-query))
+  (select-query (sparql/sparql-template "get_exercises_by_difficulty")))
 
 (def spin-dependencies
   "Dependencies between SPIN SPARQL language constructs"
   (let [deps (-> "spin_dependencies.edn" io/resource io/reader PushbackReader. edn/read)]
     (into {} (map (fn [[k v]] [(prefix/sp k) (into #{} (map prefix/sp v))]) deps))))
 
+(defn group-values-by-key
+  "Group values at `value-key` in collection `coll` by `group-key`."
+  [group-key value-key coll]
+  (letfn [(group-fn [acc item]
+            (let [k (group-key item)
+                  v (value-key item)]
+              (if (contains? acc k)
+                (update acc k conj v)
+                (assoc acc k #{v}))))]
+    (reduce group-fn {} coll)))
+
 (defn sort-exercises-by-dependencies
   "Sort exercises by the SPARQL language constructs they depend on by using them."
   []
-  (letfn [(spin-term? [term] (string/starts-with? term (prefix/sp)))
-          (group-exercises-by-constructs [acc {:keys [exercise construct]}]
-            (if (contains? acc construct)
-              (update acc construct conj exercise)
-              (assoc acc construct #{exercise})))]
+  (letfn [(spin-term? [term] (string/starts-with? term (prefix/sp)))]
     (->> "extract_exercise_constructs"
          sparql/sparql-template 
          select-query
-         (reduce group-exercises-by-constructs {}) 
+         (group-values-by-key :construct :exercise)
          (merge spin-dependencies)
          kahn-sort
          (remove spin-term?))))
@@ -112,8 +117,9 @@
 
 (defn home-page
   [request]
-  (let [exercises-done (get-exercises-done request)]
-    (layout/render "home.html" {:exercises (mark-exercises-as-done (get-exercises) exercises-done)})))
+  (let [exercises-done (get-exercises-done request)
+        exercises (get-exercises-by-difficulty)]
+    (layout/render "home.html" {:exercises (mark-exercises-as-done exercises exercises-done)})))
 
 (defn format-invalid-query
   "Render invalid query using syntax validation result."
