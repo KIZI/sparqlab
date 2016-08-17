@@ -61,16 +61,16 @@
   rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
 
 :easy a :DifficultyLevel ;
-  skos:prefLabel "Easy"@en ;
+  skos:prefLabel "Jednoduchá"@cs, "Easy"@en ;
   skos:notation 0 ;
   rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
 
 :normal a :DifficultyLevel ;
-  skos:prefLabel "Normal"@en ;
+  skos:prefLabel "Běžná"@cs, "Normal"@en ;
   skos:notation 1 ;
   rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
 
 :hard a :DifficultyLevel ;
-  skos:prefLabel "Hard"@en ;
+  skos:prefLabel "Obtížná"@cs, "Hard"@en ;
   skos:notation 2 ;
   rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
