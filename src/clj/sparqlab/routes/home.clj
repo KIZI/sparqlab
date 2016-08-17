@@ -149,8 +149,9 @@
       (layout/render "sparql_syntax_error.html" (format-invalid-query validation-result)))))
 
 (defn search-exercises
-  [search-term]
-  (select-query (sparql/sparql-template "find_exercises" {:search-term search-term})))
+  [search-term search-constructs]
+  (select-query (sparql/sparql-template "find_exercises" {:search-term search-term
+                                                          :search-constructs search-constructs})))
 
 (defn show-exercise
   [id]
@@ -190,9 +191,11 @@
     (layout/render "data.html" {:prefixes padded-prefixes})))
 
 (defn search-results
-  [search-term]
-  (let [exercises-found (search-exercises search-term)]
+  [search-term search-constructs]
+  (let [exercises-found (search-exercises search-term search-constructs)]
     (layout/render "search_results.html" {:search-term search-term
+                                          :search-constructs (exercise/get-construct-labels search-constructs
+                                                                                            local-language)
                                           :exercises exercises-found})))
 
 (defroutes home-routes
@@ -203,4 +206,6 @@
   (GET "/endpoint" [] (sparql-endpoint))
   (GET "/data" [] (data-page))
   (GET "/about" [] (about-page))
-  (GET "/search" {{search-term :q} :params} (search-results search-term)))
+  (GET "/search"
+       {{search-term :q search-constructs :construct} :params}
+       (search-results search-term search-constructs)))

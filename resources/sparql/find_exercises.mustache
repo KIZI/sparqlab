@@ -1,5 +1,6 @@
 {{!
-@param str search-term
+@param str        search-term (optional)
+@param Array<IRI> search-constructs (optional)
 }}
 
 {{> sparql/prefixes.mustache }}
@@ -8,13 +9,17 @@ SELECT DISTINCT (REPLACE(STR(?exercise), "^.*\\/([^/]+)$", "$1") AS ?id)
                 ?name
 WHERE {
   ?exercise a sp:Query ;
-    rdfs:label ?name ;
-    rdfs:comment ?description ;
-    dcterms:subject ?subject .
-    BIND (LCASE("{{search-term}}") AS ?searchTerm)
-    FILTER (STRENDS(LCASE(STR(?subject)), ?searchTerm)
-            ||
-            CONTAINS(LCASE(?name), ?searchTerm)
-            ||
-            CONTAINS(LCASE(?description), ?searchTerm)) 
+    rdfs:label ?name .
+
+  {{#search-term}}
+  ?exercise rdfs:comment ?description .
+  BIND (LCASE("{{search-term}}") AS ?searchTerm)
+  FILTER (CONTAINS(LCASE(?name), ?searchTerm)
+          ||
+          CONTAINS(LCASE(?description), ?searchTerm)) 
+  {{/search-term}}
+
+  {{#search-constructs}}
+  ?exercise dcterms:subject <{{.}}> .
+  {{/search-constructs}}
 }

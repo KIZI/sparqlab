@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Nalezená cvičení</h1>
+<h1>Výsledky vyhledávání</h1>
+{% if search-term %}
 <p><strong>Hledaný výraz:</strong> &ldquo;{{search-term}}&rdquo;</p>
+{% endif %}
+{% if search-constructs|not-empty %}
+<p><strong>Hledané SPARQL konstrukty:</strong>
+{% for search-construct in search-constructs %}
+<a href="{{servlet-context}}/search?construct={{search-construct.construct|urlescape}}">{{search-construct.label}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+{% endfor %}
+{% endif %}
+<h4>Nalezená cvičení</h4>
 {% if exercises|not-empty %}
 <ul>
   {% for exercise in exercises %}

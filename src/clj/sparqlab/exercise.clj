@@ -16,17 +16,22 @@
                 (sparql/normalize-query (:query b))
                 sparql/node-isomorphism-map)))
 
+(defn get-construct-labels
+  "Get labels of `constructs` in `local-language`."
+  [constructs local-language]
+  (->> (sparql/sparql-template "get_construct_labels"
+                               {:constructs constructs
+                                :language local-language})
+       store/select-query
+       (into #{})))
+
 (defn test-constructs
   "Test SPARQL constructs on `query-model` using `test-query`."
   [^Model query-model
    ^String test-query]
   (let [constructs (map :construct (sparql/select-query query-model test-query))]
     (when (seq constructs)
-      (->> (sparql/sparql-template "get_construct_labels" {:constructs constructs
-                                                           :language local-language})
-           store/select-query
-           (map :label)
-           (into #{})))))
+      (get-construct-labels constructs local-language))))
 
 (defn test-prohibited
   "Test if `prohibited` SPARQL language constructs are used in `query-model`."

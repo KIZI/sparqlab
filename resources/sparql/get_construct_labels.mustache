@@ -5,7 +5,7 @@
 
 {{> sparql/prefixes.mustache }}
 
-SELECT ?label
+SELECT ?construct ?label
 WHERE {
   VALUES ?construct {
     {{#constructs}}
@@ -15,4 +15,3 @@ WHERE {
   ?construct skos:prefLabel ?label .
   FILTER (langMatches(lang(?label), "{{language}}") || lang(?label) = "")
 }
-ORDER BY ?label
