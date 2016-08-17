@@ -108,13 +108,7 @@
 
 (defn get-namespace-prefixes
   []
-  (->> "get_namespace_prefixes"
-       sparql/sparql-template
-       select-query
-       (map (fn [{{prefix "@value"} :prefix
-                  {nspace "@id"} :namespace}]
-              {:prefix prefix
-               :namespace nspace}))))
+  (select-query (sparql/sparql-template "get_namespace_prefixes")))
 
 (defn home-page
   [request]
