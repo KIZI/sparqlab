@@ -1,0 +1,5 @@
+SELECT ?s ?class
+WHERE {
+  ?s a ?class .
+}
+GROUP BY ?class

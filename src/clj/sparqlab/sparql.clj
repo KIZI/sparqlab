@@ -7,7 +7,8 @@
             [cheshire.core :refer [parse-string]]
             [clojure.java.io :as io]
             [stencil.core :refer [render-file]]
-            [stencil.loader :refer [set-cache]])
+            [stencil.loader :refer [set-cache]]
+            [clojure.data :refer [diff]])
   (:import [java.io StringReader]
            [org.apache.jena.query ARQ DatasetFactory Query QueryExecutionFactory
                                   QueryFactory QueryParseException Syntax]
@@ -19,6 +20,7 @@
            [org.apache.jena.sparql.core Var]
            [org.apache.jena.graph Node]
            [org.topbraid.spin.arq ARQ2SPIN]
+           [org.apache.jena.sparql.lang SyntaxVarScope]
            [org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token]))
 
 (def arq-context
@@ -120,14 +122,19 @@
 (defn valid-query?
   "Validates syntax of `query`." 
   [^String query]
-  (let [empty-query (doto (Query.) (.setStrict true))
+  (let [parsed-query (doto (Query.) (.setStrict true))
         parser (doto (SPARQLParser11. (StringReader. query))
-                 (.setQuery empty-query))]
+                 (.setQuery parsed-query))]
     (try (do (.QueryUnit parser)
+             (SyntaxVarScope/check parsed-query)
              {:valid? true})
          (catch ParseException ex
            {:expected (get-expected-tokens ex)
             :offset (get-error-offset query ex)
+            :query query
+            :valid? false})
+         (catch QueryParseException ex
+           {:message (.getMessage ex)
             :valid? false}))))
 
 (defn normalize-query
