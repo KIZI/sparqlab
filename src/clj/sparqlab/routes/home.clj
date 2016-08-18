@@ -118,8 +118,9 @@
 (defn home-page
   [request]
   (let [exercises-done (get-exercises-done request)
-        exercises (get-exercises-by-difficulty)]
-    (layout/render "home.html" {:exercises (mark-exercises-as-done exercises exercises-done)})))
+        exercises-by-difficulty (get-exercises-by-difficulty)]
+    (layout/render "home.html" {:title "SPARQLab"
+                                :exercises (mark-exercises-as-done exercises-by-difficulty exercises-done)})))
 
 (defn format-invalid-query
   "Render invalid query using syntax validation result."
@@ -144,9 +145,11 @@
                                                 query
                                                 :prohibited (map :prohibited prohibits)
                                                 :required (map :required requires))]
-        (cond-> (layout/render "evaluation.html" (merge exercise verdict))
+        (cond-> (layout/render "evaluation.html" (assoc (merge exercise verdict)
+                                                        :title (str "Vyhodnocení cvičení: " (:name exercise))))
           (:equal? verdict) (mark-exercise-as-done id)))
-      (layout/render "sparql_syntax_error.html" (format-invalid-query validation-result)))))
+      (layout/render "sparql_syntax_error.html" (assoc (format-invalid-query validation-result)
+                                                       :title "Syntaktická chyba ve SPARQL dotazu")))))
 
 (defn search-exercises
   [search-term search-constructs]
@@ -159,17 +162,19 @@
         prerequisites (get-prerequisites id)]
     (layout/render "exercise.html" (assoc exercise
                                           :id id
-                                          :prerequisites prerequisites))))
+                                          :prerequisites prerequisites
+                                          :title (:name exercise)))))
 
 (defn sparql-endpoint
   []
-  (layout/render "endpoint.html"))
+  (layout/render "endpoint.html" {:title "SPARQL endpoint"}))
 
 (defn about-page
   []
   (let [sparql-constructs (select-query (sparql/sparql-template "get_sparql_constructs"
                                                                 {:language local-language}))]
-    (layout/render "about.html" {:sparql-constructs sparql-constructs})))
+    (layout/render "about.html" {:sparql-constructs sparql-constructs
+                                 :title "O SPARQLabu"})))
 
 (defn pad-prefixes
   "Pad `prefixes` by prepending spaces to have the same width."
@@ -188,15 +193,17 @@
   []
   (let [prefixes (get-namespace-prefixes)
         padded-prefixes (pad-prefixes prefixes)]
-    (layout/render "data.html" {:prefixes padded-prefixes})))
+    (layout/render "data.html" {:prefixes padded-prefixes
+                                :title "Data SPARQLabu"})))
 
 (defn search-results
   [search-term search-constructs]
-  (let [exercises-found (search-exercises search-term search-constructs)]
-    (layout/render "search_results.html" {:search-term search-term
-                                          :search-constructs (exercise/get-construct-labels search-constructs
-                                                                                            local-language)
-                                          :exercises exercises-found})))
+  (let [exercises-found (search-exercises search-term search-constructs)
+        construct-labels (exercise/get-construct-labels search-constructs local-language)]
+    (layout/render "search_results.html" {:exercises exercises-found
+                                          :search-term search-term
+                                          :search-constructs construct-labels
+                                          :title "Nalezená cvičení"})))
 
 (defroutes home-routes
   (GET "/" request (home-page request))
