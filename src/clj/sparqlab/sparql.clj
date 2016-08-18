@@ -2,14 +2,17 @@
   (:require [sparqlab.prefixes :refer [uuid-iri]]
             [sparqlab.rdf :refer [resource->clj]]
             [sparqlab.util :as util]
+            [sparqlab.config :refer [env]]
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [clojure.string :as string]
             [cheshire.core :refer [parse-string]]
             [clojure.java.io :as io]
             [stencil.core :refer [render-file]]
-            [stencil.loader :refer [set-cache]])
+            [stencil.loader :refer [set-cache]]
+            [mount.core :as mount])
   (:import [java.io StringReader]
+           [java.net SocketException]
            [org.apache.jena.query ARQ DatasetFactory Query QueryExecutionFactory
                                   QueryFactory QueryParseException Syntax]
            [org.apache.jena.update UpdateAction UpdateFactory]
@@ -234,3 +237,22 @@
    (sparql-template file-name {}))
   ([file-name data]
    (render-file (str "sparql/" file-name ".mustache") data)))
+
+(defn ping-endpoint
+  "Test if SPARQL endpoint at `endpoint-url` can be reached."
+  [endpoint-url]
+  (try (assert (parse-ask-result (sparql-query endpoint-url {:query-string (sparql-template "ping_endpoint")
+                                                             :query-type ::ask}))
+               (str "SPARQL endpoint <" endpoint-url "> contains no data."))
+       (catch SocketException _
+         (throw (Exception. (str "SPARQL endpoint <" endpoint-url "> is unreachable."))))))
+
+(defn init-endpoint
+  "Initialize a remote SPARQL endpoint."
+  []
+  (let [endpoint-url (:sparql-endpoint env)]
+    (ping-endpoint endpoint-url)
+    endpoint-url))
+
+(mount/defstate sparql-endpoint
+  :start (init-endpoint))
