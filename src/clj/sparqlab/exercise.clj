@@ -1,7 +1,7 @@
 (ns sparqlab.exercise
   (:require [sparqlab.sparql :as sparql]
             [sparqlab.store :as store]
-            [sparqlab.config :refer [env local-language]]
+            [sparqlab.config :refer [local-language]]
             [clojure.set :refer [union]]
             [clojure.tools.logging :as log])
   (:import [org.apache.jena.rdf.model Model]))
@@ -55,10 +55,11 @@
   (let [canonical-query (sparql/parse-query canonical-query-string)
         query (sparql/parse-query query-string)
         equal-query-result (equal-query? canonical-query query)
-        endpoint (:sparql-endpoint env)
-        canonical-results (sparql/sparql-query endpoint canonical-query)
+        canonical-results (sparql/sparql-query sparql/sparql-endpoint canonical-query)
         ; If the queries are the same, retrieve only the canonical results.
-        query-results (if equal-query-result canonical-results (sparql/sparql-query endpoint query))
+        query-results (if equal-query-result
+                        canonical-results
+                        (sparql/sparql-query sparql/sparql-endpoint query))
         query-in-spin (sparql/query->spin (:query query))
         superfluous-prohibited (test-prohibited prohibited query-in-spin)
         missing-required (test-required required query-in-spin)]

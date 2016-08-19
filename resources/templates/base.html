@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{{title}}</title>
+    <title>{{title}} | SPARQLab</title>
     <link href="/favicon.ico" rel="shortcut icon"/>
 
     <!-- styles -->
@@ -27,27 +27,47 @@
           <div class="collapse navbar-toggleable-xs" id="collapsing-navbar">
               <a class="navbar-brand" href="{{servlet-context}}/" rel="home">SPARQLab</a>
               <ul class="nav navbar-nav">
-                  <li class="nav-item">
-                      <a href="{{servlet-context}}/"
-                         class="nav-link{% ifequal page "home.html" %} active{%endifequal%}">
+                  <li class="nav-item dropdown">
+                      <a href="#"
+                         class="nav-link dropdown-toggle"
+                         data-toggle="dropdown"
+                         role="button"
+                         aria-haspopup="true"
+                         aria-expanded="false">
                       Cvičení
                       </a>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item
+                           {% ifequal page "exercises_by_difficulty.html" %}
+                           active
+                           {% endifequal %}"
+                           href="{{servlet-context}}/">
+                          Dle obtížnosti
+                        </a>
+                        <a class="dropdown-item
+                           {% ifequal page "exercises_by_language_constructs.html" %}
+                           active
+                           {% endifequal %}"
+                           href="{{servlet-context}}/exercises/by-language-constructs">
+                          Dle jazykových konstruktů
+                        </a>
+                      </div>
                   </li>
                   <li class="nav-item">
                       <a href="{{servlet-context}}/endpoint"
-                         class="nav-link{% ifequal page "endpoint.html" %} active{%endifequal%}">
+                         class="nav-link {% ifequal page "endpoint.html" %}active{%endifequal%}">
                       SPARQL endpoint
                       </a>
                   </li>
                   <li class="nav-item">
                       <a href="{{servlet-context}}/data"
-                         class="nav-link{% ifequal page "data.html" %} active{%endifequal%}">
+                         class="nav-link {% ifequal page "data.html" %}active{%endifequal%}">
                       O datech
                       </a>
                   </li>
                   <li class="nav-item">
                       <a href="{{servlet-context}}/about"
-                         class="nav-link{% ifequal page "about.html" %} active{%endifequal%}">
+                         class="nav-link {% ifequal page "about.html" %}active{%endifequal%}">
                       O aplikaci
                       </a>
                   </li>

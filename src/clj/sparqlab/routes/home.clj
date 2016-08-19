@@ -8,7 +8,6 @@
             [sparqlab.config :refer [local-language]]
             [compojure.core :refer [context defroutes GET POST]]
             [clojure.tools.logging :as log]
-            [ring.util.http-response :as response]
             [markdown.core :refer [md-to-html-string]]
             [selmer.filters :refer [add-filter!]]
             [clojure.string :as string]
@@ -36,6 +35,17 @@
                     :path "/"}
                    data
                    {:value value})))
+
+(defn group-values-by-key
+  "Group values at `value-key` in collection `coll` by `group-key`."
+  [group-key value-key coll]
+  (letfn [(group-fn [acc item]
+            (let [k (group-key item)
+                  v (value-key item)]
+              (if (contains? acc k)
+                (update acc k conj v)
+                (assoc acc k #{v}))))]
+    (reduce group-fn {} coll)))
 
 (defn mark-exercise-as-done
   [response id]
@@ -72,24 +82,17 @@
   (select-query (sparql/sparql-template "get_prerequisites" {:exercise (prefix/exercise id)})))
 
 (defn get-exercises-by-difficulty
-  []
-  (select-query (sparql/sparql-template "get_exercises_by_difficulty")))
+  [exercises-done]
+  (let [exercises (-> "get_exercises_by_difficulty"
+                      (sparql/sparql-template {:language local-language})
+                      select-query
+                      (mark-exercises-as-done exercises-done))]
+    (group-by :difficulty exercises)))
 
 (def spin-dependencies
   "Dependencies between SPIN SPARQL language constructs"
   (let [deps (-> "spin_dependencies.edn" io/resource io/reader PushbackReader. edn/read)]
     (into {} (map (fn [[k v]] [(prefix/sp k) (into #{} (map prefix/sp v))]) deps))))
-
-(defn group-values-by-key
-  "Group values at `value-key` in collection `coll` by `group-key`."
-  [group-key value-key coll]
-  (letfn [(group-fn [acc item]
-            (let [k (group-key item)
-                  v (value-key item)]
-              (if (contains? acc k)
-                (update acc k conj v)
-                (assoc acc k #{v}))))]
-    (reduce group-fn {} coll)))
 
 (defn sort-exercises-by-dependencies
   "Sort exercises by the SPARQL language constructs they depend on by using them."
@@ -115,12 +118,26 @@
   []
   (select-query (sparql/sparql-template "get_namespace_prefixes")))
 
-(defn home-page
+(defn exercises-by-difficulty
   [request]
   (let [exercises-done (get-exercises-done request)
-        exercises-by-difficulty (get-exercises-by-difficulty)]
-    (layout/render "home.html" {:title "SPARQLab"
-                                :exercises (mark-exercises-as-done exercises-by-difficulty exercises-done)})))
+        {easy (prefix/sparqlab "easy")
+         normal (prefix/sparqlab "normal")
+         hard (prefix/sparqlab "hard")} (get-exercises-by-difficulty exercises-done)]
+    (layout/render "exercises_by_difficulty.html" {:title "Cvičení dle obtížnosti"
+                                                   :easy easy
+                                                   :easy-label (:difficultyLabel (first easy))
+                                                   :normal normal
+                                                   :normal-label (:difficultyLabel (first normal))
+                                                   :hard hard
+                                                   :hard-label (:difficultyLabel (first hard))})))
+
+(defn exercises-by-language-constructs
+  [request]
+  (let [exercises-done (get-exercises-done request)
+        exercises (get-exercises-by-difficulty exercises-done)]
+    (layout/render "exercises_by_language_constructs.html" {:title "Cvičení dle jazykových konstruktů"
+                                                            :exercises exercises})))
 
 (defn format-invalid-query
   "Render invalid query using syntax validation result."
@@ -206,10 +223,12 @@
                                           :title "Nalezená cvičení"})))
 
 (defroutes home-routes
-  (GET "/" request (home-page request))
+  (GET "/" request (exercises-by-difficulty request))
   (context "/exercise" []
            (GET "/show/:id" [id] (show-exercise id))
            (POST "/evaluate/:id" [id :as request] (evaluate-exercise request id)))
+  (context "/exercises" []
+           (GET "/by-language-constructs" request (exercises-by-language-constructs request)))
   (GET "/endpoint" [] (sparql-endpoint))
   (GET "/data" [] (data-page))
   (GET "/about" [] (about-page))
