@@ -1,3 +1,6 @@
+var escapeHTML = function (text) {
+  return $("<div/>").text(text).html();
+};
 (function ($) {
   $(document).ready(function () {
     var $controlButtons = $(".control-buttons"),
@@ -41,12 +44,29 @@
     });
     yasqe.options.sparql.callbacks = {
       error: function (xhr, textStatus, errorThrown) {
+        var $modalMessage = $errorModal.find(".modal-body .modal-message");
         if (textStatus === "timeout") {
-          $errorModal
-            .find(".modal-body .modal-message")
-            .text("Dotaz překročil maximální povolenou dobu provádění (" + timeout / 1000 + " sekund).");
-          $errorModal.modal("show");
-        };
+          $modalMessage.text("Dotaz překročil maximální povolenou dobu provádění (" +
+              timeout / 1000 +
+              " sekund).");
+        } else if (textStatus === "error" && xhr.status === 400) {
+          var response = xhr.responseJSON,
+              query = response.query,
+              head = query.slice(0, response.offset),
+              tail = query.slice(response.offset),
+              expected = response.expected.join("\n");
+          $modalMessage.html(
+            "<p>Chyba syntaxe dotazu:</p><pre>" +
+            escapeHTML(head) +
+            '<span id="syntax-error" data-toggle="tooltip" data-placement="bottom" title="Očekáváno: ' +
+            expected +
+            '">...</span>' +
+            escapeHTML(tail) +
+            "</pre>"
+          );
+          $("#syntax-error").tooltip();
+        }
+        $errorModal.modal("show");
       },
       success: function () {
         $results.removeClass("hidden");
