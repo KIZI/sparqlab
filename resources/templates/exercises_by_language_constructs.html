@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Cvičení dle jazykových konstruktů</h1>
+<ul id="exercises"> 
+  {% for exercise in exercises %}
+  <li>
+    <a href="/exercise/show/{{exercise.id}}">{{exercise.name}}</a>
+    {% if exercise.done %}
+    <i class="fa fa-check right done-icon" title="Vyřešeno" aria-hidden="true"></i>
+    {% endif %}
+    <span class="tag tag-pill tag-info">{{exercise.difficultyLabel}}</span>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

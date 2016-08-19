@@ -44,7 +44,8 @@
 
 (defn- take-1
   "Returns the pair [element, s'] where s' is set s with element removed."
-  [s] {:pre [(not (empty? s))]}
+  [s]
+  {:pre [(not (empty? s))]}
   (let [item (first s)]
     [item (without s item)]))
 
@@ -73,8 +74,8 @@
      (kahn-sort (normalize g) [] (no-incoming g)))
   ([g l s]
      (if (empty? s)
-       (when (every? empty? g)) l)
+       (when (every? empty? (vals g)) l)
        (let [[n s'] (take-1 s)
              m (g n)
              g' (reduce #(update-in % [n] without %2) g m)]
-         (recur g' (conj l n) (union s' (intersection (no-incoming g') m))))))
+         (recur g' (conj l n) (union s' (intersection (no-incoming g') m)))))))

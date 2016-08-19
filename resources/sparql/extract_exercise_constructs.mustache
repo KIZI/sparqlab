@@ -1,8 +1,7 @@
 {{> sparql/prefixes.mustache }}
 
-SELECT REDUCED ?exercise ?construct
+SELECT DISTINCT ?exercise ?construct
 WHERE {
   ?exercise a sp:Query ;
     dcterms:subject ?construct . 
 }
-ORDER BY ?exercise

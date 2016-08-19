@@ -131,11 +131,19 @@
                                                    :normal-label (:difficultyLabel (first normal))
                                                    :hard hard
                                                    :hard-label (:difficultyLabel (first hard))})))
+(defn get-exercises-by-language-constructs
+  [exercises-done]
+  (let [sorted-exercises (sort-exercises-by-dependencies)
+        exercises (-> "get_exercises_by_difficulty"
+                      (sparql/sparql-template {:language local-language})
+                      select-query
+                      (mark-exercises-as-done exercises-done))]
+    (sort-by (comp #(.indexOf sorted-exercises %) prefix/exercise :id) exercises)))
 
 (defn exercises-by-language-constructs
   [request]
   (let [exercises-done (get-exercises-done request)
-        exercises (get-exercises-by-difficulty exercises-done)]
+        exercises (get-exercises-by-language-constructs exercises-done)]
     (layout/render "exercises_by_language_constructs.html" {:title "Cvičení dle jazykových konstruktů"
                                                             :exercises exercises})))
 
