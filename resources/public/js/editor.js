@@ -3,7 +3,9 @@
     var $controlButtons = $(".control-buttons"),
         $controlButtonsControls = $controlButtons.find("button"),
         $codeMirror = $(".CodeMirror"),
-        $results = $("#results");
+        $results = $("#results"),
+        $errorModal = $("#error-modal"),
+        timeout = 3000;
 
     // YASQE and YASR
     var prefixes = {
@@ -38,12 +40,21 @@
       yasqe.query();
     });
     yasqe.options.sparql.callbacks = {
+      error: function (xhr, textStatus, errorThrown) {
+        if (textStatus === "timeout") {
+          $errorModal
+            .find(".modal-body .modal-message")
+            .text("Dotaz překročil maximální povolenou dobu provádění (" + timeout / 1000 + " sekund).");
+          $errorModal.modal("show");
+        };
+      },
       success: function () {
         $results.removeClass("hidden");
       },
       complete: function (xhr, textStatus) {
         yasr.setResponse(xhr, textStatus);
       },
+      timeout: timeout
     };
     yasqe.on("change", function (e) {
       if (yasqe.queryValid) {
