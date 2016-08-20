@@ -1203,3 +1203,68 @@ WHERE {
   """ ;
   sparqlab:hasDifficulty sparqlab:normal ;
   skos:note "Implementace `REDUCED` je do značné míry ponechána na RDF úložištích. Můžete proto získat odlišné výsledky pro stejný dotaz s `REDUCED` v různých úložištích."@cs .
+
+exercise:reflexive-exact-match a sp:Query ;
+  rdfs:label "Reflexivní skos:exactMatch"@cs ;
+  rdfs:comment "Najdete koncepty číselníků (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`), které jsou spojeny samy se sebou přesnou shodou pomocí `skos:exactMatch`. Vyhovující koncepty uveďte bez opakování."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?concept
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?concept skos:exactMatch ?concept .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:czech-county-labels a sp:Query ;
+  rdfs:label "Názvy okresů"@cs ;
+  rdfs:comment "Vypište názvy okresů z číselníků (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`). Okresy jsou uvedeny jako instance třídy `ruian:Okres` a jejich názvy reprezentuje vlastnost `skos:prefLabel`. Názvy okresů vypište bez opakování."@cs ;
+  sp:text """
+PREFIX ruian: <https://data.cssz.cz/ontology/ruian/>
+PREFIX skos:  <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?label
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    [] a ruian:Okres ;
+      skos:prefLabel ?label .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:count-pension-kinds a sp:Query ;
+  rdfs:label "Počet druhů důchodů"@cs ;
+  rdfs:comment "Spočtěte kolik druhů důchodů se nachází v číselníku důchodů z roku 2008 (`<http://data.cssz.cz/ontology/pension-kinds/PensionKindScheme_2008>`). Číselník najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
+  sp:text """
+PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
+
+SELECT (COUNT(DISTINCT ?concept) AS ?count)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?concept skos:inScheme pen-onto:PensionKindScheme_2008 .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:pension-kind-schemes a sp:Query ;
+  rdfs:label "Číselníky druhů důchodů"@cs ;
+  rdfs:comment "Najděte číselníky druhů důchodů. Koncepty těchto číselníků jsou instancemi třídy `pen-onto:PensionKind`. Číselníky najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
+  sp:text """
+PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?pensionKindScheme 
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    [] a pen-onto:PensionKind ;
+      skos:inScheme ?pensionKindScheme .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
