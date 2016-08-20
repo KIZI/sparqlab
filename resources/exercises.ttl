@@ -1268,3 +1268,103 @@ WHERE {
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:ref-area-classes a sp:Query ;
+  rdfs:label "Třídy referenčních oblastí"@cs ;
+  rdfs:comment "Najděte třídy referenčních oblastí odkazovaných v důchodových ročenkách (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`). Referenční oblasti jsou objekty vlastnosti `cssz-dimension:refArea`. Třídy referenčních oblastí najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Výsledky vypište bez opakování."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+
+SELECT DISTINCT ?class
+WHERE {
+  {
+    SELECT DISTINCT ?refArea
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+        [] cssz-dimension:refArea ?refArea .
+      }
+    }
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?refArea a ?class .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+sparqlab:old-age-pension-kinds a sp:Query ;
+  rdfs:label "Koncepty starobního důchodu"@cs ;
+  rdfs:comment "Najděte koncepty starobního důchodu, které odkazují na koncept `pension-kind:PK_old_age_total_without_SR` pomocí `skos:exactMatch`. Koncepty starobního důchodu jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  sp:text """
+PREFIX pension-kind: <https://data.cssz.cz/resource/pension-kind/>
+PREFIX skos:         <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?pensionKind
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
+
+sparqlab:is-pension-kinds-2008-polyhierarchical a sp:Query ;
+  rdfs:label "Je číselník druhů důchodů z roku 2008 polyhierarchický?"@cs ;
+  rdfs:comment "Zjistěte, zdali je číselník druhů důchodů z roku 2008 (`pen-onto:PensionKindScheme_2008`) polyhierarchický. Číselník naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  skos:note "Polyhierarchické číselníky obsahují koncepty, které mají více než jeden nadřazený koncept."@cs ;
+  sp:text """
+PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  {
+    SELECT ?concept
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+        ?concept skos:inScheme pen-onto:PensionKindScheme_2008 .
+        ?broader skos:narrower ?concept .
+      }
+    }
+    GROUP BY ?concept
+    HAVING (COUNT(DISTINCT ?broader) > 1)
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+sparqlab:pensions-rounded-to-thousands a sp:Query ;
+  rdfs:label "Důchody zaokrouhlené na tisíce"@cs ;
+  rdfs:comment "Získejte výši průměrnou výši starobních důchodů pro Českou republiku (referenční oblast `<https://data.cssz.cz/resource/ruian/staty/1>`) aritmeticky zaokrouhlenou na tisíce. Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Výsledky seřaďte bez opakování sestupně dle 4-místného literálu roku průměrného důchodu."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX qb:             <http://purl.org/linked-data/cube#>
+PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT (ROUND(?pension / ?factor) * ?factor AS ?roundedPension) ?year
+WHERE {
+ GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+   ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
+ }
+ GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+   [] a qb:Observation ;
+     qb:dataSet <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> ;
+     cssz-dimension:pohlavi sdmx-code:sex-T ;
+     cssz-dimension:refArea <https://data.cssz.cz/resource/ruian/staty/1> ;
+     cssz-dimension:refPeriod ?refPeriod ;
+     cssz-dimension:druh-duchodu ?pensionKind ;
+     cssz-measure:prumerna-vyse-duchodu-v-kc ?pension .
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?refPeriod skos:notation ?date .
+    BIND(YEAR(STRDT(?date, xsd:date)) AS ?year)
+  }
+  BIND (1000 AS ?factor)
+}
+ORDER BY ?year
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
