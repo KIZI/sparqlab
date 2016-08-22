@@ -1485,3 +1485,28 @@ WHERE {
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:component-properties-with-most-specific-classes a sp:Query ;
+  rdfs:label "Nejspecifičtější třídy vlastnostní komponent"@cs ;
+  rdfs:comment "Vypište nejspecifičtější třídy instanciované vlastnostmi komponent datové struktury důchodových ročenek (`<https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech>`). Predikáty připojující vlastnosti ke komponentám datové struktury vezměte jako vlastnosti odvozené z `qb:componentProperty` pomocí `rdfs:subPropertyOf` včetně samotné `qb:componentProperty`. Tyto odvozené vlastnosti definované slovníkem Data Cube Vocabulary naleznete v pojmenovaném grafu `<http://purl.org/linked-data/cube>`. Dejte pozor na to, že třída vlastnosti komponenty nemusí být uvedena. Data o důchodových ročenkách najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?componentProperty ?class
+FROM <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>
+FROM <http://purl.org/linked-data/cube>
+WHERE {
+  ?property rdfs:subPropertyOf* qb:componentProperty .
+  <https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech> qb:component [
+    ?property ?componentProperty
+  ] .
+  OPTIONAL {
+    ?componentProperty a ?class .
+    FILTER NOT EXISTS {
+      [] rdfs:subClassOf ?class .
+    }
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
