@@ -1368,3 +1368,48 @@ WHERE {
 ORDER BY ?year
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:dataset-equals-named-graph a sp:Query ;
+  rdfs:label "Překrývají se IRI datasetů a pojmenovaných grafů?"@cs ;
+  rdfs:comment "Zjistěte, zdali se IRI některých datasetů (instancí `qb:DataSet`) překrývají s IRI pojmenovaných grafů."@cs ;
+  sp:text """
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+ASK
+WHERE {
+  GRAPH ?dataset {
+    ?dataset a qb:DataSet .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:datasets a sp:Query ;
+  rdfs:label "Datasety"@cs ;
+  rdfs:comment "Vypište unikátní datasety (instance `qb:DataSet`) v datech o důchodových ročenkách (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`)."@cs ;
+  sp:text """
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+SELECT DISTINCT ?dataset 
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    ?dataset a qb:DataSet .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:data-structure-definition a sp:Query ;
+  rdfs:label "Datová struktura důchodových ročenek"@cs ;
+  rdfs:comment "Najděte datovou strukturu datasetu důchodových ročenek (`<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) připojenou pomocí predikátu `qb:structure`. Data o důchodových ročenkách naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  sp:text """
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+SELECT ?dsd 
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure ?dsd .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
