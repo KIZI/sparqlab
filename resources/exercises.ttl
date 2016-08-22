@@ -147,7 +147,7 @@ exercise:datatypes a sp:Query ;
   rdfs:label "Datové typy"@cs ;
   rdfs:comment "Pro každý datový typ literálů v datech uveďte počet literálů anotovaných tímto datovým typem. Výsledky seřaďte sestupně podle počtu literálů."@cs ;
   sp:text """
-SELECT ?datatype (COUNT(*) AS ?count) 
+SELECT ?datatype (COUNT(*) AS ?count)
 WHERE {
   [] ?p ?literal .
   FILTER (isLiteral(?literal) && datatype(?literal) != "")
@@ -285,7 +285,7 @@ exercise:properties-qb-observation-cardinality-data a sp:Query ;
   rdfs:label "Kardinality predikátů qb:Observation v důchodových ročenkách"@cs ;
   rdfs:comment "Spočítejte minimální a maximální kardinality predikátů použitých pro popis instance `qb:Observation` v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Výsledky seřaďte sestupně podle maximální kardinality."@cs ;
   sp:text """
-PREFIX qb: <http://purl.org/linked-data/cube#> 
+PREFIX qb: <http://purl.org/linked-data/cube#>
 
 SELECT ?p (MIN(?cardinality) AS ?minCardinality) (MAX(?cardinality) AS ?maxCardinality)
 WHERE {
@@ -320,12 +320,12 @@ exercise:properties-qb-observation-data a sp:Query ;
   rdfs:label "Predikáty pozorování v důchodových ročenkách"@cs ;
   rdfs:comment "Vyberte predikáty pozorování (tj. instancí `qb:Observation`) v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Výsledky budou obsahovat každý predikát pouze jednou."@cs ;
   sp:text """
-PREFIX qb: <http://purl.org/linked-data/cube#> 
+PREFIX qb: <http://purl.org/linked-data/cube#>
 
-SELECT DISTINCT ?property 
+SELECT DISTINCT ?property
 WHERE {
   GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
-    [] a qb:Observation ; 
+    [] a qb:Observation ;
       ?property [] .
   }
 }
@@ -465,7 +465,7 @@ SELECT DISTINCT ?componentProperty ?class
 WHERE {
   GRAPH <http://purl.org/linked-data/cube> {
     ?property rdfs:subPropertyOf qb:componentProperty .
-  } 
+  }
   GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
     <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure ?dsd .
     ?dsd qb:component [
@@ -546,7 +546,7 @@ exercise:datasets a sp:Query ;
   sp:text """
 PREFIX qb: <http://purl.org/linked-data/cube#>
 
-SELECT DISTINCT ?dataset 
+SELECT DISTINCT ?dataset
 WHERE {
   GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
     ?dataset a qb:DataSet .
@@ -589,7 +589,7 @@ exercise:most-common-class-data a sp:Query ;
   rdfs:label "Nejčastěji instanciovaná třída v důchodových ročenkách"@cs ;
   rdfs:comment "Vyberte třídu s nejvyšším počtem instancí v důchodových ročenkách (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`)."@cs ;
   sp:text """
-SELECT ?class 
+SELECT ?class
 WHERE {
   GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
     ?s a ?class .
@@ -828,7 +828,7 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 ASK
 WHERE {
   {
-    SELECT ?concept ?language 
+    SELECT ?concept ?language
     WHERE {
       GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
         ?concept skos:prefLabel ?prefLabel .
@@ -1056,7 +1056,7 @@ WHERE {
     [] a qb:DataStructureDefinition ;
       qb:component ?component .
     FILTER NOT EXISTS {
-      ?component qb:componentAttachment ?componentAttachment . 
+      ?component qb:componentAttachment ?componentAttachment .
       FILTER (!sameTerm(?componentAttachment, qb:Observation))
     }
   }
@@ -1259,7 +1259,7 @@ exercise:pension-kind-schemes a sp:Query ;
 PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
 PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
 
-SELECT DISTINCT ?pensionKindScheme 
+SELECT DISTINCT ?pensionKindScheme
 WHERE {
   GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
     [] a pen-onto:PensionKind ;
@@ -1390,7 +1390,7 @@ exercise:datasets a sp:Query ;
   sp:text """
 PREFIX qb: <http://purl.org/linked-data/cube#>
 
-SELECT DISTINCT ?dataset 
+SELECT DISTINCT ?dataset
 WHERE {
   GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
     ?dataset a qb:DataSet .
@@ -1405,7 +1405,7 @@ exercise:data-structure-definition a sp:Query ;
   sp:text """
 PREFIX qb: <http://purl.org/linked-data/cube#>
 
-SELECT ?dsd 
+SELECT ?dsd
 WHERE {
   GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
     <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure ?dsd .
@@ -1413,3 +1413,75 @@ WHERE {
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:dsd-components a sp:Query ;
+  rdfs:label "Komponenty datové struktury důchodových ročenek"@cs ;
+  rdfs:comment "Vypište komponenty datové struktury důchodových ročenek (`<https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech>`). Komponenty jsou z datové struktury odkazovány predikátem `qb:structure`. Pro každý komponent vypište jeho český název (`rdfs:label`), vlastnost komponentu, volitelnou úroveň přiřazení (`qb:componentAttachment`) a volitelně uvedení, zdali je komponent povinný (`qb:componentRequired`). Predikáty odkazující na vlastnosti komponent vezměte jako podřazené predikáty (`rdfs:subPropertyOf`) predikátu `qb:componentProperty` (včetně tohoto predikátu) z pojmenovaného grafu `<http://purl.org/linked-data/cube>`. Jako výchozí hodnotu úrovně přiřazení uveďte `qb:Observation`. Výchozí hodnotou indikátoru povinnosti komponentu je v případě atributů `false`, v ostatních případech `true`. Komponenty seřaďte vzestupně dle volitelně uvedeného pořadí (`qb:order`). Data o důchodových ročenkách naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?componentProperty ?label ?componentAttachment ?componentRequired
+WHERE {
+  GRAPH <http://purl.org/linked-data/cube> {
+    ?property rdfs:subPropertyOf* qb:componentProperty .
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    <https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech> qb:component ?component .
+    ?component ?property ?componentProperty ;
+      rdfs:label ?label .
+    FILTER langMatches(lang(?label), "cs")
+
+    OPTIONAL {
+      ?component qb:order ?order .
+    }
+
+    OPTIONAL {
+      ?component qb:componentAttachment ?_componentAttachment .
+    }
+    BIND (COALESCE(?_componentAttachment, qb:Observation) AS ?componentAttachment)
+
+    OPTIONAL {
+      ?component qb:componentRequired ?_componentRequired .
+    }
+    {
+      FILTER (sameTerm(?property, qb:attribute) || EXISTS { ?componentProperty a qb:AttributeProperty . })
+      BIND (false AS ?defaultComponentRequired)
+    } UNION {
+      BIND (true AS ?defaultComponentRequired)
+    }
+    BIND (COALESCE(?_componentRequired, ?defaultComponentRequired) AS ?componentRequired)
+  }
+}
+ORDER BY ?order
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:is-multimeasure-dataset a sp:Query ;
+  rdfs:label "Obsahuje dataset důchodových ročenek více měr?"@cs ;
+  rdfs:comment "Zjistěte, zdali dataset důchodových ročenek (<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>) uvádí pro svá pozorování více druhů měr. Míry jsou ve struktuře datasetu uvedeny buď jako objekty `qb:measure` nebo `qb:componentProperty`, pokud instanciují `qb:MeasureProperty`. Data o důchodových ročenkách naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  sp:text """
+PREFIX qb:   <http://purl.org/linked-data/cube#>
+
+ASK
+WHERE {
+  {
+    SELECT ?dsd
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+        <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure ?dsd .
+        ?dsd qb:component ?component .
+        {
+          ?component qb:measure ?measureProperty .
+        } UNION {
+          ?component qb:componentProperty ?measureProperty .
+          ?measureProperty a qb:MeasureProperty .
+        }
+      }
+    }
+    GROUP BY ?dsd
+    HAVING (COUNT(DISTINCT ?measureProperty) > 1)
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
