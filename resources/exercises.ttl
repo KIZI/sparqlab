@@ -480,34 +480,6 @@ ORDER BY ?componentProperty
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
 
-exercise:dataset-component-properties-with-most-specific-classes a sp:Query ;
-  rdfs:label "Komponenty datasetu důchodových ročenek s nejspecifičtějšími třídami"@cs ;
-  rdfs:comment "Vyberte komponenty datasetu důchodových ročenek (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) spolu s volitelně uvedenými třídami predikátů, na něž komponenty odkazují přes predikát odvozený z `qb:componentProperty` pomocí `rdfs:subPropertyOf` v Data Cube Vocabulary (pojmenovaný graf `http://purl.org/linked-data/cube`). Vybere pouze nejspecifičtější třídy, které nemají žádné podtřídy odkazované pomocí `rdfs:subClassOf`."@cs ;
-  sp:text """
-PREFIX qb:   <http://purl.org/linked-data/cube#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-SELECT ?componentProperty ?class
-WHERE {
-  GRAPH <http://purl.org/linked-data/cube> {
-    ?property rdfs:subPropertyOf* qb:componentProperty .
-  }
-  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
-    <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> qb:structure ?dsd .
-    ?dsd qb:component [
-      ?property ?componentProperty
-    ] .
-    OPTIONAL {
-      ?componentProperty a ?class .
-    }
-  }
-  FILTER NOT EXISTS {
-    [] rdfs:subClassOf ?class .
-  }
-}
-  """ ;
-  sparqlab:hasDifficulty sparqlab:normal .
-
 exercise:dataset-dimensions a sp:Query ;
   rdfs:label "Dimenze důchodových ročenek"@cs ;
   rdfs:comment "Vyberte dimenze (instance `qb:DimensionProperty`) ze struktury datasetu důchodových ročenek (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Dimenze se nebudou ve výsledcích opakovat."@cs ;
@@ -1384,21 +1356,6 @@ WHERE {
   """ ;
   sparqlab:hasDifficulty sparqlab:easy .
 
-exercise:datasets a sp:Query ;
-  rdfs:label "Datasety"@cs ;
-  rdfs:comment "Vypište unikátní datasety (instance `qb:DataSet`) v datech o důchodových ročenkách (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`)."@cs ;
-  sp:text """
-PREFIX qb: <http://purl.org/linked-data/cube#>
-
-SELECT DISTINCT ?dataset
-WHERE {
-  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
-    ?dataset a qb:DataSet .
-  }
-}
-  """ ;
-  sparqlab:hasDifficulty sparqlab:easy .
-
 exercise:data-structure-definition a sp:Query ;
   rdfs:label "Datová struktura důchodových ročenek"@cs ;
   rdfs:comment "Najděte datovou strukturu datasetu důchodových ročenek (`<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) připojenou pomocí predikátu `qb:structure`. Data o důchodových ročenkách naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
@@ -1488,7 +1445,7 @@ WHERE {
 
 exercise:component-properties-with-most-specific-classes a sp:Query ;
   rdfs:label "Nejspecifičtější třídy vlastnostní komponent"@cs ;
-  rdfs:comment "Vypište nejspecifičtější třídy instanciované vlastnostmi komponent datové struktury důchodových ročenek (`<https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech>`). Predikáty připojující vlastnosti ke komponentám datové struktury vezměte jako vlastnosti odvozené z `qb:componentProperty` pomocí `rdfs:subPropertyOf` včetně samotné `qb:componentProperty`. Tyto odvozené vlastnosti definované slovníkem Data Cube Vocabulary naleznete v pojmenovaném grafu `<http://purl.org/linked-data/cube>`. Dejte pozor na to, že třída vlastnosti komponenty nemusí být uvedena. Data o důchodových ročenkách najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  rdfs:comment "Vypište nejspecifičtější třídy instanciované vlastnostmi komponent datové struktury důchodových ročenek (`<https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech>`). Predikáty připojující vlastnosti ke komponentám datové struktury vezměte jako vlastnosti odvozené z `qb:componentProperty` pomocí `rdfs:subPropertyOf` včetně samotné `qb:componentProperty`. Tyto odvozené vlastnosti definované slovníkem Data Cube Vocabulary naleznete v pojmenovaném grafu `<http://purl.org/linked-data/cube>`. Dejte pozor na to, že třída vlastnosti komponenty nemusí být uvedena. Vyberte pouze nejspecifičtější třídy, které nemají žádné     podtřídy odkazované pomocí `rdfs:subClassOf`. Data o důchodových ročenkách najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -1508,5 +1465,85 @@ WHERE {
     }
   }
 }
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:pension-kinds-2008-depth a sp:Query ;
+  rdfs:label "Hloubka hierarchie druhů důchodů z roku 2008"@cs ;
+  rdfs:comment "Spočtěte maximální hloubku hierarchie druhů důchodů z roku 2008 (`pen-onto:PensionKindScheme_2008`). Data o tomto číselníku naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  sp:text """
+PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
+
+SELECT (COUNT(?mid) AS ?depth)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?a skos:inScheme pen-onto:PensionKindScheme_2008 ;
+      skos:narrower* ?mid .
+    ?mid skos:inScheme pen-onto:PensionKindScheme_2008 ;
+      skos:narrower+ ?b .
+    ?b skos:inScheme pen-onto:PensionKindScheme_2008 .
+  }
+}
+GROUP BY ?a ?b
+ORDER BY DESC(?depth)
+LIMIT 1
+  """ ;
+  sparqlab:hasDifficulty sparqlab:hard .
+
+exercise:path-between-pension-kinds a sp:Query ;
+  rdfs:label "Cesta mezi druhy důchodů"@cs ;
+  rdfs:comment "Vypište prvky cesty mezi konceptem pro důchody celkem včetně netypických výplat (`pension-kinds:PK_total_without_special_pensions_2008`) a konceptem pro starobní důchod S (`pension-kinds:PK_S_2008`). Prvky cesty jsou propojeny predikátem `skos:narrower`. Výsledná cesta obsahuje také svůj počáteční a koncový uzel. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  sp:text """
+PREFIX pension-kinds: <https://data.cssz.cz/resource/pension-kind/>
+PREFIX skos:          <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?member
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    pension-kinds:PK_total_without_special_pensions_2008 skos:narrower* ?member .
+    ?member skos:narrower* pension-kinds:PK_S_2008 .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:pension-kind-with-most-children a sp:Query ;
+  rdfs:label "Druh důchodu s nejvíce dceřinnými koncepty"@cs ;
+  rdfs:comment "Najděte druh důchodu s nejvíce dceřinými koncepty. Berte v potaz druhy důchodů z číselníku `pen-onto:PensionKindScheme_2008`. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  sp:text """
+PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?pensionKind
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?pensionKind skos:inScheme pen-onto:PensionKindScheme_2008 ;
+      skos:narrower ?child .
+  }
+}
+GROUP BY ?pensionKind
+ORDER BY DESC(COUNT(DISTINCT ?child))
+LIMIT 1
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:pension-kind-with-most-descendants a sp:Query ;
+  rdfs:label "Druh důchodu s nejvíce potomky"@cs ;
+  rdfs:comment "Najděte druh důchodu s nejvíce potomky, kteří jsou mu tranzitivně podřazeni pomocí `skos:narrower`. Berte v potaz druhy důchodů z číselníku `pen-onto:PensionKindScheme_2008`. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  sp:text """
+PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?pensionKind
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?pensionKind skos:inScheme pen-onto:PensionKindScheme_2008 ;
+      skos:narrower+ ?descendant .
+  }
+}
+GROUP BY ?pensionKind
+ORDER BY DESC(COUNT(DISTINCT ?descendant))
+LIMIT 1
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
