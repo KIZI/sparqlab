@@ -1795,3 +1795,84 @@ WHERE {
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:hard .
+
+exercise:are-there-regions-with-women-older-than-men a sp:Query ;
+  rdfs:label "Existují regiony s průměrně staršími důchodkyněmi než důchodci?"@cs ;
+  rdfs:comment "Zjistěte, zdali existují regiony, v nichž byl někdy průměrný věk důchodkyň vyšší než průměrný věk důchodců. Berte v potaz důchodce pobírající druh důchodu ekvivalentní s `pension-kind:PK_old_age_total_without_SR`. Průměrný věk důchodců se nachází v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX qb:             <http://purl.org/linked-data/cube#>
+PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+
+ASK
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    [] cssz-dimension:pohlavi sdmx-code:sex-F ;
+      cssz-dimension:druh-duchodu ?pensionKind ;
+      cssz-dimension:refArea ?refArea ;
+      cssz-dimension:refPeriod ?refPeriod ;
+      cssz-measure:prumerny-vek ?averageAgeWomen .
+
+    [] cssz-dimension:pohlavi sdmx-code:sex-M ;
+      cssz-dimension:druh-duchodu ?pensionKind ;
+      cssz-dimension:refArea ?refArea ;
+      cssz-dimension:refPeriod ?refPeriod ;
+      cssz-measure:prumerny-vek ?averageAgeMen .
+    
+    FILTER (?averageAgeWomen > ?averageAgeMen)
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:poorest-prague-districts-over-time a sp:Query ;
+  rdfs:label "Nejchudší městské části Prahy v čase"@cs ;
+  rdfs:comment "Najděte městské části Prahy, kde v jednotlivých letech byl nejnižší starobní důchod. Pro každý rok vypište datum (`skos:notation`), název nejchudší městské části (`skos:prefLabel`) a průměrnou výši důchodů. Berte v potaz důchody ekvivalentní s `pension-kind:PK_old_age_total_without_SR`. Výše důchodů se nachází v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX ruian:          <https://data.cssz.cz/ontology/ruian/>
+PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?date ?pragueDistrict ?lowestPension
+FROM <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>
+FROM <https://data.cssz.cz/resource/dataset/pomocne-ciselniky>
+WHERE {
+  ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
+  
+  [] cssz-dimension:pohlavi sdmx-code:sex-T ;
+    cssz-dimension:druh-duchodu ?pensionKind ;
+    cssz-dimension:refPeriod ?refPeriod ;
+    cssz-dimension:refArea ?refArea1 ;
+    cssz-measure:prumerna-vyse-duchodu-v-kc ?lowestPension .
+  
+  ?refArea1 a ruian:SpravniObvod .
+
+  FILTER NOT EXISTS {
+    [] cssz-dimension:pohlavi sdmx-code:sex-T ;
+       cssz-dimension:druh-duchodu ?pensionKind ;
+       cssz-dimension:refPeriod ?refPeriod ;
+       cssz-dimension:refArea ?refArea2 ;
+       cssz-measure:prumerna-vyse-duchodu-v-kc ?evenLowerPension .
+      
+    ?refArea2 a ruian:SpravniObvod .
+     
+    FILTER (!sameTerm(?refArea1, ?refArea2) && ?evenLowerPension < ?lowestPension)
+  }
+
+  ?refPeriod skos:notation ?_date .
+  BIND (strdt(?_date, xsd:date) AS ?date)
+  ?refArea1 skos:prefLabel ?pragueDistrict .
+}
+ORDER BY ?date
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
