@@ -1733,3 +1733,65 @@ WHERE {
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:hard .
+
+exercise:greatest-increase-in-pensions a sp:Query ;
+  rdfs:label "Největší meziroční nárůst důchodů"@cs ;
+  rdfs:comment "Najděte kde a kdy došlo k největšímu meziročnímu nárůstu starobních důchodů. Jako starobní důchody berte příjemce druhů důchodů ekvivalentních s `pension-kind:PK_old_age_total_without_SR`. Data pro období, za něž jsou výše důchodů uváděny, najdete v číselníku `<https://data.cssz.cz/ontology/dates/DatesScheme>`. Meziroční nárůst vypočtěte v procentech jako rozdíl výší důchodů ve dvou následných letech vydělený výší důchodu v počátečním roce. Pro nalezenou referenční oblast uveďte název (`skos:prefLabel`). Pro počáteční a konečný rok uveďte jejich koncová data (`skos:notation`). Výše důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX qb:             <http://purl.org/linked-data/cube#>
+PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?refAreaLabel ?startDate ?endDate ?increase
+WHERE {
+  {
+    SELECT ?refArea ?start ?end ?increase
+    WHERE {
+      {
+        SELECT ?end ?start
+        WHERE {
+          GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+            ?end skos:inScheme <https://data.cssz.cz/ontology/dates/DatesScheme> ;
+              skos:notation ?endNotation .
+            FILTER STRENDS(?endNotation, "-12-31")
+            BIND (CONCAT(STR(xsd:integer(SUBSTR(?endNotation, 1, 4)) - 1), "-12-31") AS ?startNotation)
+            ?start skos:inScheme <https://data.cssz.cz/ontology/dates/DatesScheme> ;
+              skos:notation ?startNotation .
+          }
+        }
+      }
+      GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+        ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
+      }
+      GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+        [] cssz-dimension:pohlavi sdmx-code:sex-T ;
+          cssz-dimension:refArea ?refArea ;
+          cssz-dimension:refPeriod ?end ;
+          cssz-dimension:druh-duchodu ?pensionKind ;
+          cssz-measure:prumerna-vyse-duchodu-v-kc ?endPension .
+        
+        [] cssz-dimension:pohlavi sdmx-code:sex-T ;
+          cssz-dimension:refArea ?refArea ;
+          cssz-dimension:refPeriod ?start ;
+          cssz-dimension:druh-duchodu ?pensionKind ;
+          cssz-measure:prumerna-vyse-duchodu-v-kc ?startPension .
+        
+        FILTER (?endPension > ?startPension)
+        BIND ((?endPension - ?startPension)/?startPension AS ?increase)
+      }
+    }
+    ORDER BY DESC(?increase)
+    LIMIT 1
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?refArea skos:prefLabel ?refAreaLabel .
+    ?start skos:notation ?startDate .
+    ?end skos:notation ?endDate .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:hard .
