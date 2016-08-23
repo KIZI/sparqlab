@@ -1711,13 +1711,13 @@ WHERE {
           cssz-dimension:refPeriod ?end ;
           cssz-dimension:druh-duchodu ?pensionKind ;
           cssz-measure:pocet-duchodcu ?endCount .
-        
+
         [] cssz-dimension:pohlavi sdmx-code:sex-T ;
           cssz-dimension:refArea ?refArea ;
           cssz-dimension:refPeriod ?start ;
           cssz-dimension:druh-duchodu ?pensionKind ;
           cssz-measure:pocet-duchodcu ?startCount .
-        
+
         FILTER (?endCount > ?startCount)
         BIND ((?endCount - ?startCount)/?startCount AS ?increase)
       }
@@ -1773,13 +1773,13 @@ WHERE {
           cssz-dimension:refPeriod ?end ;
           cssz-dimension:druh-duchodu ?pensionKind ;
           cssz-measure:prumerna-vyse-duchodu-v-kc ?endPension .
-        
+
         [] cssz-dimension:pohlavi sdmx-code:sex-T ;
           cssz-dimension:refArea ?refArea ;
           cssz-dimension:refPeriod ?start ;
           cssz-dimension:druh-duchodu ?pensionKind ;
           cssz-measure:prumerna-vyse-duchodu-v-kc ?startPension .
-        
+
         FILTER (?endPension > ?startPension)
         BIND ((?endPension - ?startPension)/?startPension AS ?increase)
       }
@@ -1824,7 +1824,7 @@ WHERE {
       cssz-dimension:refArea ?refArea ;
       cssz-dimension:refPeriod ?refPeriod ;
       cssz-measure:prumerny-vek ?averageAgeMen .
-    
+
     FILTER (?averageAgeWomen > ?averageAgeMen)
   }
 }
@@ -1848,13 +1848,13 @@ FROM <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>
 FROM <https://data.cssz.cz/resource/dataset/pomocne-ciselniky>
 WHERE {
   ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
-  
+
   [] cssz-dimension:pohlavi sdmx-code:sex-T ;
     cssz-dimension:druh-duchodu ?pensionKind ;
     cssz-dimension:refPeriod ?refPeriod ;
     cssz-dimension:refArea ?refArea1 ;
     cssz-measure:prumerna-vyse-duchodu-v-kc ?lowestPension .
-  
+
   ?refArea1 a ruian:SpravniObvod .
 
   FILTER NOT EXISTS {
@@ -1863,9 +1863,9 @@ WHERE {
        cssz-dimension:refPeriod ?refPeriod ;
        cssz-dimension:refArea ?refArea2 ;
        cssz-measure:prumerna-vyse-duchodu-v-kc ?evenLowerPension .
-      
+
     ?refArea2 a ruian:SpravniObvod .
-     
+
     FILTER (!sameTerm(?refArea1, ?refArea2) && ?evenLowerPension < ?lowestPension)
   }
 
@@ -1874,5 +1874,53 @@ WHERE {
   ?refArea1 skos:prefLabel ?pragueDistrict .
 }
 ORDER BY ?date
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:greatest-increase-in-pensions-over-5-years a sp:Query ;
+  rdfs:label "Největší nárůst důchodů za 5 let"@cs ;
+  rdfs:comment "Najděte oblasti, druhy důchodů a pohlaví, pro něž došlo mezi lety 2009 (`day:2014-12-31`) a 2014 (`day:2009-12-31`) k největšímu poměrnému nárůstu důchodů. Zvažujte pouze ženské (`sdmx-code:sex-F`) a mužské (`sdmx-code:sex-M`) pohlaví. Míru růstu důchodů spočítejte jako poměr mezi rozdílem konečného a původního důchodů vydělený původní výší důchodu. Ve výsledcích uveďte název oblasti (`skos:prefLabel`), český název druhu důchodu (`skos:prefLabel`), pohlaví a míru růstu důchodů. Výše důchodů se nachází v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX day:            <https://data.cssz.cz/resource/reference.data.gov.uk/id/gregorian-day/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?refAreaLabel ?pensionKindLabel ?gender ?increase
+FROM <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>
+FROM <https://data.cssz.cz/resource/dataset/pomocne-ciselniky>
+WHERE {
+  {
+    SELECT ?refArea ?gender ?increase ?pensionKind
+    WHERE {
+      VALUES ?gender {
+        sdmx-code:sex-F
+        sdmx-code:sex-M
+      }
+      [] cssz-dimension:refPeriod day:2014-12-31 ;
+        cssz-dimension:pohlavi ?gender ;
+        cssz-dimension:refArea ?refArea ;
+        cssz-dimension:druh-duchodu/skos:exactMatch ?pensionKind ;
+        cssz-measure:prumerna-vyse-duchodu-v-kc ?endPension .
+
+      [] cssz-dimension:refPeriod day:2009-12-31 ;
+        cssz-dimension:pohlavi ?gender ;
+        cssz-dimension:refArea ?refArea ;
+        cssz-dimension:druh-duchodu/skos:exactMatch ?pensionKind ;
+        cssz-measure:prumerna-vyse-duchodu-v-kc ?startPension .
+
+      FILTER (?endPension > ?startPension)
+      BIND ((?endPension - ?startPension)/?startPension AS ?increase)
+    }
+    ORDER BY DESC(?increase)
+    LIMIT 10
+  }
+
+  ?refArea skos:prefLabel ?refAreaLabel .
+  ?pensionKind skos:prefLabel ?pensionKindLabel .
+}
+ORDER BY DESC(?increase)
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
