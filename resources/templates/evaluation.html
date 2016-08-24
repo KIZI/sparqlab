@@ -40,28 +40,42 @@
       {% endfor %}
     </p>
     {% endif %}
-    <textarea id="query" class="form-control" readonly rows="10">{{query.query}}</textarea>
-    <textarea id="results" class="hidden" data-type="{{query.results-type}}"> 
-      {% safe %}
-      {{query.results}}
-      {% endsafe %}
-    </textarea>
-    <h3>Výsledky</h3>
-    <div id="query-results"></div>
   </div>
   <div class="col-md-6">
     <h2>Řešení</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <textarea id="query" class="form-control" readonly rows="10">{{query.query}}</textarea>
+  </div>
+  <div class="col-md-6">
     <textarea id="canonical-query"
               class="form-control {% if not equal? %}invisible{% endif %} yasqe-like"
               readonly
               rows="10">{{canonical-query.query}}</textarea>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
     <h3>Výsledky</h3>
-    <textarea id="canonical-results" class="hidden" data-type="{{canonical-query.results-type}}">
-      {% safe %}
-      {{canonical-query.results}}
-      {% endsafe %}
-    </textarea>
-    <div id="canonical-query-results"></div>
+    <div id="query-results">
+      <textarea id="results" class="hidden" data-type="{{query.results-type}}"> 
+        {% safe %}
+        {{query.results}}
+        {% endsafe %}
+      </textarea>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <h3>Výsledky</h3>
+    <div id="canonical-query-results">
+      <textarea id="canonical-results" class="hidden" data-type="{{canonical-query.results-type}}">
+        {% safe %}
+        {{canonical-query.results}}
+        {% endsafe %}
+      </textarea>
+    </div>
   </div>
 </div>
 <div class="modal fade"
