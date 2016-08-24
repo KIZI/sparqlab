@@ -1313,7 +1313,7 @@ PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
 PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
 PREFIX qb:             <http://purl.org/linked-data/cube#>
-PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
 PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
 
@@ -1493,16 +1493,16 @@ LIMIT 1
 
 exercise:path-between-pension-kinds a sp:Query ;
   rdfs:label "Cesta mezi druhy důchodů"@cs ;
-  rdfs:comment "Vypište prvky cesty mezi konceptem pro důchody celkem včetně netypických výplat (`pension-kinds:PK_total_without_special_pensions_2008`) a konceptem pro starobní důchod S (`pension-kinds:PK_S_2008`). Prvky cesty jsou propojeny predikátem `skos:narrower`. Výsledná cesta obsahuje také svůj počáteční a koncový uzel. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:comment "Vypište prvky cesty mezi konceptem pro důchody celkem včetně netypických výplat (`pension-kind:PK_total_without_special_pensions_2008`) a konceptem pro starobní důchod S (`pension-kind:PK_S_2008`). Prvky cesty jsou propojeny predikátem `skos:narrower`. Výsledná cesta obsahuje také svůj počáteční a koncový uzel. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   sp:text """
-PREFIX pension-kinds: <https://data.cssz.cz/resource/pension-kind/>
+PREFIX pension-kind: <https://data.cssz.cz/resource/pension-kind/>
 PREFIX skos:          <http://www.w3.org/2004/02/skos/core#>
 
 SELECT ?member
 WHERE {
   GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
-    pension-kinds:PK_total_without_special_pensions_2008 skos:narrower* ?member .
-    ?member skos:narrower* pension-kinds:PK_S_2008 .
+    pension-kind:PK_total_without_special_pensions_2008 skos:narrower* ?member .
+    ?member skos:narrower* pension-kind:PK_S_2008 .
   }
 }
   """ ;
@@ -1606,7 +1606,7 @@ PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
 PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
 PREFIX qb:             <http://purl.org/linked-data/cube#>
-PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
 PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
 
@@ -1680,7 +1680,7 @@ PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
 PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
 PREFIX qb:             <http://purl.org/linked-data/cube#>
-PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
 PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
 
@@ -1742,7 +1742,7 @@ PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
 PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
 PREFIX qb:             <http://purl.org/linked-data/cube#>
-PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
 PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
 
@@ -1804,7 +1804,7 @@ PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
 PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
 PREFIX qb:             <http://purl.org/linked-data/cube#>
-PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
 PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
 
 ASK
@@ -1839,7 +1839,7 @@ PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
 PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
 PREFIX ruian:          <https://data.cssz.cz/ontology/ruian/>
-PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
 PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
 
@@ -1885,7 +1885,7 @@ PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
 PREFIX day:            <https://data.cssz.cz/resource/reference.data.gov.uk/id/gregorian-day/>
 PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
-PREFIX sdmx-code:      <https://data.cssz.cz/ontology/sdmx/code/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
 PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
 
 SELECT ?refAreaLabel ?pensionKindLabel ?gender ?increase
