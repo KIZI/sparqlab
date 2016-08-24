@@ -1040,7 +1040,7 @@ exercise:understanding-from a sp:Query ;
   rdfs:label "Spočtěte trojice ve slovníku důchodových ročenek pomocí FROM"@cs ;
   rdfs:comment "Spočtěte trojice ve slovníku důchodových ročenek (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`)."@cs ;
   dcterms:requires sp:from ;
-  sparqlab:prohibits sp:fromNamed, sp:NamedGraph;
+  sparqlab:prohibits sp:fromNamed, sp:NamedGraph ;
   sp:text """
 SELECT (COUNT(*) AS ?count)
 FROM <https://data.cssz.cz/resource/dataset/rocenka/vocabulary>
@@ -1152,8 +1152,8 @@ WHERE {
 exercise:count-distinct-classes-with-reduced a sp:Query ;
   rdfs:label "Kolik různých tříd je instanciováno (pomocí REDUCED)?"@cs ;
   rdfs:comment "Spočtěte různé třídy, jejichž instance jsou v datech o důchodových ročenkách (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) s použitím modifikátoru `REDUCED`."@cs ;
-  dcterms:required sp:reduced ;
-  sparqlab:prohibited sp:distinct, sp:groupBy ;
+  dcterms:requires sp:reduced ;
+  sparqlab:prohibits sp:distinct, sp:groupBy ;
   sp:text """
 SELECT (COUNT(?class) AS ?count)
 WHERE {
@@ -1174,7 +1174,7 @@ WHERE {
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:normal ;
-  skos:note "Implementace `REDUCED` je do značné míry ponechána na RDF úložištích. Můžete proto získat odlišné výsledky pro stejný dotaz s `REDUCED` v různých úložištích."@cs .
+  skos:note "Implementace `REDUCED` je do značné míry ponechána na RDF úložištích, proto můžete v různých úložištích získat odlišné výsledky pro stejný dotaz s `REDUCED`."@cs .
 
 exercise:reflexive-exact-match a sp:Query ;
   rdfs:label "Reflexivní skos:exactMatch"@cs ;
