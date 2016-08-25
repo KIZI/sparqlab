@@ -29,7 +29,7 @@
                  [stencil "0.5.0"]
                  [org.topbraid/spin "2.0.0"]
                  [slingshot "0.12.2"]
-                 [luminus-jetty "0.1.4"]]
+                 [luminus-immutant "0.2.2"]]
 
   :repositories [["org.topbraid" "http://topquadrant.com/repository/spin"]]
   :min-lein-version "2.0.0"
@@ -66,7 +66,6 @@
                                  [ring/ring-mock "0.3.0"]
                                  [ring/ring-devel "1.5.0"]
                                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
-                                 [luminus-immutant "0.2.2"]
                                  [pjstadig/humane-test-output "0.8.0"]
                                  [directory-naming/naming-java "0.8"]]
                   :source-paths ["env/dev/clj" "test/clj"]
