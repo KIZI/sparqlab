@@ -55,7 +55,7 @@
   (let [canonical-query (sparql/parse-query canonical-query-string)
         query (sparql/parse-query query-string)
         equal-query-result (equal-query? canonical-query query)
-        canonical-results (sparql/sparql-query sparql/sparql-endpoint canonical-query)
+        canonical-results (sparql/sparql-query-cached sparql/sparql-endpoint canonical-query)
         ; If the queries are the same, retrieve only the canonical results.
         query-results (if equal-query-result
                         canonical-results

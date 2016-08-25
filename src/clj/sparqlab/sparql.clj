@@ -191,6 +191,10 @@
     (:body (client/get endpoint {:headers {:accept accept}
                                  :query-params {"query" query-string}}))))
 
+(def sparql-query-cached
+  "Send a SPARQL query to `endpoint` and cache its results."
+  (memoize sparql-query))
+
 (defn get-construct-template
   "Extract CONSTRUCT template from `query`.
   Returns nil for non-CONSTRUCT queries."
