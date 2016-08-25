@@ -29,8 +29,7 @@
                  [stencil "0.5.0"]
                  [org.topbraid/spin "2.0.0"]
                  [slingshot "0.12.2"]
-                 [luminus-jetty "0.1.4"]
-                 [org.slf4j/slf4j-simple "1.6.2"]]
+                 [luminus-jetty "0.1.4"]]
 
   :repositories [["org.topbraid" "http://topquadrant.com/repository/spin"]]
   :min-lein-version "2.0.0"
@@ -55,7 +54,6 @@
                    :all (constantly true)}
   :profiles
   {:uberjar {:omit-source true
-             
              :aot :all
              :uberjar-name "sparqlab.jar"
              :source-paths ["env/prod/clj"]
