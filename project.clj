@@ -28,7 +28,9 @@
                  [cheshire "5.6.3"]
                  [stencil "0.5.0"]
                  [org.topbraid/spin "2.0.0"]
-                 [slingshot "0.12.2"]]
+                 [slingshot "0.12.2"]
+                 [luminus-jetty "0.1.4"]
+                 [org.slf4j/slf4j-simple "1.6.2"]]
 
   :repositories [["org.topbraid" "http://topquadrant.com/repository/spin"]]
   :min-lein-version "2.0.0"
