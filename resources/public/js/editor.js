@@ -8,7 +8,7 @@ var escapeHTML = function (text) {
         $codeMirror = $(".CodeMirror"),
         $results = $("#results"),
         $errorModal = $("#error-modal"),
-        timeout = 3000;
+        timeout = 30000;
 
     // YASQE and YASR
     var prefixes = {
