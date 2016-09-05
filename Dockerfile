@@ -1,10 +1,8 @@
 FROM clojure
 MAINTAINER Jindřich Mynarz <mynarzjindrich@gmail.com>
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY project.clj /usr/src/app/
-COPY . /usr/src/app
+WORKDIR /root
+COPY * ./
 RUN lein uberjar
 
 RUN mkdir -p /data /setup/sparql
