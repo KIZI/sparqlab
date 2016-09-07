@@ -1649,8 +1649,9 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:greatest-range-of-pensions-between-areas a sp:Query ;
-  rdfs:label "Největší rozdíl mezi důchody v různých oblastech"@cs ;
-  rdfs:comment "Najděte největší rozdíl mezi důchody v různých oblastech. Berte v potaz starobní důchody, které jsou označeny jako ekvivalentní (`skos:exactMatch`) druhu `pension-kind:PK_old_age_total_without_SR`. Data o výších důchodu naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Data o číselnících druhů důchodů jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:label "Největší rozdíl v průměrné výši starobního důchodu mezi různými oblastmi"@cs ;
+  rdfs:comment "Najděte největší rozdíl v průměrné výši starobního důchodu mezi různými oblastmi. Berte v potaz starobní důchody, které jsou označeny jako ekvivalentní (`skos:exactMatch`) druhu `pension-kind:PK_old_age_total_without_SR`. Data o průměrné výši důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Data o číselnících druhů důchodů jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  skos:note "Protože jsou uvažovány druhy důchodů ekvivalentní `pension-kind:PK_old_age_total_without_SR`, jedná se o pouze starobní důchody dle zákona č. 155/1995 Sb., o důchodovém pojištění."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
