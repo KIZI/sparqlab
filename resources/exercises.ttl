@@ -1574,7 +1574,7 @@ WHERE {
 
 exercise:orphan-count-over-time a sp:Query ;
   rdfs:label "Počet sirotků v čase"@cs ;
-  rdfs:comment "Zjistěte, jak se měnil počet sirotků v čase. Pro každý rok uveďte počet sirotků pobírajících důchod ekvivalentní (`skos:exactMatch`) druhu důchodu `pension-kind:PK_D` pro všechna pohlaví (`<https://data.cssz.cz/ontology/sdmx/code/sex-T>`) a celou Českou republiku (`<https://data.cssz.cz/resource/ruian/staty/1>`). Výsledky uveďte bez opakování a seřaďte vzestupně dle roku. Data o počtech sirotků naleznete v pojmenovaném grafu  `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Data číselníků jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:comment "Zjistěte, jak se měnil počet sirotků v čase. Pro každý rok uveďte počet sirotků pobírajících důchod ekvivalentní (`skos:exactMatch`) druhu důchodu `pension-kind:PK_D` pro všechna pohlaví (`<https://data.cssz.cz/ontology/sdmx/code/sex-T>`) a celou Českou republiku (`<https://data.cssz.cz/resource/ruian/staty/1>`). Výsledky uveďte bez opakování a seřaďte vzestupně dle roku. Data o počtech sirotků naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Data číselníků jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
