@@ -1804,6 +1804,7 @@ WHERE {
 exercise:are-there-regions-with-women-older-than-men a sp:Query ;
   rdfs:label "Existují regiony s průměrně staršími důchodkyněmi než důchodci?"@cs ;
   rdfs:comment "Zjistěte, zdali existují regiony, v nichž byl někdy průměrný věk důchodkyň vyšší než průměrný věk důchodců. Berte v potaz důchodce pobírající druh důchodu ekvivalentní s `pension-kind:PK_old_age_total_without_SR`. Průměrný věk důchodců se nachází v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  skos:note "Protože jsou uvažovány druhy důchodů ekvivalentní `pension-kind:PK_old_age_total_without_SR`, jedná se o pouze starobní důchody dle zákona č. 155/1995 Sb., o důchodovém pojištění."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
