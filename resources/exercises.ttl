@@ -1309,7 +1309,7 @@ WHERE {
 
 sparqlab:pensions-rounded-to-thousands a sp:Query ;
   rdfs:label "Důchody zaokrouhlené na tisíce"@cs ;
-  rdfs:comment "Získejte výši průměrnou výši starobních důchodů pro Českou republiku (referenční oblast `<https://data.cssz.cz/resource/ruian/staty/1>`) aritmeticky zaokrouhlenou na tisíce. Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Výsledky seřaďte bez opakování sestupně dle 4-místného literálu roku průměrného důchodu."@cs ;
+  rdfs:comment "Získejte průměrnou výši starobních důchodů pro Českou republiku (referenční oblast `<https://data.cssz.cz/resource/ruian/staty/1>`) aritmeticky zaokrouhlenou na tisíce. Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Výsledky seřaďte bez opakování sestupně dle 4-místného literálu roku průměrného důchodu."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
