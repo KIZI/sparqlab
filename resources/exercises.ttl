@@ -888,8 +888,8 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:top-concept-has-no-broader-concept a sp:Query ;
-  rdfs:label "Mají vrcholové koncepty nadřazené koncepty?"@cs ;
-  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) objevují chybné vrcholové koncepty, které mají nadřazené koncepty ve stejném konceptuálním schématu. Jako vrcholové koncepty berte ty, které odkazují na své schéma pomocí predikátu `skos:topConceptOf` nebo jsou ze schématu odkazovány pomocí predikátu `skos:hasTopConcept`. Nadřazené koncepty hledejte přes hierarchické predikáty `skos:broader`, `skos:broaderTransitive`, `skos:narrower` nebo `skos:narrowerTransitive`."@cs ;
+  rdfs:label "Mají koncepty představující vrchol hierearchie nadřazené koncepty?"@cs ;
+  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) objevují chybné koncepty představující vrchol hierearchie, které mají nadřazené koncepty ve stejném konceptuálním schématu. Jako koncepty představující vrchol hierearchie berte ty, které odkazují na své schéma pomocí predikátu `skos:topConceptOf` nebo jsou ze schématu odkazovány pomocí predikátu `skos:hasTopConcept`. Nadřazené koncepty hledejte přes hierarchické predikáty `skos:broader`, `skos:broaderTransitive`, `skos:narrower` nebo `skos:narrowerTransitive`."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
