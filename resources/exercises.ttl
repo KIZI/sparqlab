@@ -737,8 +737,8 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:orphan-concepts a sp:Query ;
-  rdfs:label "Jsou v číselnících sirotci?"@cs ;
-  rdfs:comment "Zjistěte, zdali číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) obsahují sirotčí koncepty. Sirotci jsou instance `skos:Concept`, které nejsou spojeny žádným sémantickým vztahem pomocí predikátů `skos:broader`, `skos:narrower`, `skos:related`, `skos:broaderTransitive`, `skos:narrowerTransitive`, `skos:topConceptOf` nebo `skos:hasTopConcept`."@cs ;
+  rdfs:label "Jsou v číselnících osamocené koncepty?"@cs ;
+  rdfs:comment "Zjistěte, zdali číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) obsahují osamocené koncepty. Osamocené koncepty jsou instance `skos:Concept`, které nejsou spojeny žádným sémantickým vztahem pomocí predikátů `skos:broader`, `skos:narrower`, `skos:related`, `skos:broaderTransitive`, `skos:narrowerTransitive`, `skos:topConceptOf` nebo `skos:hasTopConcept`."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
