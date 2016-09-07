@@ -1084,8 +1084,8 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:comparing-from-and-graph a sp:Query ;
-  rdfs:label "Jsou počty trojic ve slovníků statistik důchodů a důchodců shodné při použití FROM, FROM NAMED a GRAPH?"@cs ;
-  rdfs:comment "Spočtěte trojice ve slovníku statistik důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`) třemi způsoby pomocí FROM, FROM NAMED a GRAPH a ověřte, že se součty rovnají."@cs ;
+  rdfs:label "Jsou počty trojic ve slovníku statistik důchodů a důchodců shodné při použití klauzulí FROM, FROM NAMED a GRAPH?"@cs ;
+  rdfs:comment "Spočtěte trojice ve slovníku statistik důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`) třemi způsoby s využitím klauzulí FROM, FROM NAMED a GRAPH a ověřte, že se součty rovnají."@cs ;
   dcterms:requires sp:NamedGraph, sp:from, sp:fromNamed ;
   sp:text """
 ASK
