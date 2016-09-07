@@ -1359,7 +1359,7 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:data-structure-definition a sp:Query ;
-  rdfs:label "Datová struktura statistik důchodů a důchodců"@cs ;
+  rdfs:label "Datová struktura datasetu statistik důchodů a důchodců"@cs ;
   rdfs:comment "Najděte datovou strukturu datasetu statistik důchodů a důchodců (`<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) připojenou pomocí predikátu `qb:structure`. Data o statistikách důchodů a důchodců naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
   sp:text """
 PREFIX qb: <http://purl.org/linked-data/cube#>
