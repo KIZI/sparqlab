@@ -1212,7 +1212,7 @@ WHERE {
 
 exercise:count-pension-kinds a sp:Query ;
   rdfs:label "Počet druhů důchodů"@cs ;
-  rdfs:comment "Spočtěte kolik druhů důchodů se nachází v číselníku důchodů z roku 2008 (`<http://data.cssz.cz/ontology/pension-kinds/PensionKindScheme_2008>`). Číselník najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
+  rdfs:comment "Spočtěte, kolik druhů důchodů se nachází v číselníku druhů důchodů z roku 2008 (`<http://data.cssz.cz/ontology/pension-kinds/PensionKindScheme_2008>`). Číselník najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
   sp:text """
 PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
 PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
