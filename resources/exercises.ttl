@@ -576,7 +576,7 @@ LIMIT 1
 
 exercise:ambiguous-notation-references a sp:Query ;
   rdfs:label "Jsou notace číselníkových konceptů víceznačné?"@cs ;
-  rdfs:comment "Zjistěte, zdali jsou číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`) různé koncepty, které sdílí stejnou notaci (hodnotu `skos:notation`)."@cs ;
+  rdfs:comment "Zjistěte, zdali jsou v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`) různé koncepty, které sdílí stejnou notaci (hodnotu `skos:notation`)."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
