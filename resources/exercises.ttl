@@ -663,7 +663,7 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:incomplete-language-coverage a sp:Query ;
-  rdfs:label "Mají číselníky neúplné pokrytí štítků dle jazyků?"@cs ;
+  rdfs:label "Je pokrytí štítků dle jazyků v číselnících neúplné?"@cs ;
   rdfs:comment "Zjistěte, zdali v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) je neúplné pokrytí štítků dle jazyků. Pokud je v určitém číselníku koncept se štítkem v určitém jazyce a existuje koncept téhož číselníku, který štítek v tomto jazyce postrádá, pak hovoříme o neúplném pokrytí dle jazyků. Jako štítky berte objekty predikátů `skos:prefLabel`, `skos:altLabel` a `skos:hiddenLabel`."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
