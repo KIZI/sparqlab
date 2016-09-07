@@ -1601,8 +1601,9 @@ ORDER BY ?year
   sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:greatest-gender-pay-gap a sp:Query ;
-  rdfs:label "Největší rozdíl v důchodech mužů a žen"@cs ;
-  rdfs:comment "Najděte největší rozdíl v důchodech mužů a žen. Rozdíl počítejte jako relativní podílem mezi důchodem žen a důchodem mužů. Jako druhy důchodu berte v potaz ekvivalenty `pension-kind:PK_old_age_total_without_SR`. Pro největší rozdíl získejte název jeho refereční oblasti a rok. Data statistik důchodů a důchodců naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Data číselníků jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:label "Největší rozdíl v průměrné výši starobního důchodu mužů a žen"@cs ;
+  rdfs:comment "Najděte největší rozdíl v průměrné výši starobního důchodu mužů a žen. Rozdíl počítejte jako relativní podílem mezi průměrnou výší důchodu žen a průměrnou výší důchodu mužů. Jako druhy důchodu berte v potaz ekvivalenty `pension-kind:PK_old_age_total_without_SR`. Pro největší rozdíl získejte název jeho refereční oblasti a rok. Data statistik důchodů a důchodců naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Data číselníků jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  skos:note "Protože jsou uvažovány druhy důchodů ekvivalentní `pension-kind:PK_old_age_total_without_SR`, jedná se o pouze starobní důchody dle zákona č. 155/1995 Sb., o důchodovém pojištění."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
