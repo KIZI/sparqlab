@@ -1511,7 +1511,7 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:pension-kind-with-most-children a sp:Query ;
-  rdfs:label "Druh důchodu s nejvíce dceřinnými koncepty"@cs ;
+  rdfs:label "Druh důchodu s nejvíce dceřinými koncepty"@cs ;
   rdfs:comment "Najděte druh důchodu s nejvíce dceřinými koncepty. Berte v potaz druhy důchodů z číselníku `pen-onto:PensionKindScheme_2008`. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   sp:text """
 PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
