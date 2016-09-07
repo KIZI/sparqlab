@@ -239,7 +239,7 @@ ORDER BY DESC(?count)
 
 exercise:properties-histogram-code-lists a sp:Query ;
   rdfs:label "Četnost výskytů predikátů v číselnících"@cs ;
-  rdfs:comment "Spočítejte četnost výskytů predikátů použitých v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně    podle tohoto počtu."@cs ;
+  rdfs:comment "Spočítejte četnost výskytů predikátů použitých v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
   sp:text """
 SELECT ?property (COUNT(*) AS ?count)
 WHERE {
