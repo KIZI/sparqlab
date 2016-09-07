@@ -918,7 +918,7 @@ WHERE {
 
 exercise:unidirectionally-related-concepts a sp:Query ;
   rdfs:label "Jsou v číselnících jednosměrně propojené koncepty?"@cs ;
-  rdfs:comment "Zjistěte, zdali v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) jsou jednosměrně propojené koncept. Například, pokud jsou koncepty `A` a `B` jednosměrně propojeny predikátem `skos:broader`, pak neexistuje propojení `B skos:narrower A`. Použijte páry inverzních predikátů `skos:broader` a `skos:narrower`, `skos:broaderTransitive` a `skos:narrowerTransitive`, `skos:topConceptOf` a `skos:hasTopConcept`."@cs ;
+  rdfs:comment "Zjistěte, zdali v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) jsou jednosměrně propojené koncepty. Například, pokud jsou koncepty `A` a `B` jednosměrně propojeny predikátem `skos:broader`, pak neexistuje propojení `B skos:narrower A`. Použijte páry inverzních predikátů `skos:broader` a `skos:narrower`, `skos:broaderTransitive` a `skos:narrowerTransitive`, `skos:topConceptOf` a `skos:hasTopConcept`."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
