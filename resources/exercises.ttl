@@ -1069,8 +1069,8 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:understanding-graph a sp:Query ;
-  rdfs:label "Spočtěte trojice ve slovníku statistik důchodů a důchodců pomocí GRAPH"@cs ;
-  rdfs:comment "Spočtěte trojice ve slovníku statistik důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`)"@cs ;
+  rdfs:label "Spočtěte trojice ve slovníku statistik důchodů a důchodců s využitím klauzule GRAPH"@cs ;
+  rdfs:comment "Spočtěte trojice ve slovníku statistik důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`). Použijte při tom klauzuli GRAPH."@cs ;
   dcterms:requires sp:NamedGraph ;
   sparqlab:prohibits sp:from, sp:fromNamed ;
   sp:text """
