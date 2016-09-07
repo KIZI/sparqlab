@@ -203,7 +203,7 @@ LIMIT 1
 
 exercise:one-triple a sp:Query ;
   rdfs:label "Jedna trojice"@cs ;
-  rdfs:comment "Vyberte jednu trojici v dat."@cs ;
+  rdfs:comment "Vyberte jednu (libovolnou) trojici z dat."@cs ;
   sp:text """
 SELECT *
 WHERE {
