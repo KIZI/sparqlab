@@ -415,7 +415,7 @@ WHERE {
 
 exercise:dataset-attributes a sp:Query ;
   rdfs:label "Atributy ve statistikách důchodů a důchodců"@cs ;
-  rdfs:comment "Vyberte atributy (tj. instance `qb:AttributeProperty`), které jsou použity ve struktuře statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`)."@cs ;
+  rdfs:comment "Vyberte atributy (tj. instance `qb:AttributeProperty`), které jsou použity ve struktuře datové kostky statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`)."@cs ;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 
