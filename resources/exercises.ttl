@@ -188,7 +188,8 @@ ORDER BY DESC(?count)
 
 exercise:one-quad a sp:Query ;
   rdfs:label "Jedna čtveřice"@cs ;
-  rdfs:comment "Vyberte jednu čtveřici z dat."@cs ;
+  rdfs:comment "Vyberte jednu (libovolnou) čtveřici z dat."@cs ;
+  skos:note "Čtveřice je RDF trojice doplněná o identifikátor grafu, ve kterém se nachází."@cs ;
   sp:text """
 SELECT *
 WHERE {
