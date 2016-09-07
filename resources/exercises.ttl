@@ -1266,7 +1266,7 @@ WHERE {
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
 
-sparqlab:old-age-pension-kinds a sp:Query ;
+exercise:old-age-pension-kinds a sp:Query ;
   rdfs:label "Koncepty starobního důchodu"@cs ;
   rdfs:comment "Najděte koncepty starobního důchodu, které odkazují na koncept `pension-kind:PK_old_age_total_without_SR` pomocí `skos:exactMatch`. Koncepty starobního důchodu jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   sp:text """
@@ -1282,7 +1282,7 @@ WHERE {
   """ ;
   sparqlab:hasDifficulty sparqlab:easy .
 
-sparqlab:is-pension-kinds-2008-polyhierarchical a sp:Query ;
+exercise:is-pension-kinds-2008-polyhierarchical a sp:Query ;
   rdfs:label "Je číselník druhů důchodů z roku 2008 polyhierarchický?"@cs ;
   rdfs:comment "Zjistěte, zdali je číselník druhů důchodů z roku 2008 (`pen-onto:PensionKindScheme_2008`) polyhierarchický. Číselník naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   skos:note "Polyhierarchické číselníky obsahují koncepty, které mají více než jeden nadřazený koncept."@cs ;
@@ -1307,7 +1307,7 @@ WHERE {
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
 
-sparqlab:pensions-rounded-to-thousands a sp:Query ;
+exercise:pensions-rounded-to-thousands a sp:Query ;
   rdfs:label "Důchody zaokrouhlené na tisíce"@cs ;
   rdfs:comment "Získejte průměrnou výši starobních důchodů pro Českou republiku (referenční oblast `<https://data.cssz.cz/resource/ruian/staty/1>`) aritmeticky zaokrouhlenou na tisíce. Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Výsledky seřaďte bez opakování sestupně dle 4-místného literálu roku průměrného důchodu."@cs ;
   sp:text """
