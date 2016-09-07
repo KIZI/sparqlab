@@ -1838,8 +1838,9 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:normal .
 
 exercise:poorest-prague-districts-over-time a sp:Query ;
-  rdfs:label "Nejchudší městské části Prahy v čase"@cs ;
-  rdfs:comment "Najděte městské části Prahy, kde v jednotlivých letech byl nejnižší starobní důchod. Pro každý rok vypište datum (`skos:notation`), název nejchudší městské části (`skos:prefLabel`) a průměrnou výši důchodů. Berte v potaz důchody ekvivalentní s `pension-kind:PK_old_age_total_without_SR`. Výše důchodů se nachází v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:label "Městské části Prahy s nejnižší průměrnou výší starobního důchodu v čase"@cs ;
+  rdfs:comment "Najděte městské části Prahy, kde v jednotlivých letech byla nejnižší průměrná výše starobního důchodu. Pro každý rok vypište datum (`skos:notation`), název příslušné městské části (`skos:prefLabel`) a průměrnou výši důchodů. Berte v potaz důchody ekvivalentní s `pension-kind:PK_old_age_total_without_SR`. Výše důchodů se nachází v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  skos:note "Protože jsou uvažovány druhy důchodů ekvivalentní `pension-kind:PK_old_age_total_without_SR`, jedná se o pouze starobní důchody dle zákona č. 155/1995 Sb., o důchodovém pojištění."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
