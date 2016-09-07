@@ -948,7 +948,7 @@ WHERE {
 
 exercise:unprintable-characters-in-labels a sp:Query ;
   rdfs:label "Jsou ve štítcích konceptů netisknutelné znaky?"@cs ;
-  rdfs:comment "Zjistěte, zdali v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) jsou štítky s obsahující netisknutelné znaky. Jako štítky berte objekty predikátů `skos:prefLabel`, `skos:altLabel` a `skos:hiddenLabel`. Netisknutelné znaky jsou v Unicode kategoriích `Zl`, `Zp` a `C`."@cs ;
+  rdfs:comment "Zjistěte, zdali v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) jsou štítky obsahující netisknutelné znaky. Jako štítky berte objekty predikátů `skos:prefLabel`, `skos:altLabel` a `skos:hiddenLabel`. Netisknutelné znaky jsou v Unicode kategoriích `Zl`, `Zp` a `C`."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
