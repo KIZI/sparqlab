@@ -1739,8 +1739,9 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:hard .
 
 exercise:greatest-increase-in-pensions a sp:Query ;
-  rdfs:label "Největší meziroční nárůst důchodů"@cs ;
-  rdfs:comment "Najděte kde a kdy došlo k největšímu meziročnímu nárůstu starobních důchodů. Jako starobní důchody berte příjemce druhů důchodů ekvivalentních s `pension-kind:PK_old_age_total_without_SR`. Data pro období, za něž jsou výše důchodů uváděny, najdete v číselníku `<https://data.cssz.cz/ontology/dates/DatesScheme>`. Meziroční nárůst vypočtěte v procentech jako rozdíl výší důchodů ve dvou následných letech vydělený výší důchodu v počátečním roce. Pro nalezenou referenční oblast uveďte název (`skos:prefLabel`). Pro počáteční a konečný rok uveďte jejich koncová data (`skos:notation`). Výše důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:label "Největší meziroční nárůst průměrné výše starobních důchodů"@cs ;
+  rdfs:comment "Najděte kde a kdy došlo k největšímu meziročnímu nárůstu průměrné výše starobních důchodů. Jako starobní důchody berte berte druhy důchodů ekvivalentních s `pension-kind:PK_old_age_total_without_SR`. Uvažujte pouze počty pro všechna pohlaví (`<https://data.cssz.cz/ontology/sdmx/code/sex-T>`). Data pro období, za něž jsou výše důchodů uváděny, najdete v číselníku `<https://data.cssz.cz/ontology/dates/DatesScheme>`. Meziroční nárůst vypočtěte v procentech jako rozdíl průměrné výše důchodů ve dvou následných letech vydělený průměrnou výší důchodu v počátečním roce. Pro nalezenou referenční oblast uveďte název (`skos:prefLabel`). Pro počáteční a konečný rok uveďte jejich koncová data (`skos:notation`). Průměrné výše důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  skos:note "Protože jsou uvažovány druhy důchodů ekvivalentní `pension-kind:PK_old_age_total_without_SR`, jedná se o pouze starobní důchody dle zákona č. 155/1995 Sb., o důchodovém pojištění."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
