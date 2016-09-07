@@ -1180,7 +1180,7 @@ WHERE {
 
 exercise:reflexive-exact-match a sp:Query ;
   rdfs:label "Reflexivní skos:exactMatch"@cs ;
-  rdfs:comment "Najdete koncepty číselníků (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`), které jsou spojeny samy se sebou přesnou shodou pomocí `skos:exactMatch`. Vyhovující koncepty uveďte bez opakování."@cs ;
+  rdfs:comment "Najděte koncepty číselníků (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`), které jsou spojeny samy se sebou přesnou shodou pomocí `skos:exactMatch`. Vyhovující koncepty uveďte bez opakování."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
