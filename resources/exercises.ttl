@@ -86,8 +86,8 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:classes-histogram a sp:Query ;
-  rdfs:label "Histogram instanciovaných tříd"@cs ;
-  rdfs:comment "Spočítejte histogram tříd instanciovaných v datech. Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  rdfs:label "Četnost výskytů instanciovaných tříd"@cs ;
+  rdfs:comment "Spočítejte četnost výskytů tříd instanciovaných v datech. Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
   sp:text """
 SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
@@ -99,8 +99,8 @@ ORDER BY DESC(?count)
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:classes-histogram-code-lists a sp:Query ;
-  rdfs:label "Histogram tříd instanciovaných v číselnících"@cs ;
-  rdfs:comment "Spočítejte histogram tříd instanciovaných v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  rdfs:label "Četnost výskytů tříd instanciovaných v číselnících"@cs ;
+  rdfs:comment "Spočítejte četnost výskytů tříd instanciovaných v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
   sp:text """
 SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
@@ -114,8 +114,8 @@ ORDER BY DESC(?count)
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:classes-histogram-data a sp:Query ;
-  rdfs:label "Histogram tříd instanciovaných ve statistikách důchodů a důchodců"@cs ;
-  rdfs:comment "Spočítejte histogram tříd instanciovaných ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  rdfs:label "Četnost výskytů tříd instanciovaných ve statistikách důchodů a důchodců"@cs ;
+  rdfs:comment "Spočítejte četnost výskytů tříd instanciovaných ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
   sp:text """
 SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
@@ -129,8 +129,8 @@ ORDER BY DESC(?count)
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:classes-histogram-metadata a sp:Query ;
-  rdfs:label "Histogram tříd instanciovaných v metadatech"@cs ;
-  rdfs:comment "Spočítejte histogram tříd instanciovaných v metadatech ke statistikám důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  rdfs:label "Četnost výskytů tříd instanciovaných v metadatech"@cs ;
+  rdfs:comment "Spočítejte četnost výskytů tříd instanciovaných v metadatech ke statistikám důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
   sp:text """
 SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
@@ -224,8 +224,8 @@ WHERE {
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties-histogram a sp:Query ;
-  rdfs:label "Histogram predikátů"@cs ;
-  rdfs:comment "Spočítejte histogram predikátů použitých v datech. Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
+  rdfs:label "Četnost výskytů predikátů"@cs ;
+  rdfs:comment "Spočítejte četnost výskytů predikátů použitých v datech. Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
   sp:text """
 SELECT ?property (COUNT(*) AS ?count)
 WHERE {
@@ -237,8 +237,8 @@ ORDER BY DESC(?count)
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties-histogram-code-lists a sp:Query ;
-  rdfs:label "Histogram predikátů v číselnících"@cs ;
-  rdfs:comment "Spočítejte histogram predikátů použitých v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně    podle tohoto počtu."@cs ;
+  rdfs:label "Četnost výskytů predikátů v číselnících"@cs ;
+  rdfs:comment "Spočítejte četnost výskytů predikátů použitých v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně    podle tohoto počtu."@cs ;
   sp:text """
 SELECT ?property (COUNT(*) AS ?count)
 WHERE {
@@ -252,8 +252,8 @@ ORDER BY DESC(?count)
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties-histogram-data a sp:Query ;
-  rdfs:label "Histogram predikátů ve statistikách důchodů a důchodců"@cs ;
-  rdfs:comment "Spočítejte histogram predikátů použitých ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
+  rdfs:label "Četnost výskytů predikátů ve statistikách důchodů a důchodců"@cs ;
+  rdfs:comment "Spočítejte četnost výskytů predikátů použitých ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
   sp:text """
 SELECT ?property (COUNT(*) AS ?count)
 WHERE {
@@ -267,8 +267,8 @@ ORDER BY DESC(?count)
   sparqlab:hasDifficulty sparqlab:easy .
 
 exercise:properties-histogram-metadata a sp:Query ;
-  rdfs:label "Histogram predikátů v metadatech statistik důchodů a důchodců"@cs ;
-  rdfs:comment "Spočítejte histogram predikátů použitých v metadatech ke statistikám důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
+  rdfs:label "Četnost výskytů predikátů v metadatech statistik důchodů a důchodců"@cs ;
+  rdfs:comment "Spočítejte četnost výskytů predikátů použitých v metadatech ke statistikám důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata`). Pro každý predikát uveďte počet jeho použití a výsledky seřaďte sestupně podle tohoto počtu."@cs ;
   sp:text """
 SELECT ?property (COUNT(*) AS ?count)
 WHERE {
