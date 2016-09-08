@@ -63,11 +63,11 @@
         query-in-spin (sparql/query->spin (:query query))
         superfluous-prohibited (test-prohibited prohibited query-in-spin)
         missing-required (test-required required query-in-spin)]
-    {:canonical-query {:query (:query-string canonical-query)
+    {:canonical-query {:query canonical-query-string
                        :results canonical-results
                        :results-type (sparql/get-results-type (:query-type canonical-query))}
      :query {:missing-required missing-required
-             :query (:query-string query)
+             :query query-string
              :results query-results
              :results-type (sparql/get-results-type (:query-type query))
              :superfluous-prohibits superfluous-prohibited}
