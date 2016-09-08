@@ -6,9 +6,7 @@
   <p>{{message}}</p>
   <pre>{{query}}</pre>
 {% else %}
-  <pre>
-  {{head}}<span id="syntax-error" data-toggle="tooltip" data-placement="bottom" title="Očekáváno: {{expected}}">{{error}}</span>{{tail}}
-  </pre>
+  <pre>{{head}}<span id="syntax-error" data-toggle="tooltip" data-placement="bottom" title="Očekáváno: {{expected}}">{{error}}</span>{{tail}}</pre>
 {% endif %}
 {% endblock %}
 
