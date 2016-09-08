@@ -624,7 +624,7 @@ WHERE {
 exercise:cyclic-hierchical-relations a sp:Query ;
   rdfs:label "Jsou v číselnících cyklické hierarchické vztahy?"@cs ;
   rdfs:comment "Zjistěte, zdali jsou v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) cykly v transitivních hierarchických vztazích vyjádřených predikáty `skos:broaderTransitive` nebo `skos:narrowerTransitive`."@cs ;
-  skos:note "O cyklickech v hierarchických vztazích v rámci číselníků se můžete dočíst ve specifikaci slovníku [SKOS](https://www.w3.org/TR/skos-reference/#L2484)."@cs ;
+  skos:note "O cyklech v hierarchických vztazích v rámci číselníků se můžete dočíst ve specifikaci slovníku [SKOS](https://www.w3.org/TR/skos-reference/#L2484)."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
