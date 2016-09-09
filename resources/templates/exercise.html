@@ -46,7 +46,7 @@
         {% endif %}
       </div>
     </div>
-    <form action="/exercise/evaluate/{{id}}" method="POST">
+    <form action="{{servlet-context}}/exercise/evaluate/{{id}}" method="POST">
       {% csrf-field %}
       {% include "sparql_editor.html" %}
       <div class="control-buttons hidden btn-group" role="group">
