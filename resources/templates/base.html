@@ -80,7 +80,10 @@
                       </a>
                   </li>
                 </ul>
-                <form class="navbar-form form-inline pull-right" role="search" action="/search" method="GET">
+                <form class="navbar-form form-inline pull-right"
+                      role="search"
+                      action="{{servlet-context}}/search"
+                      method="GET">
                   <div class="input-group">
                     <label class="sr-only" for="search">Hledaný výraz:</label>
                     <input id="search-term"
