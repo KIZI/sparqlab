@@ -2,7 +2,7 @@ FROM clojure
 MAINTAINER Jindřich Mynarz <mynarzjindrich@gmail.com>
 
 WORKDIR /root
-COPY * ./
+COPY . ./
 RUN lein uberjar
 
 EXPOSE 3000
