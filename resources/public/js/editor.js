@@ -18,7 +18,7 @@ var escapeHTML = function (text) {
     var yasqe = YASQE.fromTextArea(document.getElementById("editor"), {
       autofocus: true,
       sparql: {
-        endpoint: "/api/query",
+        endpoint: "../api/query",
         requestMethod: "GET"
       },
       tabSize: 2,
