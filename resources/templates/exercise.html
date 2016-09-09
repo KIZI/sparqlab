@@ -40,7 +40,7 @@
         <small class="text-muted">
           <strong>Podobná cvičení:</strong>
           {% for prerequisite in prerequisites %}
-          <a href="/exercise/show/{{prerequisite.id}}">{{prerequisite.name}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+          <a href="{{servlet-context}}/exercise/show/{{prerequisite.id}}">{{prerequisite.name}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
           {% endfor %}
         </small>
         {% endif %}
