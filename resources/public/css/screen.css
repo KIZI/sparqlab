@@ -46,7 +46,7 @@ strong {
 }
 
 .navbar-brand {
-  background: url("/img/logo.svg") left / contain no-repeat;
+  background: url("../img/logo.svg") left / contain no-repeat;
   padding-left: 40px;
 }
 
