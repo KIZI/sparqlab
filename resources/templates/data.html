@@ -2,12 +2,404 @@
 {% block content %}
 <div class="row">
   <div class="col-md-12">
-    <p>Tato verze cvičebnice SPARQLab používá <a href="https://data.cssz.cz/web/otevrena-data/-/duchodci-v-cr-krajich-okresech">data o důchodových ročenkách</a> od <a href="http://www.cssz.cz">České správy sociálního zabezpečení</a>. Užití těchto otevřených dat se řídí <a href="https://data.cssz.cz/web/otevrena-data/podminky-uziti">těmito podmínkami</a>.</p>
-    <p>V dotazech jsou používány tyto prefixy jmenných prostorů:</p>
+    <h1>Statistická data z oblasti důchodového pojištění</h1>
+    
+    <h2 class="text-muted">Popis dat a číselníku druhů důchodů pro cvičebnici SPARQL</h2>
+
+    <h2>Úvod</h2>
+
+    <p>Pro seznámení se s jazykem <abbr class="initialism" title="SPARQL Protocol And RDF Query Language">SPARQL</abbr> a pro jeho procvičování byla zvolena <a href="https://data.cssz.cz/web/otevrena-data/-/duchodci-v-cr-krajich-okresech">data o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu</a>, která poskytuje ve formátu RDF <a href="http://www.cssz.cz">Česká správa sociálního zabezpečení</a> (<abbr class="initialism" title="Česká správa sociálního zabezpečení">ČSSZ</abbr>). ČSSZ je jedním z prvních orgánů veřejné správy v České republice, který poskytuje svá data formou otevřených dat ve formátu RDF a zvolený dataset je jedním z datasetů, které ČSSZ zveřejňuje na svém <a href="https://data.cssz.cz/zakladni-info">portálu pro publikaci a vizualizaci otevřených dat</a>. Výše uvedený dataset byl zvolena nejen proto, že obsahuje data dostatečně bohatá, aby na nich bylo možné ukázat a procvičovat různé konstrukty jazyka SPARQL, ale také proto, že se jedná o data, která poskytuje k dalšímu využití orgán veřejné správy v ČR, a nejedná se tak o data připravená pouze pro účely cvičebnice SPARQL. Volba těchto dat by tedy měla sloužit také jako příklad toho, že znalost jazyka SPARQL lze uplatnit při zpracování dat, se kterými se lze dnes již setkat na v celé řadě případů, což ilustruje např. známý <a href="http://lod-cloud.net">Linking Open Data cloud diagram</a>. Z věcného hlediska mohou data pomoci studentům pochopit situaci mezi různými kategoriemi poživatelů důchodů – senioři či lidé pobírající invalidní nebo pozůstalostní důchod.</p>
+
+    <p>Formát RDF i jazyk SPARQL jsou standardizovány konsorciem <a href="https://www.w3.org"><abbr class="initialism" title="World Wide Web Consortium">W3C</abbr></a>. Pokud se s formátem RDF nebo s jazykem SPARQL setkáváte poprvé, nebo si je potřebujete připomenout, můžete se podívat <a href="http://www.learningsparql.com">Learning SPARQL</a>, případně na <a href="https://www.w3.org/TR/rdf11-primer/">RDF 1.1 Primer</a> a <a href="https://www.w3.org/TR/sparql11-overview">SPARQL 1.1 Overview</a>, kde najdete vysvětlení základních pojmů a odkazy na jednotlivé specifikace. Tato cvičebnice jazyka SPARQL je zaměřena na zvládnutí jazyka SPARQL pro dotazování nad daty v RDF, tj. <a href="https://www.w3.org/TR/sparql11-query">SPARQL 1.1 Query Language</a>.</p>
+
+    <p><a href="https://data.cssz.cz/web/otevrena-data/-/duchodci-v-cr-krajich-okresech">Data o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu</a> jsou reprezentována pomocí slovníku <a href="https://www.w3.org/TR/vocab-data-cube">Data Cube Vocabulary</a>, číselníky dimenzí (bude vysvětleno dále) jsou pak reprezentovány pomocí slovníku <a href="https://www.w3.org/TR/skos-reference"><abbr title="Simple Knowledge Organization System" class="initialism">SKOS</abbr></a>. Dále je stručně vysvětlen způsob, jakým jsou reprezentována data využitá v cvičebnici SPARQL. Pokud se ale seznámíte s těmito slovníky, usnadní Vám to pochopení využitých dat a následně i zvládnutí úloh v rámci cvičebnice SPARQL.</p>
+
+    <h2>Způsob reprezentace statistických dat z oblasti důchodového pojištění</h2>
+
+    <h3>Obecně o statistických datech z oblasti důchodového pojištění</h3>
+
+    <p>Přehled o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu je jedním z datasetů ČSSZ, který obsahuje statistická data z oblasti důchodového pojištění v České republice. Níže popsaný způsob reprezentace dat platí jak pro dataset použitý ve cvičebnici SPARQL, tak jej lze obdobně aplikovat i na ostatní datasety z oblasti důchodového pojištění poskytované ČSSZ. Tyto datasety lze nalézt v <a href="https://data.cssz.cz/web/otevrena-data/katalog-otevrenych-dat">katalogu otevřených dat ČSSZ</a>, kde jsou označeny klíčovým slovem &ldquo;důchodová ročenka&rdquo;.</p>
+
+    <div name="figure-1" id="figure-1" class="pull-xs-right m-l-1 m-y-1">
+      <img alt="Příklad měřené veličiny a přiřazených dimenzí"
+           class="img-fluid" 
+           width="600" height="450"
+           src="{{servlet-context}}/img/measure_and_dimensions.png"/>
+      <p class="text-xs-center">
+        <em><small>Obrázek 1: Příklad měřené veličiny a přiřazených dimenzí</small></em>
+      </p>
+    </div>
+
+    <p>Přehled o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu obsahuje statistická data, tj. data o určitých sledovaných (měřených) veličinách, v tomto případě data o počtech důchodců, o průměrné výši důchodu a o průměrném věku důchodců. Statistická data zpravidla představují tzv. vícerozměrná (multidimenzionální) data. To znamená, že sledované veličiny jsou měřeny v určitých vymezených kategoriích (dimenzích), jako je např. pohlaví důchodce, druh důchodu nebo období / datum platnosti, kdy bylo měření provedeno, resp. k jakému datu jsou naměřené údaje platné, či místo / území, kde bylo měření provedeno, resp. k jakému území se měření vztahuje. Statistická data vypovídají o skupinách subjektů či jevů, u kterých jsou sledované veličiny měřeny, a které vznikají kombinací zvolených dimenzí. Neobsahují tedy individuální data o jednotlivých subjektech (jednotlivcích) či jevech.</p>
+
+    <p>Vícerozměrnost statistických dat můžeme ilustrovat na následujícím příkladu, který je také zachycen na obrázku 1. Jednou z měřených veličin v použitém datasetu je počet důchodců. Počet důchodců je sledován za určité území, za jednotlivá pohlaví, za jednotlivé druhy důchodů a zjištěný počet je vždy platný k určitému datu. Údaje uvedené na obrázku lze slovy vyjádřit tak, že na území Prahy 3 bylo k 31. 12. 2013 evidováno 3 889 mužů pobírajících starobní důchod typu S. Pro úplnost je možné uvést, že starobní důchod S představuje starobní důchod dle § 29 odst. 1 a 3 z. č. 155/1995 Sb. nebo příslušných ustanovení předcházejících předpisů, a v důchodové statistice je pod tento druh důchodu zahrnut i důchod SIN dle § 29 odst. 4 téhož zákona. Druhy důchodu v důchodové statistice vysvětluje <a href="http://www.cssz.cz/NR/rdonlyres/B949AF7C-213E-4F46-A74D-DD700706A3ED/0/N%C3%A1vodkestatistik%C3%A1m.pdf">Návod ke statistikám důchodů a důchodců připravený ČSSZ</a>.</p>
+
+    <h3>The RDF Data Cube Vocabulary a jeho využití</h3>
+
+    <div name="figure-2" id="figure-2" class="pull-xs-right m-l-1 m-y-1">
+      <img alt="Schéma slovníku Data Cube Vocabulary"
+           class="img-fluid" 
+           width="600" height="410"
+           src="{{servlet-context}}/img/qb.png"/>
+      <p class="text-xs-center">
+        <em><small>Obrázek 2: Schéma slovníku Data Cube Vocabulary, zdroj: převzato ze <a href="https://www.w3.org/TR/vocab-data-cube">specifikace slovníku</a></small></em>
+      </p>
+    </div>
+
+    <p>Pro publikaci vícerozměrných dat na webu ve formátu RDF byl navržen slovník <a href="https://www.w3.org/TR/vocab-data-cube">Data Cube Vocabulary</a> (<abbr title="Data Cube Vocabulary" class="initialism">DCV</abbr>). Tento slovník zavádí třídy a vlastnosti, pomocí kterých lze reprezentovat datové kostky sestávající se z pozorování obsahujících měřené veličiny (fakty), jim přiřazené dimenze a případně také atributy měřených veličin jako např. jednotku, ve kterých jsou hodnoty měřených veličin vyjádřeny. Schéma slovníku DCV je znázorněno na <a href="#figure-2">obrázku 2</a>.</p>
+
+    <p>Jaké měřené veličiny a dimenze jsou obsaženy v přehledu o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu uvádí <a href="https://data.cssz.cz/documentation/duchodci-v-cr-krajich-okresech">dokumentace tohoto datasetu</a>. Není zde účelem tuto dokumentaci duplikovat, nicméně pro snazší pochopení používaného datasetu jsou zde uvedeny alespoň použité jmenné prostory a měřené veličiny a dimenze, které tvoří příslušnou datovou kostku. Měřené veličiny a dimenze jsou definovány v rámci následujících jmenných prostorů:</p> 
+
     <pre>
 {% for prefix in prefixes %}PREFIX {{prefix.prefix}}:{{prefix.padding}}&lt;{{prefix.namespace}}&gt;
 {% endfor %}
     </pre>
+
+    <p>Dataset <em>Přehled o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu</em> obsahuje měřené veličiny a dimenze uvedené v následující tabulce.</p>
+
+    <table class="table table-striped">
+      <caption class="text-xs-center">Tabulka 1: Měřené veličiny a dimenze v datasetu Přehled o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu</caption>
+      <thead class="thead-inverse">
+        <tr>
+          <th scope="col">Typ</th>
+          <th scope="col">Název</th>
+          <th scope="col">Popis</th>
+          <th scope="col"><abbr title="Internationalized Resource Identifier" class="initialism">IRI</abbr></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dimenze</td>
+          <td>Druh důchodu</td>
+          <td>Druh důchodu, pro který je počet důchodců, průměrný věk důchodce či průměrná výše důchodu uvedena</td>
+          <td><tt>cssz-dimension:druh-duchodu</tt></td>
+        </tr>
+        <tr>
+          <td>Dimenze</td>
+          <td>Pohlaví</td>
+          <td>Pohlaví, pro které je počet důchodců, průměrný věk důchodce či průměrná výše důchodu uvedena</td>
+          <td><tt>cssz-dimension:pohlavi</tt></td>
+        </tr>
+        <tr>
+          <td>Dimenze</td>
+          <td>Referenční období</td>
+          <td>Období, za které je počet důchodců, průměrný věk důchodce či průměrná výše důchodu uvedena</td>
+          <td><tt>cssz-dimension:refPeriod</tt></td>
+        </tr>
+        <tr>
+          <td>Dimenze</td>
+          <td>Referenční oblast</td>
+          <td>Oblast (stát, kraj nebo okres), za kterou je počet důchodců, průměrný věk důchodce či průměrná výše důchodu uvedena</td>
+          <td><tt>cssz-dimension:refArea</tt></td>
+        </tr>
+        <tr>
+          <td>Dimenze</td>
+          <td>Typ měření</td>
+          <td>Pomocná dimenze udávající, jaké měření obsahuje aktuální pozorování v případě dat ve formátu RDF</td>
+          <td><tt>qb:measureType</tt></td>
+        </tr>
+        <tr>
+          <td>Měřená veličina</td>
+          <td>Počet důchodců</td>
+          <td>Počet důchodců</td>
+          <td><tt>cssz-measure:pocet-duchodcu</tt></td>
+        </tr>
+        <tr>
+          <td>Měřená veličina</td>
+          <td>Průměrná výše důchodu</td>
+          <td>Průměrná výše důchodu</td>
+          <td><tt>cssz-measure:prumerna-vyse-duchodu-v-kc</tt></td>
+        </tr>
+        <tr>
+          <td>Měřená veličina</td>
+          <td>Průměrný věk</td>
+          <td>Průměrný věk</td>
+          <td><tt>cssz-measure:prumerny-vek</tt></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Tabulka ukazuje, že dataset použitý ve cvičebnici SPARQL obsahuje tři měřené veličiny a pět dimenzí. Měřenými veličinami jsou vedle <em>počtu důchodců</em>, který byl již uveden v příkladu na <a href="#figure-1">obrázku 1</a>, <em>průměrná výše důchodu</em> a <em>průměrný věk</em> poživatele důchodu. Pomocí dimenze <em>referenční období</em> je vyjádřeno, k jakému datu jsou hodnoty měřených veličin platné, a pomocí dimenze <em>referenční oblast</em> je vyjádřeno, k jakému území se měřené veličiny vztahují.</p>
+
+    <p>Dataset obsahuje také pomocnou dimenzi <em>typ měření</em>. Slovník DCV umožňuje dva <a href="https://www.w3.org/TR/vocab-data-cube/#dsd-mm">způsoby reprezentace dat v situaci, kdy má dataset obsahovat více než jednu měřenou veličinu</a>. Měření (instance třídy <tt>qb:Observation</tt>) mohou buď obsahovat hodnoty všech měřených veličin, nebo pouze hodnotu jedné z nich přičemž pomocí pomocné dimenze <em>typ měření</em> je vyjádřeno, o kterou měřenou veličinu se jedná. V datasetu <em>Přehled o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu</em> je použit druhý jmenovaný způsob.</p>
+
+    <p>S výjimkou pomocné dimenze <em>typ měření</em> jsou pro hodnoty dimenzí voleny hodnoty z definovaných číselníků (dimenze <em>typ měření</em> může nabývat hodnot, které odpovídají jednotlivým měřeným veličinám, nicméně pro ně není zaveden samostatný číselník). Dimenze a odpovídající číselníky uvádí <a href="#table-2">tabulka 2</a>. V rámci definice komponent datové kostky je vazba dimenze na číselník vyjádřena pomocí predikátu <tt>rdfs:range</tt>. Slovník DCV umožňuje pro tento účel volitelně použít také predikát <tt>qb:codeList</tt>, který ale v rámci definice komponent datové kostky použit není.</p>
+
+    <table name="table-2" id="table-2" class="table table-striped">
+      <caption class="text-xs-center">Tabulka 2: Číselníky dimenzí datasetu Přehled o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu</caption>
+      <thead class="thead-inverse">
+        <tr>
+          <th scope="col">Dimenze</th>
+          <th scope="col">Číselník</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Druh důchodu</td>
+          <td>Číselník druhů důchodů a jejich kombinací</td>
+        </tr>
+        <tr>
+          <td>Pohlaví</td>
+          <td>Číselník pohlaví dle <abbr title="Statistical Data and Metadata eXchange" class="initialism">SDMX</abbr></td>
+        </tr>
+        <tr>
+          <td>Referenční období</td>
+          <td>Číselník použitých dní</td>
+        </tr>
+        <tr>
+          <td>Referenční oblast</td>
+          <td>Územní celky dle <abbr title="Registr územní identifikace adres a nemovitostí" class="initialism">RÚIAN</abbr></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Výše uvedené číselníky jsou součástí samostatného datasetu poskytované ČSSZ s názvem <a href="https://data.cssz.cz/web/otevrena-data/-/pomocne-ciselniky">Pomocné číselníky</a>. Číselník druhů důchodů a jejich kombinací je samostatně představen níže. Číselník pohlaví je vytvořen dle standardu SDMX pro statistická data a kromě položek pro označení mužů a žen obsahuje také položky pro vyznačení situací, kdy pohlaví není známo, rozlišení dle pohlaví není pro daný případ možné a součet za všechny typy pohlaví. Standardní reprezentace číselníku pohlaví dle SDMX v RDF je k dispozici pod IRI <tt>&lt;http://purl.org/linked-data/sdmx/2009/code#&gt;</tt>. V datech publikovaných ČSSZ je vytvořen alias tohoto číselníku ve jmenném prostoru <tt>&lt;https://data.cssz.cz/ontology/sdmx/code/&gt;</tt>. Pro účely cvičebnice SPARQLu je tento alias přepsán zpět na standardní reprezentaci číselníku pohlaví.</p>
+
+    <p>Číselník použitých dní obsahuje jednotlivé kalendářní dny. Územní celky dle RÚIAN obsahuje jednotlivé územní celky v České republice dle Registru územní identifikace adres a nemovitostí. Zde je třeba upozornit na skutečnost, že Hlavní město Praha je jak krajem, tak i okresem a proto jsou data za Hlavní město Prahu v datasetu obsažena dvakrát.</p>
+
+    <h2>Číselník druhů důchodů</h2>
+
+    <p>Číselník druhů důchodů odráží věcnou problematiku důchodového pojištění v České republice. Je vhodné si prostudovat <a href="http://www.cssz.cz/NR/rdonlyres/B949AF7C-213E-4F46-A74D-DD700706A3ED/0/N%C3%A1vodkestatistik%C3%A1m.pdf">Návod ke statistikám důchodů a důchodců</a> připravený ČSSZ. Následující text je zaměřen pouze na základní vysvětlení druhů důchodů a soustředí se zejména na to, jakým způsobem je číselník druhů důchodů reprezentován ve formátu RDF.</p>
+
+    <h3>Druhy důchodů</h3>
+
+    <p>Druhy důchodů jsou dány platnou legislativou a jsou uvedeny v následující tabulce.</p>
+
+    <table id="table-3" name="table-3" class="table table-striped">
+      <caption class="text-xs-center">Tabulka 3: Druhy důchodů v České republice, zdroj: <a href="http://www.cssz.cz/NR/rdonlyres/B949AF7C-213E-4F46-A74D-DD700706A3ED/0/N%C3%A1vodkestatistik%C3%A1m.pdf">Návod ke statistikám důchodů a důchodců</a></caption>
+      <thead class="thead-inverse">
+        <tr>
+          <th scope="col">Kategorie druhu důchodu</th>
+          <th scope="col">Označení druhu důchodu</th>
+          <th scope="col">Vymezení druhu důchodu</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Přímý</td>
+          <td>S</td>
+          <td>Starobní důchod dle § 29 odst. 1 a 3 z. č. 155/1995 Sb. nebo příslušných ustanovení předcházejících předpisů, zahrnut i důchod SIN dle § 29 odst. 4 téhož zákona</td>
+        </tr>
+        <tr>
+          <td>Přímý</td>
+          <td>SD</td>
+          <td>Starobní důchod dle § 30 z. č. 155/1995 Sb. ve znění do 31. 12. 2009</td>
+        </tr>
+        <tr>
+          <td>Přímý</td>
+          <td>ST</td>
+          <td>Starobní důchod dle § 31 z. č. 155/1995 Sb.</td>
+        </tr>
+        <tr>
+          <td>Přímý</td>
+          <td>SRN</td>
+          <td>Starobní důchod dle § 29 odst. 2 z. č. 155/1995 Sb. nebo příslušných ustanovení předcházejících předpisů</td>
+        </tr>
+        <tr>
+          <td>Přímý</td>
+          <td>SR</td>
+          <td>Poměrný starobní důchod dle § 26 z. č. 100/1988 Sb. ve znění do 31. 12. 1995</td>
+        </tr>
+        <tr>
+          <td>Přímý</td>
+          <td>SI</td>
+          <td>Starobní důchod vzniklý transformací invalidního důchodu v 65 letech věku dle § 61a z. č. 155/1995 Sb. (příp. dle čl. II bodu 5 z. č. 306/2008 Sb.)</td>
+        </tr>
+        <tr>
+          <td>Přímý</td>
+          <td>IT</td>
+          <td>Invalidní důchod třetího stupně dle § 38 a § 39 odst. 2 písm. c) z. č. 155/1995 Sb. a čl. II bod 8 z. č. 306/2008 Sb., zahrnut i důchod IM (tzv. invalidita z mládí) dle § 42 z. č. 155/1995 Sb. nebo příslušných ustanovení předcházejících předpisů</td>
+        </tr>
+        <tr>
+          <td>Přímý</td>
+          <td>ID</td>
+          <td>Invalidní důchod druhého stupně dle § 38 a § 39 odst. 2 písm. b) z. č. 155/1995 Sb. a čl. II bod 8 z. č. 306/2008 Sb.</td>
+        </tr>
+        <tr>
+          <td>Přímý</td>
+          <td>IP</td>
+          <td>Invalidní důchod prvního stupně dle § 38 a § 39 odst. 2 písm. a) z. č. 155/1995 Sb. a čl. II bod 8 z. č. 306/2008 Sb.</td>
+        </tr>
+        <tr>
+          <td>Odvozený, pozůstalostní</td>
+          <td>V</td>
+          <td>Vdovský důchod dle § 49 odst. 1 z. č. 155/1995 Sb. nebo příslušných ustanovení předcházejících předpisů</td>
+        </tr>
+        <tr>
+          <td>Odvozený, pozůstalostní</td>
+          <td>VM</td>
+          <td>Vdovecký důchod dle § 49 odst. 2 z. č. 155/1995 Sb. nebo příslušných ustanovení předcházejících předpisů</td>
+        </tr>
+        <tr>
+          <td>Odvozený, pozůstalostní</td>
+          <td>D, D-DĚTI</td>
+          <td>Sirotčí důchod dle § 52 z. č. 155/1995 Sb. nebo příslušných ustanovení předcházejících předpisů</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Důchody mohou být vypláceny buď samostatně (sólo), nebo v případě vdovských (V), resp. vdoveckých (VM) důchodů může docházet k jejich výplatě v souběhu s přímým důchodem. Kombinace důchodů vyplácených v souběhu jsou označovány kombinací písmen označujících jednotlivé druhy důchodů.</p>
+
+    <p>Kombinace přímého důchodu s vdovským důchodem (V) jsou značeny: SV, SIV, SRNV, STV, SDV, SRV, ITV, IDV a IPV. Jejich součet je značen V-KOMB.</p>
+
+    <p>Kombinace přímého důchodu s vdoveckým důchodem (VM) jsou značeny: SVM, SIVM, SRNVM, STVM, SDVM, SRVM, ITVM, IDVM a IPVM. Jejich součet je značen VM-KOMB.</p>
+
+    <p>Je třeba uvést, že výše uvedená skladba druhů důchodů je využívána od roku 2010. Před rokem 2010 nebyly invalidní důchody členěny na invalidní důchod prvního, druhého a třetí stupně, ale byl rozlišován úplný invalidní důchod (značený &ldquo;I&rdquo;) a částečný invalidní důchod (značený &ldquo;IČ&rdquo;). V datech platných pro období před rokem 2010 také nebyl obsažen starobní důchod Starobní důchod vzniklý transformací invalidního důchodu v 65 letech věku dle § 61a z. č. 155/1995 Sb. (starobní důchod SI). Adekvátně k tomu se také lišila skladba kombinací přímého důchodu s vdovským či vdoveckým důchodem.</p>
+
+    <h3>Reprezentace číselníku druhů důchodů ve formátu RDF</h3>
+
+    <p>Číselník druhů důchodů je reprezentován pomocí slovníku <a href="https://www.w3.org/TR/skos-reference">SKOS</a> a ve skutečnosti je tvořen třemi instancemi třídy <tt>skos:ConceptScheme</tt>:</p>
+
+    <ul>
+      <li><tt>cssz-pension-kinds:PensionKindScheme</tt>,</li>
+      <li><tt>cssz-pension-kinds:PensionKindScheme_2008</tt> a</li>
+      <li><tt>cssz-pension-kinds:PensionKindScheme_2010</tt>.</li>
+    </ul>
+
+    <p>Jmenný prostor <tt>cssz-pension-kinds</tt> je vymezen jako <tt>&lt;https://data.cssz.cz/ontology/pension-kinds/&gt;</tt>.</p>
+
+    <p>V datasetu, který je použit v rámci cvičebnice SPARQL jsou zahrnuta data pro období od roku 2008. Číselník <tt>cssz-pension-kinds:PensionKindScheme_2008</tt> tak obsahuje druhy důchodů, které vyskytují v datech za roky 2008 a 2009. Výše jsou zmíněny rozdíly v druzích důchodů od roku 2010. Číselník <tt>cssz-pension-kinds:PensionKindScheme_2010</tt> obsahuje druhy důchodů používané v datech od roku 2010.</p>
+
+    <p>Některé druhy důchodů se objevují jak v datech za období let 2008-2009, tak i v datech od roku 2010. Číselník <tt>cssz-pension-kinds:PensionKindScheme</tt> obsahuje druhy důchodů vymezené bez vazby na výše uvedená období. Koncepty představující jednotlivé druhy důchodů v číselnících <tt>cssz-pension-kinds:PensionKindScheme_2008</tt> a <tt>cssz-pension-kinds:PensionKindScheme_2010</tt> jsou propojeny na koncept představující jejich na období nezávislou reprezentaci v číselníku <tt>cssz-pension-kinds:PensionKindScheme</tt> pomocí vlastnosti <tt>skos:exactMatch</tt>.</p>
+
+    <p>Některé druhy důchodů jsou sumou jiných druhů důchodů, např. výše zmíněné druhy důchodů s označením V-KOMB a VM-KOMB. V číselnících <tt>cssz-pension-kinds:PensionKindScheme_2008</tt> a <tt>cssz-pension-kinds:PensionKindScheme_2010</tt> je využito vlastnosti <tt>skos:narrower</tt> pro vyjádření, že určitý druh důchodů je sumou druhů důchodů, které jsou uvedeny jako objekty tvrzení, kde je predikátem <tt>skos:narrower</tt>.</p>
+
+    <h3>Použitá hierarchie důchodů</h3>
+
+    <p>Protože je číselník druhů důchodů použit i v jiných datasetech důchodové statistiky ČSSZ, obsahuje i druhy důchodů a jejich součty, které nejsou obsaženy v datasetu <em>Přehled o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu</em>, která je použita v rámci cvičebnice SPARQL. Druhy důchodů obsažené v tomto datasetu a jejich hierarchie, která vyjadřuje, jak jsou jednotlivé druhy důchodů agregovány, jsou uvedeny v <a href="#table-4">tabulce 4</a> (pro zkrácení jsou vynechány prefixy jmenného prostoru).</p>
+
+    <p>Dataset využitý ve cvičebnici SPARQL obsahuje také druh důchodů označený jako D-KMENY. Ve skutečnosti se nejedná o samostatný druh důchodu, ale o označení příjemců sirotčího důchodu. Jeden příjemce může jedním důchodovým listem dostávat sirotčí důchod pro více osiřelých dětí. Počet příjemců sirotčího důchodu tak může být menší než počet vyplácených sirotčích důchodů. Tato specifická kategorie stojí mimo hierarchii druhů důchodů.</p>
+
+    <table id="table-4" name="table-4" class="table table-striped">
+      <caption class="text-xs-center">Tabulka 4: Hierarchie druhů důchodů v datasetu Přehled o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu</caption>
+      <thead class="thead-inverse">
+        <tr>
+          <th scope="col">Hierarchie pro data za roky 2008 a 2009</th>
+          <th scope="col">Hierarchie pro data od roku 2010</th>
+        </tr>
+      </thead>
+      <tbody>
+        <td>
+          <tt>PK_total_without_special_pensions_2008</tt>
+          <ul>
+            <li>
+              <tt>PK_old_age_total_S_SRN_ST_SD_2008</tt>
+              <ul>
+                <li><tt>PK_S_2008</tt></li>
+                <li><tt>PK_SRN_2008</tt></li>
+                <li><tt>PK_ST_2008</tt></li>
+                <li><tt>PK_SD_2008</tt></li>
+              </ul>
+            </li>
+            <li><tt>PK_SR_2008</tt></li>
+            <li><tt>PK_I_2008</tt></li>
+            <li><tt>PK_IC_2008</tt></li>
+            <li>
+              <tt>PK_V_total_2008</tt>
+              <ul>
+                <li><tt>PK_V_2008</tt></li>
+                <li>
+                  <tt>PK_V-KOMB_2008</tt>
+                  <ul>
+                    <li><tt>PK_SV_2008</tt></li>
+                    <li><tt>PK_SRNV_2008</tt></li>
+                    <li><tt>PK_STV_2008</tt></li>
+                    <li><tt>PK_SDV_2008</tt></li>
+                    <li><tt>PK_SRV_2008</tt></li>
+                    <li><tt>PK_IV_2008</tt></li>
+                    <li><tt>PK_ICV_2008</tt></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <tt>PK_VM_total_2008</tt>
+              <ul>
+                <li><tt>PK_VM_2008</tt></li>
+                <li>
+                  <tt>PK_VM-KOMB_2008</tt>
+                  <ul>
+                    <li><tt>PK_SVM_2008</tt></li>
+                    <li><tt>PK_SRNVM_2008</tt></li>
+                    <li><tt>PK_STVM_2008</tt></li>
+                    <li><tt>PK_SDVM_2008</tt></li>
+                    <li><tt>PK_SRVM_2008</tt></li>
+                    <li><tt>PK_IVM_2008</tt></li>
+                    <li><tt>PK_ICVM_2008</tt></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><tt>PK_D_2008</tt></li>
+          </ul>
+        </td>
+        <td>
+          <tt>PK_total_without_special_pensions_2010</tt>
+          <ul>
+            <li>
+              <tt>PK_old_age_total_S_SI_SRN_ST_SD_2010</tt>
+              <ul>
+                <li><tt>PK_S_2010</tt></li>
+                <li><tt>PK_SI_2010</tt></li>
+                <li><tt>PK_SRN_2010</tt></li>
+                <li><tt>PK_ST_2010</tt></li>
+                <li><tt>PK_SD_2010</tt></li>
+              </ul>
+            </li>
+            <li><tt>PK_SR_2010</tt></li>
+            <li><tt>PK_IP_2010</tt></li>
+            <li><tt>PK_ID_2010</tt></li>
+            <li><tt>PK_IT_2010</tt></li>
+            <li>
+              <tt>PK_V_total_2010</tt>
+              <ul>
+                <li><tt>PK_V_2010</tt></li>
+                <li>
+                  <tt>PK_V-KOMB_2010</tt>
+                  <ul>
+                    <li><tt>PK_SVM_2010</tt></li>
+                    <li><tt>PK_SIVM_2010</tt></li>
+                    <li><tt>PK_SRNVM_2010</tt></li>
+                    <li><tt>PK_STVM_2010</tt></li>
+                    <li><tt>PK_SDVM_2010</tt></li>
+                    <li><tt>PK_SRVM_2010</tt></li>
+                    <li><tt>PK_ITVM_2010</tt></li>
+                    <li><tt>PK_IDVM_2010</tt></li>
+                    <li><tt>PK_IPVM_2010</tt></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <tt>PK_VM_total_2010</tt>
+              <ul>
+                <li><tt>PK_VM_2010</tt></li>
+                <li>
+                  <tt>PK_VM-KOMB_2010</tt>
+                  <ul>
+                    <li><tt>PK_SV_2010</tt></li>
+                    <li><tt>PK_SIV_2010</tt></li>
+                    <li><tt>PK_SRNV_2010</tt></li>
+                    <li><tt>PK_STV_2010</tt></li>
+                    <li><tt>PK_SDV_2010</tt></li>
+                    <li><tt>PK_SRV_2010</tt></li>
+                    <li><tt>PK_ITV_2010</tt></li>
+                    <li><tt>PK_IDV_2010</tt></li>
+                    <li><tt>PK_IPV_2010</tt></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><tt>PK_D_2010</tt></li>
+          </ul>
+        </td>
+      </tbody>
+    </table>
+
+    <h2>Licence dat</h2>
+
+    <p>Tato verze cvičebnice SPARQLab používá <a href="https://data.cssz.cz/web/otevrena-data/-/duchodci-v-cr-krajich-okresech">data o důchodových ročenkách</a> od <a href="http://www.cssz.cz">České správy sociálního zabezpečení</a>. Užití těchto otevřených dat se řídí <a href="https://data.cssz.cz/web/otevrena-data/podminky-uziti">těmito podmínkami</a>.</p>
+
   </div>
 </div>
 {% endblock %}
