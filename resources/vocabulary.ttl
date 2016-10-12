@@ -74,3 +74,57 @@
   skos:prefLabel "Obtížná"@cs, "Hard"@en ;
   skos:notation 2 ;
   rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
+
+# ----- Exercise categories -----
+
+:exercise-categories a skos:ConceptScheme ;
+  rdfs:label "Kategorie cvičení"@cs, "Exercise categories"@en ;
+  rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
+
+:graph-patterns a skos:Concept ;
+  skos:prefLabel "Grafové vzory"@cs, "Graph patterns"@en ;
+  skos:topConceptOf :exercise-categories .
+
+:filtering a skos:Concept ;
+  skos:prefLabel "Filtrování"@cs, "Filtering"@en ;
+  skos:topConceptOf :exercise-categories .
+
+:optional-patterns a skos:Concept ;
+  skos:prefLabel "Nepovinné části vzorů"@cs, "Optional graph patterns"@en ;
+  skos:topConceptOf :exercise-categories .
+
+:ordering a skos:Concept ;
+  skos:prefLabel "Řazení"@cs, "Ordering"@en ;
+  skos:topConceptOf :exercise-categories .
+  
+:deduplication a skos:Concept ;
+  skos:prefLabel "Vynechání duplicit"@cs, "Deduplication"@en ;
+  skos:topConceptOf :exercise-categories .
+
+:negation a skos:Concept ;
+  skos:prefLabel "Negace"@cs, "Negation"@en ;
+  skos:topConceptOf :exercise-categories .
+
+:aggregation a skos:Concept ;
+  skos:prefLabel "Agregace"@cs, "Aggregation"@en ;
+  skos:topConceptOf :exercise-categories .
+
+:subqueries a skos:Concept ;
+  skos:prefLabel "Vnořené dotazy"@cs, "Subqueries"@en ;
+  skos:topConceptOf :exercise-categories .
+
+:property-paths a skos:Concept ;
+  skos:prefLabel "Cesty v grafech"@cs, "Property paths"@en ;
+  skos:topConceptOf :exercise-categories .
+
+:construct-queries a skos:Concept ;
+  skos:prefLabel "CONSTRUCT dotazy"@cs, "CONSTRUCT queries"@en ;
+  skos:topConceptOf :exercise-categories .
+
+:ask-queries a skos:Concept ;
+  skos:prefLabel "ASK dotazy"@cs, "ASK queries"@en ;
+  skos:topConceptOf :exercise-categories .
+ 
+:describe-queries a skos:Concept ;
+  skos:prefLabel "DESCRIBE dotazy"@cs, "DESCRIBE queries"@en ;
+  skos:topConceptOf :exercise-categories .
