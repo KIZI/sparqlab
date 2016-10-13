@@ -13,7 +13,7 @@
           Povinné konstrukty:
         </strong>
           {% for require in requires %}
-          <code>{{require.label}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+          {{require.label|inline-markdown}}{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
           {% endfor %}
         </p>
         {% endif %}
@@ -24,7 +24,7 @@
           Zakázané konstrukty:
          </strong>
           {% for prohibit in prohibits %}
-          <code>{{prohibit.label}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+          {{prohibit.label|inline-markdown}}{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
           {% endfor %}
         </p>
         {% endif %}

@@ -27,7 +27,7 @@
       <i class="fa fa-question left" aria-hidden="true"></i>
       <strong>Chybějící konstrukty:</strong>
       {% for required in query.missing-required %}
-      <code>{{required.label}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+      {{required.label|inline-markdown}}{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
       {% endfor %}
     </p>
     {% endif %}
@@ -36,7 +36,7 @@
       <i class="fa fa-ban left" aria-hidden="true"></i>
       <strong>Zakázané konstrukty:</strong>
       {% for prohibited in query.superfluous-prohibited %}
-      <code>{{prohibited.label}}</code>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+      {{prohibited.label|inline-markdown}}{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
       {% endfor %}
     </p>
     {% endif %}
