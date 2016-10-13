@@ -93,12 +93,8 @@ h3 {
   color: #d9534f;
 }
 
-.fa.left {
-  padding-right: .3em;
-}
-
-.fa.right {
-  padding-left: .3em;
+.fa {
+  padding-right: 0 .3em;
 }
 
 .done-icon {

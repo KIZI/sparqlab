@@ -9,7 +9,7 @@
         {% if requires|not-empty %}
         <p>
         <strong>
-          <i class="fa fa-check left" aria-hidden="true"></i>
+          <i class="fa fa-check" aria-hidden="true"></i>
           Povinné konstrukty:
         </strong>
           {% for require in requires %}
@@ -20,7 +20,7 @@
         {% if prohibits|not-empty %}
         <p>
         <strong>
-          <i class="fa fa-ban left" aria-hidden="true"></i>
+          <i class="fa fa-ban" aria-hidden="true"></i>
           Zakázané konstrukty:
          </strong>
           {% for prohibit in prohibits %}
@@ -32,7 +32,7 @@
       <div class="col-md-4">
         {% if note %}
         <div class="alert alert-info" role="alert">
-          <h5><i class="fa fa-thumb-tack left" aria-hidden="true"></i>Poznámka</h5>
+          <h5><i class="fa fa-thumb-tack" aria-hidden="true"></i>Poznámka</h5>
           {{note|markdown}}
         </div>
         {% endif %}
