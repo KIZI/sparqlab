@@ -2,14 +2,14 @@
 {% block content %}
 <h1>Cvičení dle jazykových konstruktů</h1>
 <p>Cvičení jsou řazena podle použitých konstruktů jazyka SPARQL tak, že nejprve jsou uvedena cvičení využívající méně konstruktů.</p>
-<ul id="exercises"> 
+<ul class="exercises"> 
   {% for exercise in exercises %}
   <li>
     <a href="{{servlet-context}}/exercise/show/{{exercise.id}}">{{exercise.name}}</a>
     {% if exercise.done %}
     <i class="fa fa-check done-icon" title="Vyřešeno" aria-hidden="true"></i>
     {% endif %}
-    <span class="tag tag-pill tag-info">{{exercise.difficultyLabel}}</span>
+    <span title="Obtížnost" class="tag tag-pill tag-info">{{exercise.difficultyLabel}}</span>
   </li>
   {% endfor %}
 </ul>

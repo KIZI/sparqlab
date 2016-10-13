@@ -12,7 +12,7 @@
 {% endif %}
 <h4>Nalezená cvičení</h4>
 {% if exercises|not-empty %}
-<ul>
+<ul class="exercises">
   {% for exercise in exercises %}
   <li><a href="{{servlet-context}}/exercise/show/{{exercise.id}}">{{exercise.name}}</a></li>
   {% endfor %}
