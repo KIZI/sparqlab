@@ -28,6 +28,14 @@
           {% endfor %}
         </p>
         {% endif %}
+        <form action="{{servlet-context}}/exercise/evaluate/{{id}}" method="POST">
+          {% csrf-field %}
+          {% include "sparql_editor.html" %}
+          <div class="control-buttons hidden btn-group" role="group">
+            <button id="run-query" type="button" class="btn btn-default">Spustit dotaz</button>
+            <button type="submit" class="btn btn-primary">Odeslat</button>
+          </div>
+        </form>
       </div>
       <div class="col-md-4">
         {% if note %}
@@ -37,23 +45,17 @@
         </div>
         {% endif %}
         {% if prerequisites|not-empty %}
-        <small class="text-muted">
-          <strong>Podobná cvičení:</strong>
-          {% for prerequisite in prerequisites %}
-          <a href="{{servlet-context}}/exercise/show/{{prerequisite.id}}">{{prerequisite.name}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
-          {% endfor %}
-        </small>
+        <p id="related-exercises">
+          <small class="text-muted">
+            <strong>Podobná cvičení:</strong>
+            {% for prerequisite in prerequisites %}
+            <a href="{{servlet-context}}/exercise/show/{{prerequisite.id}}">{{prerequisite.name}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+            {% endfor %}
+          </small>
+        </p>
         {% endif %}
       </div>
     </div>
-    <form action="{{servlet-context}}/exercise/evaluate/{{id}}" method="POST">
-      {% csrf-field %}
-      {% include "sparql_editor.html" %}
-      <div class="control-buttons hidden btn-group" role="group">
-        <button id="run-query" type="button" class="btn btn-default">Spustit dotaz</button>
-        <button type="submit" class="btn btn-primary">Odeslat</button>
-      </div>
-    </form>
     {% include "sparql_results.html" %}
   </div>
 </div>
