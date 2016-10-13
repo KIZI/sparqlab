@@ -70,7 +70,7 @@
              :query query-string
              :results query-results
              :results-type (sparql/get-results-type (:query-type query))
-             :superfluous-prohibits superfluous-prohibited}
+             :superfluous-prohibited superfluous-prohibited}
      :equal? (and (empty? (union superfluous-prohibited missing-required))
                   (or equal-query-result
                       (sparql/equal-query-results? (:query-type canonical-query)
