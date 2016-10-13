@@ -14,7 +14,12 @@
 {% if exercises|not-empty %}
 <ul class="exercises">
   {% for exercise in exercises %}
-  <li><a href="{{servlet-context}}/exercise/show/{{exercise.id}}">{{exercise.name}}</a></li>
+  <li>
+    <a href="{{servlet-context}}/exercise/show/{{exercise.id}}">{{exercise.name}}</a>
+    {% if exercise.done %}
+    <i class="fa fa-check done-icon" title="Vyřešeno" aria-hidden="true"></i>
+    {% endif %}
+  </li>
   {% endfor %}
 </ul>
 {% else %}

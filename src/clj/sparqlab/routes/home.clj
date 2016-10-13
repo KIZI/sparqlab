@@ -107,6 +107,7 @@
          (remove spin-term?))))
 
 (defn get-exercises-done
+  "Get a set of IDs of exercises correctly answered."
   [request]
   (->> (:cookies request)
        (filter (every-pred (comp #(string/starts-with? % cookie-ns) key)
@@ -177,9 +178,14 @@
                                                        :title "Syntaktická chyba ve SPARQL dotazu")))))
 
 (defn search-exercises
-  [search-term search-constructs]
-  (select-query (sparql/sparql-template "find_exercises" {:search-term search-term
-                                                          :search-constructs search-constructs})))
+  "Search exercises for a `search-term` or several SPARQL `search-constructs`."
+  [request search-term search-constructs]
+  (let [exercises-done (get-exercises-done request)
+        exercises-found (->> {:search-term search-term
+                              :search-constructs search-constructs}
+                             (sparql/sparql-template "find_exercises")
+                             select-query)]
+    (mark-exercises-as-done exercises-found exercises-done)))
 
 (defn show-exercise
   [id]
@@ -222,8 +228,8 @@
                                 :title "Data SPARQLabu"})))
 
 (defn search-results
-  [search-term search-constructs]
-  (let [exercises-found (search-exercises search-term search-constructs)
+  [request search-term search-constructs]
+  (let [exercises-found (search-exercises request search-term search-constructs)
         construct-labels (exercise/get-construct-labels search-constructs local-language)]
     (layout/render "search_results.html" {:exercises exercises-found
                                           :search-term search-term
@@ -241,5 +247,6 @@
   (GET "/data" [] (data-page))
   (GET "/about" [] (about-page))
   (GET "/search"
-       {{search-term :q search-constructs :construct} :params}
-       (search-results search-term search-constructs)))
+       {{search-term :q search-constructs :construct} :params
+        :as request}
+       (search-results request search-term search-constructs)))
