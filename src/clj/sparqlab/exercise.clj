@@ -52,28 +52,45 @@
   [^String canonical-query-string
    ^String query-string
    & {:keys [prohibited required]}]
-  (let [canonical-query (sparql/parse-query canonical-query-string)
+  (let [sparql-query (partial sparql/sparql-query sparql/sparql-endpoint)
+        canonical-query (sparql/parse-query canonical-query-string)
         query (sparql/parse-query query-string)
         equal-query-result (equal-query? canonical-query query)
-        canonical-results (sparql/sparql-query-cached sparql/sparql-endpoint canonical-query)
+        all-ask-queries? (every? (comp (partial = ::sparql/ask) :query-type) [canonical-query query])
         ; If the queries are the same, retrieve only the canonical results.
-        query-results (if equal-query-result
-                        canonical-results
-                        (sparql/sparql-query sparql/sparql-endpoint query))
+        results (if equal-query-result
+                  (let [res (sparql/sparql-query-cached sparql/sparql-endpoint canonical-query)]
+                    {:canonical-results res
+                     :query-results res})
+                  ; If the type of both queries is ASK, then rewrite them to SELECT queries
+                  (if all-ask-queries?
+                    (let [convert-and-query (comp sparql-query sparql/ask->select-query :query)
+                          canonical-select-results (convert-and-query canonical-query)
+                          query-select-results (convert-and-query query)]
+                      {:canonical-results (sparql/select->ask-result canonical-select-results)
+                       :canonical-results-to-compare canonical-select-results
+                       :query-results (sparql/select->ask-result query-select-results)
+                       :query-results-to-compare query-select-results})
+                    ; Otherwise execute both queries
+                    {:canonical-results (sparql-query canonical-query)
+                     :query-results (sparql-query query)}))
         query-in-spin (sparql/query->spin (:query query))
         superfluous-prohibited (test-prohibited prohibited query-in-spin)
         missing-required (test-required required query-in-spin)]
     {:canonical-query {:query canonical-query-string
-                       :results canonical-results
+                       :results (:canonical-results results)
                        :results-type (sparql/get-results-type (:query-type canonical-query))}
      :query {:missing-required missing-required
              :query query-string
-             :results query-results
+             :results (:query-results results)
              :results-type (sparql/get-results-type (:query-type query))
              :superfluous-prohibited superfluous-prohibited}
      :equal? (and (empty? (union superfluous-prohibited missing-required))
                   (or equal-query-result
-                      (sparql/equal-query-results? (:query-type canonical-query)
-                                                   canonical-results
-                                                   (:query-type query)
-                                                   query-results)))}))
+                      (if all-ask-queries?
+                        (sparql/equal-query-results? ::sparql/select (:canonical-results-to-compare results)
+                                                     ::sparql/select (:query-results-to-compare results))
+                        (sparql/equal-query-results? (:query-type canonical-query)
+                                                     (:canonical-results results)
+                                                     (:query-type query)
+                                                     (:query-results results)))))}))

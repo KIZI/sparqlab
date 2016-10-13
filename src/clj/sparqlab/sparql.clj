@@ -6,7 +6,7 @@
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [clojure.string :as string]
-            [cheshire.core :refer [parse-string]]
+            [cheshire.core :as json] 
             [clojure.java.io :as io]
             [stencil.core :refer [render-file]]
             [stencil.loader :refer [set-cache]]
@@ -146,7 +146,7 @@
 (defn normalize-select-results
   "Normalize results of a SPARQL SELECT query."
   [query-results]
-  (let [data (parse-string query-results keyword)]
+  (let [data (json/parse-string query-results keyword)]
     (cond-> (map (partial map val) (get-in data [:results :bindings]))
       (not (get-in data [:results :ordered])) set ; Unordered bindings are compared as sets 
       )))
@@ -154,7 +154,7 @@
 (defn parse-ask-result
   "Parse SPARQL ASK query."
   [query-result]
-  (:boolean (parse-string query-result keyword)))
+  (:boolean (json/parse-string query-result keyword)))
 
 (defmulti equal-query-results?
   "Test if query results are equal. Dispatches on the type of the first query results.
@@ -241,6 +241,36 @@
    (sparql-template file-name {}))
   ([file-name data]
    (render-file (str "sparql/" file-name ".mustache") data)))
+
+(defn ask->select-query
+  "Convert ASK `query` to SELECT query."
+  [^Query query]
+  (let [query-pattern (.getQueryPattern query)
+        select (doto (Query.)
+                 (.setQuerySelectType)
+                 (.setQueryResultStar true)
+                 (.setQueryPattern query-pattern)
+                 (.setLimit 100))]
+    {:query select
+     :query-string (serialize-query select)
+     :query-type ::select}))
+
+(defn ask-result
+  "Make a result of SPARQL ASK query"
+  [^Boolean result]
+  (let [response {:head {}
+                  :boolean result}]
+    (json/generate-string response {:pretty true})))
+
+(defn select->ask-result
+  "Convert SPARQL SELECT results as if they were results for SPARQL ASK query."
+  [^String select-results]
+  (-> select-results
+      (json/parse-string keyword)
+      (get-in [:results :bindings])
+      empty?
+      not
+      ask-result))
 
 (defn ping-endpoint
   "Test if SPARQL endpoint at `endpoint-url` can be reached."
