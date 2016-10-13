@@ -1,8 +1,9 @@
 (function ($) {
   var yasqeOptions = {
     createShareLink: false,
-    readOnly: true,
+    lineNumbers: false,
     persistent: null,
+    readOnly: true,
     theme: "sparqlab"
   };
   var textAreaToYasqe = function (element) {
