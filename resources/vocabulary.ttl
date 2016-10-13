@@ -83,48 +83,60 @@
 
 :graph-patterns a skos:Concept ;
   skos:prefLabel "Grafové vzory"@cs, "Graph patterns"@en ;
+  skos:related sp:where ;
   skos:topConceptOf :exercise-categories .
 
 :filtering a skos:Concept ;
   skos:prefLabel "Filtrování"@cs, "Filtering"@en ;
+  skos:related sp:Filter, sp:having ;
   skos:topConceptOf :exercise-categories .
 
 :optional-patterns a skos:Concept ;
   skos:prefLabel "Nepovinné části vzorů"@cs, "Optional graph patterns"@en ;
+  skos:related sp:Optional ;
   skos:topConceptOf :exercise-categories .
 
 :ordering a skos:Concept ;
   skos:prefLabel "Řazení"@cs, "Ordering"@en ;
+  skos:related sp:Asc, sp:Desc, sp:orderBy ;
   skos:topConceptOf :exercise-categories .
   
 :deduplication a skos:Concept ;
   skos:prefLabel "Vynechání duplicit"@cs, "Deduplication"@en ;
+  skos:related sp:distinct, sp:reduced, sp:groupBy ;
   skos:topConceptOf :exercise-categories .
 
 :negation a skos:Concept ;
   skos:prefLabel "Negace"@cs, "Negation"@en ;
+  skos:related sp:NotExists, sp:not, sp:notExists ;
   skos:topConceptOf :exercise-categories .
 
 :aggregation a skos:Concept ;
   skos:prefLabel "Agregace"@cs, "Aggregation"@en ;
+  skos:related sp:Aggregation, sp:Avg, sp:Count, sp:GroupConcat, sp:Max, sp:Min, sp:Sample, sp:Sum, sp:groupBy ;
   skos:topConceptOf :exercise-categories .
 
 :subqueries a skos:Concept ;
   skos:prefLabel "Vnořené dotazy"@cs, "Subqueries"@en ;
+  skos:related sp:SubQuery ;
   skos:topConceptOf :exercise-categories .
 
 :property-paths a skos:Concept ;
   skos:prefLabel "Cesty v grafech"@cs, "Property paths"@en ;
+  skos:related sp:AltPath, sp:ModPath, sp:Path, sp:ReversePath, sp:SeqPath, sp:TriplePath ;
   skos:topConceptOf :exercise-categories .
 
 :construct-queries a skos:Concept ;
   skos:prefLabel "CONSTRUCT dotazy"@cs, "CONSTRUCT queries"@en ;
+  skos:related sp:Construct ;
   skos:topConceptOf :exercise-categories .
 
 :ask-queries a skos:Concept ;
   skos:prefLabel "ASK dotazy"@cs, "ASK queries"@en ;
+  skos:related sp:Ask ;
   skos:topConceptOf :exercise-categories .
  
 :describe-queries a skos:Concept ;
   skos:prefLabel "DESCRIBE dotazy"@cs, "DESCRIBE queries"@en ;
+  skos:related sp:Describe ;
   skos:topConceptOf :exercise-categories .
