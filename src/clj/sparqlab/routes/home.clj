@@ -47,16 +47,17 @@
                 (assoc acc k #{v}))))]
     (reduce group-fn {} coll)))
 
-(defn mark-exercise-as-done
+(defn mark-exercise-as-solved
+  "Marks exercise identified with `id` as solved using a cookie."
   [response id]
-  (set-cookie response (str cookie-ns id) true))
+  (set-cookie response (str cookie-ns id) "solved"))
 
-(defn mark-exercises-as-done
-  [exercises exercises-done]
+(defn mark-exercises-with-statuses
+  [exercises exercise-statuses]
   (map (fn [{:keys [id]
              :as exercise}]
-         (if (exercises-done id)
-           (assoc exercise :done true)
+         (if-let [exercise-status (exercise-statuses id)]
+           (assoc exercise :status exercise-status)
            exercise))
        exercises))
 
@@ -82,11 +83,11 @@
   (select-query (sparql/sparql-template "get_prerequisites" {:exercise (prefix/exercise id)})))
 
 (defn get-exercises-by-difficulty
-  [exercises-done]
+  [exercise-statuses]
   (let [exercises (-> "get_exercises_by_difficulty"
                       (sparql/sparql-template {:language local-language})
                       select-query
-                      (mark-exercises-as-done exercises-done))]
+                      (mark-exercises-with-statuses exercise-statuses))]
     (group-by :difficulty exercises)))
 
 (def spin-dependencies
@@ -106,14 +107,14 @@
          kahn-sort
          (remove spin-term?))))
 
-(defn get-exercises-done
-  "Get a set of IDs of exercises correctly answered."
+(defn get-exercise-statuses
+  "Get a map of exercise IDs to their statuses (from #{solved, revealed})."
   [request]
   (->> (:cookies request)
-       (filter (every-pred (comp #(string/starts-with? % cookie-ns) key)
-                           (comp (partial = "true") :value val)))
-       (map (comp #(subs % (count cookie-ns)) key))
-       (into #{})))
+       (filter (every-pred (comp #(string/starts-with? % cookie-ns) key)))
+       (map (juxt (comp #(subs % (count cookie-ns)) key)
+                  (comp :value val)))
+       (into {})))
 
 (defn get-namespace-prefixes
   []
@@ -121,10 +122,10 @@
 
 (defn exercises-by-difficulty
   [request]
-  (let [exercises-done (get-exercises-done request)
+  (let [exercise-statuses (get-exercise-statuses request)
         {easy (prefix/sparqlab "easy")
          normal (prefix/sparqlab "normal")
-         hard (prefix/sparqlab "hard")} (get-exercises-by-difficulty exercises-done)]
+         hard (prefix/sparqlab "hard")} (get-exercises-by-difficulty exercise-statuses)]
     (layout/render "exercises_by_difficulty.html" {:title "Cvičení dle obtížnosti"
                                                    :easy easy
                                                    :easy-label (:difficultyLabel (first easy))
@@ -133,18 +134,18 @@
                                                    :hard hard
                                                    :hard-label (:difficultyLabel (first hard))})))
 (defn get-exercises-by-language-constructs
-  [exercises-done]
+  [exercise-statuses]
   (let [sorted-exercises (sort-exercises-by-dependencies)
         exercises (-> "get_exercises_by_difficulty"
                       (sparql/sparql-template {:language local-language})
                       select-query
-                      (mark-exercises-as-done exercises-done))]
+                      (mark-exercises-with-statuses exercise-statuses))]
     (sort-by (comp #(.indexOf sorted-exercises %) prefix/exercise :id) exercises)))
 
 (defn exercises-by-language-constructs
   [request]
-  (let [exercises-done (get-exercises-done request)
-        exercises (get-exercises-by-language-constructs exercises-done)]
+  (let [exercise-statuses (get-exercise-statuses request)
+        exercises (get-exercises-by-language-constructs exercise-statuses)]
     (layout/render "exercises_by_language_constructs.html" {:title "Cvičení dle jazykových konstruktů"
                                                             :exercises exercises})))
 
@@ -160,7 +161,8 @@
      :expected (string/join \newline expected)}))
 
 (defn evaluate-exercise
-  [{{query "query"} :form-params}
+  [{{query "query"} :form-params
+    :as request}
    id]
   (let [{:keys [valid?] :as validation-result} (sparql/valid-query? query)]
     (if valid?
@@ -170,22 +172,23 @@
             verdict (exercise/evaluate-exercise canonical-query
                                                 query
                                                 :prohibited (map :prohibited prohibits)
-                                                :required (map :required requires))]
+                                                :required (map :required requires))
+            exercise-status (get (get-exercise-statuses request) id)]
         (cond-> (layout/render "evaluation.html" (assoc (merge exercise verdict)
                                                         :title (str "Vyhodnocení cvičení: " (:name exercise))))
-          (:equal? verdict) (mark-exercise-as-done id)))
+          (and (:equal? verdict) (not= exercise-status "revealed")) (mark-exercise-as-solved id)))
       (layout/render "sparql_syntax_error.html" (assoc (format-invalid-query validation-result)
                                                        :title "Syntaktická chyba ve SPARQL dotazu")))))
 
 (defn search-exercises
   "Search exercises for a `search-term` or several SPARQL `search-constructs`."
   [request search-term search-constructs]
-  (let [exercises-done (get-exercises-done request)
+  (let [exercise-statuses (get-exercise-statuses request)
         exercises-found (->> {:search-term search-term
                               :search-constructs search-constructs}
                              (sparql/sparql-template "find_exercises")
                              select-query)]
-    (mark-exercises-as-done exercises-found exercises-done)))
+    (mark-exercises-with-statuses exercises-found exercise-statuses)))
 
 (defn show-exercise
   [id]

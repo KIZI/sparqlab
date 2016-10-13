@@ -6,9 +6,12 @@
   {% for exercise in exercises %}
   <li>
     <a href="{{servlet-context}}/exercise/show/{{exercise.id}}">{{exercise.name}}</a>
-    {% if exercise.done %}
+    {% ifequal exercise.status "solved" %}
     <i class="fa fa-check done-icon" title="Vyřešeno" aria-hidden="true"></i>
-    {% endif %}
+    {% endifequal %}
+    {% ifequal exercise.status "revealed" %}
+    <i class="fa revealed-icon" title="Prozrazeno" aria-hidden="true"></i>
+    {% endifequal %}
     <span title="Obtížnost" class="tag tag-pill tag-info">{{exercise.difficultyLabel}}</span>
   </li>
   {% endfor %}

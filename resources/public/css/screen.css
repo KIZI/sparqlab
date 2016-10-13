@@ -101,6 +101,15 @@ h3 {
   color: #ddd;
 }
 
+.revealed-icon {
+  background-image: url("../img/broken_lock.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  width: 16px;
+  height: 1em;
+}
+
 #editor {
   margin-top: 1em !important;
 }

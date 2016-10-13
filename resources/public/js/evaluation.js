@@ -13,6 +13,13 @@
       return yasqe;
     }
   };
+  var getExerciseId = function () {
+    var path = document.location.pathname,
+        index = path.lastIndexOf("/");
+    if (index !== -1) {
+      return path.substring(index + 1);
+    } 
+  };
 
   $(document).ready(function () {
     var query = textAreaToYasqe(document.getElementById("query")),
@@ -38,6 +45,10 @@
       $canonicalQuery.removeClass("invisible");
       canonicalQuery = textAreaToYasqe($canonicalQuery[0]);
       $("#reveal-solution-button").hide();
+      var exerciseId = getExerciseId();
+      if (exerciseId) {
+        createCookie(exerciseId, "revealed");
+      }
     });
   });
 })(jQuery);
