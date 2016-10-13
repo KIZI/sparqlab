@@ -184,7 +184,8 @@
   "Search exercises for a `search-term` or several SPARQL `search-constructs`."
   [request search-term search-constructs]
   (let [exercise-statuses (get-exercise-statuses request)
-        exercises-found (->> {:search-term search-term
+        exercises-found (->> {:language local-language
+                              :search-term search-term
                               :search-constructs search-constructs}
                              (sparql/sparql-template "find_exercises")
                              select-query)]

@@ -1,4 +1,5 @@
 {{!
+@param str        language
 @param str        search-term (optional)
 @param Array<IRI> search-constructs (optional)
 }}
@@ -7,9 +8,12 @@
 
 SELECT DISTINCT (REPLACE(STR(?exercise), "^.*\\/([^/]+)$", "$1") AS ?id)
                 ?name
+                ?difficultyLabel
 WHERE {
   ?exercise a sp:Query ;
-    rdfs:label ?name .
+    rdfs:label ?name ;
+    sparqlab:hasDifficulty/skos:prefLabel ?difficultyLabel .
+  FILTER langMatches(lang(?difficultyLabel), "{{language}}")
 
   {{#search-term}}
   ?exercise rdfs:comment ?description .
