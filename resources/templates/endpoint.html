@@ -5,29 +5,7 @@
   <button id="run-query" type="button" class="btn btn-primary">Spustit dotaz</button>
 </div>
 {% include "sparql_results.html" %}
-<div class="modal fade"
-  id="error-modal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="Chyba v provádění dotazu"
-  aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Zavřít">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title">
-            <i class="fa fa-exclamation" aria-hidden="true"></i>
-            Chyba v provádění dotazu
-          </h4>
-        </div>
-        <div class="modal-body">
-          <p class="modal-message">Došlo k chybě v provádění dotazu.</div>
-        </div>
-      </div>
-    </div>
-</div>
+{% include "error_modal.html" %}
 {% endblock %}
 {% block page-scripts %}
 {% script "/js/editor.js" %}

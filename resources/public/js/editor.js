@@ -47,6 +47,7 @@ var escapeHTML = function (text) {
     });
     yasqe.options.sparql.callbacks = {
       error: function (xhr, textStatus, errorThrown) {
+        $loading.hide();
         var $modalMessage = $errorModal.find(".modal-body .modal-message");
         if (textStatus === "timeout") {
           $modalMessage.text("Dotaz překročil maximální povolenou dobu provádění (" +
