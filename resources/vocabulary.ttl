@@ -123,7 +123,7 @@
 
 :property-paths a skos:Concept ;
   skos:prefLabel "Cesty v grafech"@cs, "Property paths"@en ;
-  skos:related sp:AltPath, sp:ModPath, sp:Path, sp:ReversePath, sp:SeqPath, sp:TriplePath ;
+  skos:related sp:AltPath, sp:ModPath, sp:Path, sp:ReversePath, sp:SeqPath, sp:TriplePath, sp:subPath ;
   skos:topConceptOf :exercise-categories .
 
 :construct-queries a skos:Concept ;
@@ -154,4 +154,19 @@
 :working-with-rdf-graphs a skos:Concept ;
   skos:prefLabel "Práce s RDF grafy"@cs, "Working with RDF graphs"@en ;
   skos:related sp:from, sp:fromNamed, sp:NamedGraph ;
+  skos:topConceptOf :exercise-categories .
+
+:text-literals a skos:Concept ;
+  skos:prefLabel "Textové literály"@cs, "Text literals"@en ;
+  skos:related sp:concat, sp:lang, sp:langMatches, sp:regex, sp:strlen, sp:substr ;
+  skos:topConceptOf :exercise-categories .
+
+:creating-resources a skos:Concept ;
+  skos:prefLabel "Tvorba RDF zdrojů"@cs, "Creating RDF resources"@en ;
+  skos:related sp:iri, sp:strdt ;
+  skos:topConceptOf :exercise-categories .
+
+:number a skos:Concept ;
+  skos:prefLabel "Čísla"@cs, "Numbers"@en ;
+  skos:related sp:divide, sp:ge, sp:gt, sp:le, sp:lt, sp:mul, sp:round ;
   skos:topConceptOf :exercise-categories .

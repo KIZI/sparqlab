@@ -41,8 +41,11 @@ sp:TriplePath skos:prefLabel "Cesta"@cs .
 sp:Union skos:prefLabel "`UNION`" .
 sp:Values skos:prefLabel "`VALUES`" .
 sp:and skos:prefLabel "`&&`" .
+sp:coalesce skos:prefLabel "`coalesce`" .
+sp:concat skos:prefLabel "`concat`" .
 sp:datatype skos:prefLabel "`datatype`" .
 sp:distinct skos:prefLabel "`DISTINCT`" .
+sp:divide skos:prefLabel "`/`" .
 sp:eq skos:prefLabel "`=`" .
 sp:from skos:prefLabel "`FROM`" .
 sp:fromNamed skos:prefLabel "`FROM NAMED`" .
@@ -57,18 +60,25 @@ sp:langMatches skos:prefLabel "`langMatches`" .
 sp:limit skos:prefLabel "`LIMIT`" .
 sp:le skos:prefLabel "`<=`" .
 sp:lt skos:prefLabel "`<`" .
+sp:mul skos:prefLabel "`*`" .
 sp:ne skos:prefLabel "`!=`" .
 sp:not skos:prefLabel "`!`" .
 sp:notExists skos:prefLabel "`NOT EXISTS`" .
 sp:offset skos:prefLabel "`OFFSET`" .
+sp:or skos:prefLabel "`||`" .
 sp:orderBy skos:prefLabel "`ORDER BY`" .
 sp:reduced skos:prefLabel "`REDUCED`" .
 sp:regex skos:prefLabel "`regex`" .
 sp:replace skos:prefLabel "`replace`" .
+sp:round skos:prefLabel "`round`" .
 sp:sameTerm skos:prefLabel "`sameTerm`" .
 sp:str skos:prefLabel "`str`" .
+sp:strdt skos:prefLabel "`strdt`" .
 sp:strlen skos:prefLabel "`strlen`" .
+sp:subPath skos:prefLabel "Vnořená cesta"@cs .
+sp:substr skos:prefLabel "`substr`" .
 sp:where skos:prefLabel "`WHERE`" .
+sp:year skos:prefLabel "`year`" .
 
 #################
 ### Exercises ###
