@@ -8,7 +8,8 @@ var escapeHTML = function (text) {
         $codeMirror = $(".CodeMirror"),
         $results = $("#results"),
         $errorModal = $("#error-modal"),
-        timeout = 30000;
+        timeout = 30000,
+        $loading = $("#loading");
 
     // YASQE and YASR
     var prefixes = {
@@ -40,6 +41,8 @@ var escapeHTML = function (text) {
       $controlButtons.removeClass("hidden");
     });
     $controlButtons.delegate("#run-query", "click", function (e) {
+      $results.addClass("hidden");
+      $loading.fadeIn();
       yasqe.query();
     });
     yasqe.options.sparql.callbacks = {
@@ -69,6 +72,7 @@ var escapeHTML = function (text) {
         $errorModal.modal("show");
       },
       success: function () {
+        $loading.hide();
         $results.removeClass("hidden");
       },
       complete: function (xhr, textStatus) {

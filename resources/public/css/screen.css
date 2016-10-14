@@ -152,3 +152,57 @@ h3 {
 }
 
 .cm-s-sparqlab .cm-error {color: #f00;} /* errors */
+
+@keyframes pulsate {
+  0% { opacity: 0.5; }
+  50% { opacity: 1.0; }
+  100% { opacity: 0.5; }
+}
+#loading {
+  width: 100px;
+  display: none;
+}
+#loading p {
+  animation: pulsate 2.2s ease-in-out infinite;
+}
+@keyframes sway {
+  to { transform: rotate(30deg); }
+}
+#loading svg {
+  top: -20px;
+  transform-origin: center top;
+  transform: rotate(-30deg);
+  animation: sway 2.2s infinite alternate ease-in-out;
+}
+@keyframes pink-to-blue {
+  0% { fill: #ff358b; }
+  50% { fill: #01b0f0; }
+  100% { fill: #ff358b; }
+}
+@keyframes blue-to-green {
+  0% { fill: #01b0f0; }
+  50% { fill: #aeee00; }
+  100% { fill: #01b0f0; }
+}
+@keyframes green-to-yellow {
+  0% { fill: #aeee00; }
+  50% { fill: #fef501; }
+  100% { fill: #aeee00; }
+}
+@keyframes yellow-to-pink {
+  0% { fill: #fef501; }
+  50% { fill: #ff358b; }
+  100% { fill: #fef501; }
+}
+#loading-pink {
+  animation: pink-to-blue linear 4.4s infinite;
+}
+#loading-blue {
+  animation: blue-to-green linear 4.4s infinite;
+}
+#loading-green {
+  animation: green-to-yellow linear 4.4s infinite;
+}
+#loading-yellow {
+  animation: yellow-to-pink linear 4.4s infinite;
+}
