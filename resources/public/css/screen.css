@@ -168,6 +168,7 @@ h3 {
 }
 #loading p {
   animation: pulsate 2.2s ease-in-out infinite;
+  text-align: center;
 }
 @keyframes sway {
   to { transform: rotate(30deg); }
