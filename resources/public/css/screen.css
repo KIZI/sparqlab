@@ -77,8 +77,13 @@ code {
   outline: 0;
 }
 
+h2 {
+  font-size: 1.5rem;
+}
+
 h3 {
   margin-top: .5em;
+  font-size: 1.2rem;
 }
 
 .exercises a:visited {
@@ -157,6 +162,7 @@ h3 {
 
 .cm-s-sparqlab .cm-error {color: #f00;} /* errors */
 
+/* Loading animation */
 @keyframes pulsate {
   0% { opacity: 0.5; }
   50% { opacity: 1.0; }
@@ -196,6 +202,7 @@ h3 {
   animation: rotate-colours 8.8s infinite alternate ease-in-out;
 }
 
+/* Difficulty tags */
 .tag-info {
   background-color: #01b0f0;
 }
@@ -209,6 +216,7 @@ h3 {
   content: "\f005\00a0\f005\00a0\f005";
 }
 
+/* 3-column layout */
 .column-3 {
   column-width: 18em;
 }
