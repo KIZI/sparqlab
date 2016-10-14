@@ -53,6 +53,13 @@
                           Dle obtížnosti
                         </a>
                         <a class="dropdown-item
+                          {% ifequal page "exercises_by_category.html" %}
+                          active
+                          {% endifequal %}"
+                          href="{{servlet-context}}/exercises/by-categories">
+                          Dle kategorií
+                        </a>
+                        <a class="dropdown-item
                            {% ifequal page "exercises_by_language_constructs.html" %}
                            active
                            {% endifequal %}"

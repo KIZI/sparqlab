@@ -1,0 +1,24 @@
+{{!
+@param str language
+}}
+
+{{> sparql/prefixes.mustache }}
+
+SELECT DISTINCT (REPLACE(STR(?exercise), "^.*\\/([^/]+)$", "$1") AS ?id)
+                ?name
+                ?categoryLabel
+                ?difficultyLabel
+                ?difficultyLevel
+WHERE {
+  [] skos:prefLabel ?categoryLabel ;
+    skos:related/^dcterms:subject ?exercise . 
+  FILTER langMatches(lang(?categoryLabel), "{{language}}")
+  ?exercise a sp:Query ;
+    rdfs:label ?name ;
+    sparqlab:hasDifficulty [
+      skos:notation ?difficultyLevel ;
+      skos:prefLabel ?difficultyLabel
+    ] .
+  FILTER langMatches(lang(?difficultyLabel), "{{language}}")
+}
+ORDER BY ?difficultyLevel

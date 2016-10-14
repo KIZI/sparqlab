@@ -88,7 +88,7 @@
                       (sparql/sparql-template {:language local-language})
                       select-query
                       (mark-exercises-with-statuses exercise-statuses))]
-    (group-by :difficulty exercises)))
+    (group-by :difficultyLevel exercises)))
 
 (def spin-dependencies
   "Dependencies between SPIN SPARQL language constructs"
@@ -123,16 +123,30 @@
 (defn exercises-by-difficulty
   [request]
   (let [exercise-statuses (get-exercise-statuses request)
-        {easy (prefix/sparqlab "easy")
-         normal (prefix/sparqlab "normal")
-         hard (prefix/sparqlab "hard")} (get-exercises-by-difficulty exercise-statuses)]
+        {easy 0
+         normal 1
+         hard 2} (get-exercises-by-difficulty exercise-statuses)]
     (layout/render "exercises_by_difficulty.html" {:title "Cvičení dle obtížnosti"
                                                    :easy easy
-                                                   :easy-label (:difficultyLabel (first easy))
                                                    :normal normal
-                                                   :normal-label (:difficultyLabel (first normal))
-                                                   :hard hard
-                                                   :hard-label (:difficultyLabel (first hard))})))
+                                                   :hard hard})))
+
+(defn get-exercises-by-categories
+  [exercise-statuses]
+  (let [exercises (-> "get_exercises_by_category"
+                      (sparql/sparql-template {:language local-language})
+                      select-query
+                      (mark-exercises-with-statuses exercise-statuses))]
+    (sort-by (comp string/lower-case key)
+             (group-by :categoryLabel exercises))))
+
+(defn exercises-by-categories
+  [request]
+  (let [exercise-statuses (get-exercise-statuses request)
+        exercises (get-exercises-by-categories exercise-statuses)]
+    (layout/render "exercises_by_category.html" {:exercises exercises
+                                                 :title "Cvičení dle kategorií"})))
+
 (defn get-exercises-by-language-constructs
   [exercise-statuses]
   (let [sorted-exercises (sort-exercises-by-dependencies)
@@ -246,6 +260,7 @@
            (GET "/show/:id" [id] (show-exercise id))
            (POST "/evaluate/:id" [id :as request] (evaluate-exercise request id)))
   (context "/exercises" []
+           (GET "/by-categories" request (exercises-by-categories request))
            (GET "/by-language-constructs" request (exercises-by-language-constructs request)))
   (GET "/endpoint" [] (sparql-endpoint))
   (GET "/data" [] (data-page))
