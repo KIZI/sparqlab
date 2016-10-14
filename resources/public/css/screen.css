@@ -172,43 +172,27 @@ h3 {
 @keyframes sway {
   to { transform: rotate(30deg); }
 }
+@keyframes anti-sway {
+  to { transform: rotate(-30deg); }
+}
 #loading svg {
-  top: -20px;
   transform-origin: center top;
   transform: rotate(-30deg);
   animation: sway 2.2s infinite alternate ease-in-out;
 }
-@keyframes pink-to-blue {
+#tincture-clip {
+  transform-origin: center top;
+  transform: rotate(30deg);
+  animation: anti-sway 2.2s infinite alternate ease-in-out;
+}
+@keyframes rotate-colours {
   0% { fill: #ff358b; }
-  50% { fill: #01b0f0; }
-  100% { fill: #ff358b; }
-}
-@keyframes blue-to-green {
-  0% { fill: #01b0f0; }
+  25% { fill: #01b0f0; }
   50% { fill: #aeee00; }
-  100% { fill: #01b0f0; }
-}
-@keyframes green-to-yellow {
-  0% { fill: #aeee00; }
-  50% { fill: #fef501; }
-  100% { fill: #aeee00; }
-}
-@keyframes yellow-to-pink {
-  0% { fill: #fef501; }
-  50% { fill: #ff358b; }
   100% { fill: #fef501; }
 }
-#loading-pink {
-  animation: pink-to-blue linear 4.4s infinite;
-}
-#loading-blue {
-  animation: blue-to-green linear 4.4s infinite;
-}
-#loading-green {
-  animation: green-to-yellow linear 4.4s infinite;
-}
-#loading-yellow {
-  animation: yellow-to-pink linear 4.4s infinite;
+#loading-tincture {
+  animation: rotate-colours 8.8s infinite alternate ease-in-out;
 }
 
 .tag-info {
