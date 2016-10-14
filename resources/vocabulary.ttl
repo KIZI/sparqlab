@@ -140,3 +140,18 @@
   skos:prefLabel "DESCRIBE dotazy"@cs, "DESCRIBE queries"@en ;
   skos:related sp:Describe ;
   skos:topConceptOf :exercise-categories .
+
+:alternative-patterns a skos:Concept ;
+  skos:prefLabel "Alternativní vzory"@cs, "Alternative patterns"@en ;
+  skos:related sp:AltPath, sp:Union, sp:Values ;
+  skos:topConceptOf :exercise-categories .
+
+:binding-variables a skos:Concept ;
+  skos:prefLabel "Přiřazování hodnot proměnným"@cs, "Binding variables"@en ;
+  skos:related sp:Bind, sp:Values, sp:SubQuery ;
+  skos:topConceptOf :exercise-categories .
+
+:working-with-rdf-graphs a skos:Concept ;
+  skos:prefLabel "Práce s RDF grafy"@cs, "Working with RDF graphs"@en ;
+  skos:related sp:from, sp:fromNamed, sp:NamedGraph ;
+  skos:topConceptOf :exercise-categories .
