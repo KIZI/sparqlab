@@ -3,10 +3,10 @@
 <div class="row">
   <div class="col-md-12">
     <h1>{{title}}</h1>
-    <div id="by-category" class="exercises" class="row">
+    <div class="exercises column-3" class="row">
       <div class="col-md-12">
         {% for category, items in exercises %}
-          <h2>{{category}}</h2>
+          <h3>{{category}}</h3>
           <ul> 
             {% for exercise in items %}
             <li>

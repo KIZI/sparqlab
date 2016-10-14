@@ -208,6 +208,6 @@ h3 {
   content: "\f005\00a0\f005\00a0\f005";
 }
 
-#by-category {
+.column-3 {
   column-width: 18em;
 }
