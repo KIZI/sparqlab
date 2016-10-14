@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Cvičení dle jazykových konstruktů</h1>
+<h1>{{title}}</h1>
 <p>Cvičení jsou řazena podle použitých konstruktů jazyka SPARQL tak, že nejprve jsou uvedena cvičení využívající méně konstruktů.</p>
 <ul class="exercises"> 
   {% for exercise in exercises %}
@@ -12,7 +12,9 @@
     {% ifequal exercise.status "revealed" %}
     <i class="fa revealed-icon" title="Prozrazeno" aria-hidden="true"></i>
     {% endifequal %}
-    <span title="Obtížnost" class="tag tag-pill tag-info">{{exercise.difficultyLabel}}</span>
+    <span title="{{exercise.difficultyLabel}} obtížnost" class="tag tag-pill tag-info">
+      <i class="fa difficulty{{exercise.difficultyLevel}}" aria-hidden="true"></i>
+    </span>
   </li>
   {% endfor %}
 </ul>

@@ -206,3 +206,16 @@ h3 {
 #loading-yellow {
   animation: yellow-to-pink linear 4.4s infinite;
 }
+
+.tag-info {
+  background-color: #01b0f0;
+}
+.difficulty0:before {
+  content: "\f005";
+}
+.difficulty1:before {
+  content: "\f005\00a0\f005";
+}
+.difficulty2:before {
+  content: "\f005\00a0\f005\00a0\f005";
+}

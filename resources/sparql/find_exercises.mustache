@@ -9,10 +9,14 @@
 SELECT DISTINCT (REPLACE(STR(?exercise), "^.*\\/([^/]+)$", "$1") AS ?id)
                 ?name
                 ?difficultyLabel
+                ?difficultyLevel
 WHERE {
   ?exercise a sp:Query ;
     rdfs:label ?name ;
-    sparqlab:hasDifficulty/skos:prefLabel ?difficultyLabel .
+    sparqlab:hasDifficulty [
+      skos:notation ?difficultyLevel ;
+      skos:prefLabel ?difficultyLabel
+    ] .
   FILTER langMatches(lang(?difficultyLabel), "{{language}}")
 
   {{#search-term}}

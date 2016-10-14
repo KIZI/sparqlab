@@ -6,7 +6,7 @@
 
 SELECT (REPLACE(STR(?exercise), "^.*\\/([^/]+)$", "$1") AS ?id)
        ?name
-       ?difficulty
+       ?difficultyLevel
        ?difficultyLabel
 WHERE {
   ?exercise a sp:Query ;
