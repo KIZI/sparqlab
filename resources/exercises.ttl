@@ -1941,3 +1941,24 @@ WHERE {
 ORDER BY DESC(?increase)
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:describe-orphan-pension a sp:Query ;
+  rdfs:label "Popis sirotčího důchodu"@cs ;
+  rdfs:comment "Dotazem typu `DESCRIBE` získejte popis konceptu popisujícího sirotčí důchod s IRI `<https://data.cssz.cz/resource/pension-kind/PK_D>`."@cs ;
+  sp:text """
+DESCRIBE <https://data.cssz.cz/resource/pension-kind/PK_D>
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:describe-dimensions a sp:Query ;
+  rdfs:label "Popis dimenzí"@cs ;
+  rdfs:comment "Dotazem typu `DESCRIBE` získejte popis všech dimenzí (instancí `qb:DimensionProperty`)."@cs ;
+  sp:text """
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+DESCRIBE ?dimension
+WHERE {
+  ?dimension a qb:DimensionProperty .
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:easy .
