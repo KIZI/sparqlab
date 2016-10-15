@@ -14,7 +14,7 @@ docker network create sparqlab
 # cd stardog directory...
 docker build -t stardog .
 docker run --name stardog \
-           --net sparqlab \
+           --network sparqlab \
            -d stardog
 
 ################
@@ -25,7 +25,7 @@ docker run --name stardog \
 docker build -t sparqlab .
 docker run --name sparqlab \
            -p 3000:3000 \
-           --net sparqlab \
+           --network sparqlab \
            -d \
            -e SPARQL_ENDPOINT=http://stardog:5820/sparqlab/query \
            -e APP_CONTEXT=/sparqlab \
