@@ -220,3 +220,7 @@ h3 {
 .column-3 {
   column-width: 18em;
 }
+
+.yasqe_tooltip strong {
+  color: #fff;
+}
