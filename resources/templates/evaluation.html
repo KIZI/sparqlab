@@ -53,7 +53,7 @@
     <textarea id="canonical-query"
               class="form-control {% if not equal? %}invisible{% endif %}"
               readonly
-              rows="10">{{canonical-query.query}}</textarea>
+              rows="10">{% if equal? %}{{canonical-query.query}}{% endif %}</textarea>
   </div>
 </div>
 <div class="row">

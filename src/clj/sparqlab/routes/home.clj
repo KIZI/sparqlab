@@ -6,6 +6,7 @@
             [sparqlab.util :refer [kahn-sort query-file?]]
             [sparqlab.exercise :as exercise]
             [sparqlab.config :refer [local-language]]
+            [sparqlab.cookies :as cookie]
             [compojure.core :refer [context defroutes GET POST]]
             [clojure.tools.logging :as log]
             [markdown.core :refer [md-to-html-string]]
@@ -20,22 +21,6 @@
 
 (add-filter! :dec dec)
 
-(def a-year
-  "One year in seconds"
-  (* 60 60 24 365))
-
-(def cookie-ns
-  "sparqlab-exercise-")
-
-(defn set-cookie
-  [response k value & {:as data}]
-  (assoc-in response
-            [:cookies k]
-            (merge {:max-age a-year
-                    :path "/"}
-                   data
-                   {:value value})))
-
 (defn group-values-by-key
   "Group values at `value-key` in collection `coll` by `group-key`."
   [group-key value-key coll]
@@ -46,11 +31,6 @@
                 (update acc k conj v)
                 (assoc acc k #{v}))))]
     (reduce group-fn {} coll)))
-
-(defn mark-exercise-as-solved
-  "Marks exercise identified with `id` as solved using a cookie."
-  [response id]
-  (set-cookie response (str cookie-ns id) "solved"))
 
 (defn mark-exercises-with-statuses
   [exercises exercise-statuses]
@@ -107,22 +87,13 @@
          kahn-sort
          (remove spin-term?))))
 
-(defn get-exercise-statuses
-  "Get a map of exercise IDs to their statuses (from #{solved, revealed})."
-  [request]
-  (->> (:cookies request)
-       (filter (every-pred (comp #(string/starts-with? % cookie-ns) key)))
-       (map (juxt (comp #(subs % (count cookie-ns)) key)
-                  (comp :value val)))
-       (into {})))
-
 (defn get-namespace-prefixes
   []
   (select-query (sparql/sparql-template "get_namespace_prefixes")))
 
 (defn exercises-by-difficulty
   [request]
-  (let [exercise-statuses (get-exercise-statuses request)
+  (let [exercise-statuses (cookie/get-exercise-statuses request)
         {easy 0
          normal 1
          hard 2} (get-exercises-by-difficulty exercise-statuses)]
@@ -142,7 +113,7 @@
 
 (defn exercises-by-categories
   [request]
-  (let [exercise-statuses (get-exercise-statuses request)
+  (let [exercise-statuses (cookie/get-exercise-statuses request)
         exercises (get-exercises-by-categories exercise-statuses)]
     (layout/render "exercises_by_category.html" {:exercises exercises
                                                  :title "Cvičení dle kategorií"})))
@@ -158,7 +129,7 @@
 
 (defn exercises-by-language-constructs
   [request]
-  (let [exercise-statuses (get-exercise-statuses request)
+  (let [exercise-statuses (cookie/get-exercise-statuses request)
         exercises (get-exercises-by-language-constructs exercise-statuses)]
     (layout/render "exercises_by_language_constructs.html" {:title "Cvičení dle jazykových konstruktů"
                                                             :exercises exercises})))
@@ -187,17 +158,17 @@
                                                 query
                                                 :prohibited (map :prohibited prohibits)
                                                 :required (map :required requires))
-            exercise-status (get (get-exercise-statuses request) id)]
+            exercise-status (get (cookie/get-exercise-statuses request) id)]
         (cond-> (layout/render "evaluation.html" (assoc (merge exercise verdict)
                                                         :title (str "Vyhodnocení cvičení: " (:name exercise))))
-          (and (:equal? verdict) (not= exercise-status "revealed")) (mark-exercise-as-solved id)))
+          (and (:equal? verdict) (not= exercise-status "revealed")) (cookie/mark-exercise-as-solved id)))
       (layout/render "sparql_syntax_error.html" (assoc (format-invalid-query validation-result)
                                                        :title "Syntaktická chyba ve SPARQL dotazu")))))
 
 (defn search-exercises
   "Search exercises for a `search-term` or several SPARQL `search-constructs`."
   [request search-term search-constructs]
-  (let [exercise-statuses (get-exercise-statuses request)
+  (let [exercise-statuses (cookie/get-exercise-statuses request)
         exercises-found (->> {:language local-language
                               :search-term search-term
                               :search-constructs search-constructs}

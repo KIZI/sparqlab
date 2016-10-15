@@ -1,6 +1,9 @@
 (ns sparqlab.routes.api
   (:require [sparqlab.config :refer [env]]
-            [sparqlab.sparql :refer [valid-query?]]
+            [sparqlab.sparql :as sparql]
+            [sparqlab.prefixes :as prefix]
+            [sparqlab.store :as store]
+            [sparqlab.cookies :as cookie]
             [clojure.tools.logging :as log]
             [compojure.core :refer [context defroutes GET]]
             [clj-http.client :as client]
@@ -14,7 +17,7 @@
     :as params}
    headers]
   (let [{:keys [valid?]
-         :as validation-results} (valid-query? query)]
+         :as validation-results} (sparql/valid-query? query)]
     (if valid?
       (:body (client/get (:sparql-endpoint env) {:headers headers
                                                  :query-params params
@@ -24,9 +27,25 @@
        :body (generate-string (assoc (select-keys validation-results [:expected :offset])
                                      :query query))})))
 
+(defn get-exercise-solution
+  "Get canonical solution for the exercise identified with `id`."
+  [request id]
+  (let [exercise-status (cookie/get-exercise-status request id)
+        solution (-> "get_exercise_solution"
+                     (sparql/sparql-template {:exercise (prefix/exercise id)})
+                     store/select-query
+                     first
+                     :query)]
+    (cond-> (response solution)
+      (not= exercise-status "solved") (cookie/mark-exercise-as-revealed id))))
+
 (defroutes api-routes
   (context "/api" []
            (GET "/query"
                 {params :params
                  headers :headers}
-                (sparql-query params headers))))
+                (sparql-query params headers))
+           (GET "/exercise-solution"
+                {{id :id} :params
+                 :as request}
+                (get-exercise-solution request id))))

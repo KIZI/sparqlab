@@ -43,13 +43,16 @@
       contentType: $canonicalResults.data("type")
     });
     $revealSolution.on("click", function (e) {
-      $canonicalQuery.removeClass("invisible");
-      canonicalQuery = textAreaToYasqe($canonicalQuery[0]);
-      $("#reveal-solution-button").hide();
       var exerciseId = getExerciseId();
-      if (exerciseId) {
-        createCookie(exerciseId, "revealed");
-      }
+      $.get("../../api/exercise-solution",
+        {id: exerciseId},
+        function (solution) {
+          $canonicalQuery.val(solution);
+          $canonicalQuery.removeClass("invisible");
+          canonicalQuery = textAreaToYasqe($canonicalQuery[0]);
+          $("#reveal-solution-button").hide();
+        }
+      );
     });
   });
 })(jQuery);

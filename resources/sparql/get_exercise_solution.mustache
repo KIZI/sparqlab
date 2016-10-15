@@ -1,0 +1,13 @@
+{{!
+@param IRI exercise
+}}
+
+{{> sparql/prefixes.mustache }}
+
+SELECT ?query
+WHERE {
+  <{{exercise}}> a sp:Query ;
+    sp:text ?_query .
+
+  BIND (REPLACE(?_query, "^\\s+|\\s+$", "") AS ?query)
+}
