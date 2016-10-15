@@ -1963,25 +1963,9 @@ WHERE {
   """ ;
   sparqlab:hasDifficulty sparqlab:easy .
 
-exercise:only-rdf-type a sp:Query ;
-  rdfs:label "Instance bez dalšího popisu"@cs ;
-  rdfs:comment "Najděte instance, pro něž je známá pouze jejich třída, ale žádná další trojice, v níž by instance figurovaly v roli subjektu."@cs ;
-  sp:text """
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-
-SELECT ?s
-WHERE {
-  ?s a [] .
-  FILTER NOT EXISTS {
-    ?s !rdf:type [] .
-  }
-}
-  """ ;
-  sparqlab:hasDifficulty sparqlab:normal .
-
 exercise:count-districts a sp:Query ;
   rdfs:label "Počet okresů"@cs ;
-  rdfs:comment "Spočítejte, kolik okresů (instancí třídy `<https://data.cssz.cz/ontology/ruian/Okres>`) existuje v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
+  rdfs:comment "Spočítejte, kolik okresů (instancí třídy `ruian:Okres`) existuje v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
   sp:text """
 PREFIX ruian: <https://data.cssz.cz/ontology/ruian/>
 
