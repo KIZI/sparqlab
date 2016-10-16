@@ -24,8 +24,7 @@
                                                  :throw-entire-message? true}))
       {:status 400
        :headers {"Content-Type" "application/json"}
-       :body (generate-string (assoc (select-keys validation-results [:expected :offset])
-                                     :query query))})))
+       :body (generate-string validation-results)})))
 
 (defn get-exercise-solution
   "Get canonical solution for the exercise identified with `id`."

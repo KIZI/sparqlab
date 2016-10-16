@@ -55,19 +55,30 @@ var escapeHTML = function (text) {
               " sekund).");
         } else if (textStatus === "error" && xhr.status === 400) {
           var response = xhr.responseJSON,
-              query = response.query,
+              modalHeading = "<p>Chyba syntaxe dotazu:</p>";
+          if ("expected" in response) {
+            var query = response.query,
               head = query.slice(0, response.offset),
               tail = query.slice(response.offset),
               expected = response.expected.join("\n");
-          $modalMessage.html(
-            "<p>Chyba syntaxe dotazu:</p><pre>" +
-            escapeHTML(head) +
-            '<span id="syntax-error" data-toggle="tooltip" data-placement="bottom" title="Očekáváno: ' +
-            expected +
-            '">...</span>' +
-            escapeHTML(tail) +
-            "</pre>"
-          );
+            $modalMessage.html(
+              modalHeading +
+              "<pre>" +
+              escapeHTML(head) +
+              '<span id="syntax-error" data-toggle="tooltip" data-placement="bottom" title="Očekáváno: ' +
+              expected +
+              '">...</span>' +
+              escapeHTML(tail) +
+              "</pre>"
+            );
+          } else {
+            $modalMessage.html(
+              modalHeading +
+              "<pre>" +
+              response.message +
+              "</pre>"
+            );
+          }
           $("#syntax-error").tooltip();
         }
         $errorModal.modal("show");
