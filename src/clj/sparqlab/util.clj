@@ -24,8 +24,7 @@
           (take line)
           butlast
           (map (comp (partial + 2) count)) ; FIXME: Why does newline take 2 characters instead of 1?
-          (reduce +)
-          dec)
+          (reduce +))
      column))
 
 ;; Kahn's topological sort. <https://gist.github.com/alandipert/1263783>
