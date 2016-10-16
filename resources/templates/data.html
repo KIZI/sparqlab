@@ -36,7 +36,7 @@
 
     <h3>The RDF Data Cube Vocabulary a jeho využití</h3>
 
-    <div name="figure-2" id="figure-2" class="pull-xs-right m-l-1 m-y-1">
+    <div name="figure-2" id="figure-2" class="pull-xs-right m-l-1 m-b-1">
       <img alt="Schéma slovníku Data Cube Vocabulary"
            class="img-fluid" 
            width="600" height="410"
@@ -50,7 +50,7 @@
 
     <p>Jaké měřené veličiny a dimenze jsou obsaženy v přehledu o počtu důchodců podle území, pohlaví, průměrné výše důchodu, průměrného věku a podle druhu důchodu uvádí <a href="https://data.cssz.cz/documentation/duchodci-v-cr-krajich-okresech">dokumentace tohoto datasetu</a>. Není zde účelem tuto dokumentaci duplikovat, nicméně pro snazší pochopení používaného datasetu jsou zde uvedeny alespoň použité jmenné prostory a měřené veličiny a dimenze, které tvoří příslušnou datovou kostku. Měřené veličiny a dimenze jsou definovány v rámci následujících jmenných prostorů:</p> 
 
-    <pre>
+    <pre class="w-100">
 {% for prefix in prefixes %}PREFIX {{prefix.prefix}}:{{prefix.padding}}&lt;{{prefix.namespace}}&gt;
 {% endfor %}
     </pre>
