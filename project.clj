@@ -1,4 +1,4 @@
-(defproject sparqlab "0.1.0-SNAPSHOT"
+(defproject sparqlab "0.5.0"
   :description "Lab for exercising SPARQL" 
   :url "http://github.com/jindrichmynarz/sparqlab"
   :dependencies [[ring/ring-servlet "1.5.0"]
