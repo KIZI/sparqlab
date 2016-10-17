@@ -1977,3 +1977,195 @@ WHERE {
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:easy .
+
+exercise:average-pension-per-region a sp:Query ;
+  rdfs:label "Průměrný důchod dle krajů"@cs ;
+  rdfs:comment "Spočítejte průměrný důchod dle krajů (instance `ruian:Vusc`) v roce 2015 (referenční období `day:2015-12-31`). Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX day:            <https://data.cssz.cz/resource/reference.data.gov.uk/id/gregorian-day/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX ruian:          <https://data.cssz.cz/ontology/ruian/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+
+SELECT (AVG(?pension) AS ?avgPensionPerRegion)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
+    ?refArea a ruian:Vusc .
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    [] cssz-dimension:refPeriod day:2015-12-31 ;
+      cssz-dimension:pohlavi sdmx-code:sex-T ;
+      cssz-dimension:refArea ?refArea ;
+      cssz-dimension:druh-duchodu ?pensionKind ;
+      cssz-measure:prumerna-vyse-duchodu-v-kc ?pension .
+  }
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:pension-gap-in-regions-over-time a sp:Query ;
+  rdfs:label "Rozptyl průměrných důchodů v krajích v čase"@cs ;
+  rdfs:comment "Dochází ke zvyšování rozdílu v důchodech mezi kraji nebo se naopak výše důchodů v krajích vzájemně přibližují? Vypočtěte rozdíl mezi nejnižším a nejvyšším průměrným důchodem v krajích (instance `ruian:Vusc`) v čase. Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX day:            <https://data.cssz.cz/resource/reference.data.gov.uk/id/gregorian-day/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX ruian:          <https://data.cssz.cz/ontology/ruian/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?refPeriod (MAX(?pension) - MIN(?pension) AS ?range)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
+    ?refArea a ruian:Vusc .
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    [] cssz-dimension:refPeriod ?refPeriod ;
+      cssz-dimension:pohlavi sdmx-code:sex-T ;
+      cssz-dimension:refArea ?refArea ;
+      cssz-dimension:druh-duchodu ?pensionKind ;
+      cssz-measure:prumerna-vyse-duchodu-v-kc ?pension .
+  }
+}
+GROUP BY ?refPeriod
+ORDER BY DESC(?refPeriod)
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:median-pension-per-region a sp:Query ;
+  rdfs:label "Medián důchodu dle krajů"@cs ;
+  rdfs:comment "Vypočtěte [medián](https://cs.wikipedia.org/wiki/Medi%C3%A1n) důchodů dle krajů (instance `ruian:Vusc`) v roce 2015 (referenční období `day:2015-12-31`). Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX day:            <https://data.cssz.cz/resource/reference.data.gov.uk/id/gregorian-day/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX ruian:          <https://data.cssz.cz/ontology/ruian/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+
+SELECT (AVG(?pension) AS ?medianPension)
+WHERE {
+  {
+    SELECT ?pension 
+           (abs(COUNT(DISTINCT ?higherPensionRefArea) - COUNT(DISTINCT ?lowerPensionRefArea)) AS ?diff)
+    WHERE {
+      GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+        ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
+        ?refArea a ruian:Vusc .
+        ?lowerPensionRefArea a ruian:Vusc .
+        ?higherPensionRefArea a ruian:Vusc .
+      }
+      GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+        [] cssz-dimension:refPeriod day:2015-12-31 ;
+          cssz-dimension:pohlavi sdmx-code:sex-T ;
+          cssz-dimension:refArea ?refArea ;
+          cssz-dimension:druh-duchodu ?pensionKind ;
+          cssz-measure:prumerna-vyse-duchodu-v-kc ?pension .
+
+        [] cssz-dimension:refPeriod day:2015-12-31 ;
+          cssz-dimension:pohlavi sdmx-code:sex-T ;
+          cssz-dimension:refArea ?lowerPensionRefArea ;
+          cssz-dimension:druh-duchodu ?pensionKind ;
+          cssz-measure:prumerna-vyse-duchodu-v-kc ?lowerPension .
+        FILTER (?pension > ?lowerPension)
+    
+        [] cssz-dimension:refPeriod day:2015-12-31 ;
+          cssz-dimension:pohlavi sdmx-code:sex-T ;
+          cssz-dimension:refArea ?higherPensionRefArea ;
+          cssz-dimension:druh-duchodu ?pensionKind ;
+          cssz-measure:prumerna-vyse-duchodu-v-kc ?higherPension .
+        FILTER (?pension < ?higherPension)
+      }
+    }
+    GROUP BY ?refArea ?pension
+  }
+  FILTER (?diff IN (0, 1))
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:hard .
+
+exercise:total-pension-cost-for-2015-per-prague-district a sp:Query ;
+  rdfs:label "Celkové výdaje na starobní důchody dle pražských částí za rok 2015"@cs ;
+  rdfs:comment "Spočítejte celkové roční výdaje na starobní důchody pražských městských částí v roce 2015 (referenční období `day:2015-12-31`). Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů a počty důchodců se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Počítejte s výdaji za celý rok. Výdaje uveďte v miliónech korun, zaokrouhlete na celá čísla a seřaďte sestupně dle výše výdajů. Každý výsledek bude obsahovat název městské části a celkové výdaje."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX day:            <https://data.cssz.cz/resource/reference.data.gov.uk/id/gregorian-day/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX ruian:          <https://data.cssz.cz/ontology/ruian/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?pragueDistrictLabel (round(?pension * ?retireeCount * 12 / 1000000) AS ?pensionYearCost)
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?pensionKind skos:exactMatch pension-kind:PK_old_age_total_without_SR .
+    ?pragueDistrict a ruian:SpravniObvod ;
+      skos:prefLabel ?pragueDistrictLabel .
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    [] cssz-dimension:refPeriod day:2015-12-31 ;
+      cssz-dimension:pohlavi sdmx-code:sex-T ;
+      cssz-dimension:druh-duchodu ?pensionKind ;
+      cssz-dimension:refArea ?pragueDistrict ;
+      cssz-measure:prumerna-vyse-duchodu-v-kc ?pension .
+    
+    [] cssz-dimension:refPeriod day:2015-12-31 ;
+      cssz-dimension:pohlavi sdmx-code:sex-T ;
+      cssz-dimension:druh-duchodu ?pensionKind ;
+      cssz-dimension:refArea ?pragueDistrict ;
+      cssz-measure:pocet-duchodcu ?retireeCount .
+  }
+}
+ORDER BY DESC(?pensionYearCost)
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:average-age-per-disability-level-and-year a sp:Query ;
+  rdfs:label "Průměrný věk dle stupně invalidity a roku"@cs ;
+  rdfs:comment "Najděte průměrný věk invalidních důchodců pro 3 stupně invalidity dle roku. 1. stupeň invalidity je označen druhy důchodu shodnými s `pension-kind:PK_IP`, 2. stupeň značí `pension-kind:PK_ID` a 3. stupeň označuje `pension-kind:PK_IT`. Vazby na druhy důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Průměrný věk najděte pro Českou republiku (referenční oblast `<https://data.cssz.cz/resource/ruian/staty/1>`) bez ohledu na pohlaví (tj. `sdmx-code:sex-T`). Výsledky seřaďte sestupně dle referenčního období. Data o průměrném stáří jsou k nalezení v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  sp:text """
+PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
+PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
+PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
+PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
+PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?refPeriod ?avgAgeLevel1 ?avgAgeLevel2 ?avgAgeLevel3
+WHERE {
+  GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
+    ?disabilityPensionLevel1 skos:exactMatch pension-kind:PK_IP .
+    ?disabilityPensionLevel2 skos:exactMatch pension-kind:PK_ID .
+    ?disabilityPensionLevel3 skos:exactMatch pension-kind:PK_IT .
+  }
+  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
+    [] cssz-dimension:refPeriod ?refPeriod ;
+      cssz-dimension:pohlavi sdmx-code:sex-T ;
+      cssz-dimension:druh-duchodu ?disabilityPensionLevel1 ;
+      cssz-dimension:refArea <https://data.cssz.cz/resource/ruian/staty/1> ;
+      cssz-measure:prumerny-vek ?avgAgeLevel1 .
+    
+    [] cssz-dimension:refPeriod ?refPeriod ;
+      cssz-dimension:pohlavi sdmx-code:sex-T ;
+      cssz-dimension:druh-duchodu ?disabilityPensionLevel2 ;
+      cssz-dimension:refArea <https://data.cssz.cz/resource/ruian/staty/1> ;
+      cssz-measure:prumerny-vek ?avgAgeLevel2 .
+    
+    [] cssz-dimension:refPeriod ?refPeriod ;
+      cssz-dimension:pohlavi sdmx-code:sex-T ;
+      cssz-dimension:druh-duchodu ?disabilityPensionLevel3 ;
+      cssz-dimension:refArea <https://data.cssz.cz/resource/ruian/staty/1> ;
+      cssz-measure:prumerny-vek ?avgAgeLevel3 .
+  }
+}
+ORDER BY DESC(?refPeriod)
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
