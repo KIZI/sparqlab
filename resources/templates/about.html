@@ -5,7 +5,9 @@
     {% include "bubbling_beaker.html" %}
     <p class="lead">SPARQLab slouží k procvičování <a href="https://www.w3.org/TR/sparql11-query/">dotazovacího jazyka <abbr title="SPARQL Protocol And RDF Query Language" class="initialism">SPARQL</abbr></a>.</p>
     
-    <p>Aplikace je v současnosti ve vývoji, takže může obsahovat chyby. Pokud se setkáte s chybou, můžete jí nahlásit do <a href="https://github.com/jindrichmynarz/sparqlab/issues">issue trackeru</a>.</p>
+    <p>Cílem jeho úloh je zformulovat SPARQL dotaz tak, aby vyhověl textovému zadání. Pro každou úlohu je nabídnuto vzorové řešení. Aplikace využívá propojená data o důchodových statistikách z České správy sociálního zabezpečení. Úlohy jsou zaměřené na průzkum dat, například pro zjištění dimenzí použitých v datech, ale také na jejich věcnou analýzu, například pro nalezení oblastí s nejvyšším poměrným rozdílem důchodů mezi muži a ženami.</p>
+
+    <p>Zdrojový kód aplikace je volně dostupný v <a href="https://github.com/jindrichmynarz/sparqlab">tomto repozitáři</a>. Pokud se setkáte s chybou, můžete jí nahlásit do <a href="https://github.com/jindrichmynarz/sparqlab/issues">issue trackeru</a>.</p>
 
     <p>Cvičení používají tyto prvky jazyka SPARQL:
     {% for sparql-construct in sparql-constructs %}
