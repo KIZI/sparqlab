@@ -1355,7 +1355,7 @@ ORDER BY ?year
 
 exercise:dataset-equals-named-graph a sp:Query ;
   rdfs:label "Překrývají se IRI datasetů a pojmenovaných grafů?"@cs ;
-  rdfs:comment "Zjistěte, zdali se IRI některých datasetů (instancí `qb:DataSet`) překrývají s IRI pojmenovaných grafů."@cs ;
+  rdfs:comment "Zjistěte, zdali se IRI některých datasetů (instancí `qb:DataSet`) překrývají s IRI pojmenovaných grafů, v nichž se tyto instance nacházejí."@cs ;
   sp:text """
 PREFIX qb: <http://purl.org/linked-data/cube#>
 
