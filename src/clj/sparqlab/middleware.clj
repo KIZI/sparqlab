@@ -47,6 +47,7 @@
   (-> ((:middleware defaults) handler)
       wrap-webjars
       (wrap-defaults
-        (-> site-defaults (assoc-in [:session :store] (ttl-memory-store (* 60 30)))))
+        (-> site-defaults (assoc-in [:session :store] (ttl-memory-store (* 60 30)))
+                          (assoc-in [:security :anti-forgery] false)))
       wrap-context
       wrap-internal-error))
