@@ -1535,7 +1535,7 @@ WHERE {
   }
 }
 GROUP BY ?pensionKind
-ORDER BY DESC(COUNT(DISTINCT ?child))
+ORDER BY DESC(COUNT(?child))
 LIMIT 1
   """ ;
   sparqlab:hasDifficulty sparqlab:easy .
