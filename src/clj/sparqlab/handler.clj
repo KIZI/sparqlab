@@ -35,7 +35,6 @@
 (def app-routes
   (routes
     (-> #'home-routes
-        (wrap-routes middleware/wrap-csrf)
         (wrap-routes middleware/wrap-formats))
     #'api-routes
     (route/not-found

@@ -3,7 +3,6 @@
             [sparqlab.config :refer [env]]
             [sparqlab.layout :refer [*app-context* error-page]]
             [clojure.tools.logging :as log]
-            [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.middleware.format :refer [wrap-restful-format]]
             [ring-ttl-session.core :refer [ttl-memory-store]]
@@ -35,14 +34,6 @@
                      :title "Something very bad has happened!"
                      :message "We've dispatched a team of highly trained gnomes to take care of the problem."})))))
 
-(defn wrap-csrf [handler]
-  (wrap-anti-forgery
-    handler
-    {:error-response
-     (error-page
-       {:status 403
-        :title "Invalid anti-forgery token"})}))
-
 (defn wrap-formats [handler]
   (let [wrapped (wrap-restful-format
                   handler
@@ -56,8 +47,6 @@
   (-> ((:middleware defaults) handler)
       wrap-webjars
       (wrap-defaults
-        (-> site-defaults
-            (assoc-in [:security :anti-forgery] false)
-            (assoc-in [:session :store] (ttl-memory-store (* 60 30)))))
+        (-> site-defaults (assoc-in [:session :store] (ttl-memory-store (* 60 30)))))
       wrap-context
       wrap-internal-error))

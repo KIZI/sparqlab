@@ -29,7 +29,6 @@
         </p>
         {% endif %}
         <form action="{{servlet-context}}/exercise/evaluate/{{id}}" method="POST">
-          {% csrf-field %}
           {% include "sparql_editor.html" %}
           <div class="control-buttons hidden btn-group" role="group">
             <button id="run-query" type="button" class="btn btn-default">Spustit dotaz</button>
