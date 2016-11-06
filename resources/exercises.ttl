@@ -572,7 +572,7 @@ exercise:most-common-class-data a sp:Query ;
   rdfs:label "Nejčastěji instanciovaná třída ve statistikách důchodů a důchodců"@cs ;
   rdfs:comment "Vyberte třídu s nejvyšším počtem instancí ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). V případě, že by tříd s nejvyšším počtem instací bylo více, postačí vybrat jednu z nich."@cs ;
   sp:text """
-SELECT ?class
+SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
   GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
     ?s a ?class .
