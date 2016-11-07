@@ -15,6 +15,7 @@ docker network create sparqlab
 docker build -t stardog .
 docker run --name stardog \
            --network sparqlab \
+           --restart always \
            -d stardog
 
 ################
@@ -26,6 +27,7 @@ docker build -t sparqlab .
 docker run --name sparqlab \
            -p 3000:3000 \
            --network sparqlab \
+           --restart always \
            -d \
            -e SPARQL_ENDPOINT=http://stardog:5820/sparqlab/query \
            -e APP_CONTEXT=/sparqlab \
