@@ -3,5 +3,6 @@
 SELECT ?prefix ?namespace
 WHERE {
   ?namespace vann:preferredNamespacePrefix ?prefix .
+  FILTER (?prefix != "sparqlab")
 }
 ORDER BY ?prefix
