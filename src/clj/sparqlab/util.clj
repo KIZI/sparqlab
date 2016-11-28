@@ -21,11 +21,18 @@
    ^Integer column]
   (+ (->> s
           string/split-lines
-          (take line)
-          butlast
-          (map (comp (partial + 2) count)) ; FIXME: Why does newline take 2 characters instead of 1?
+          (take (dec line))
+          (map (comp inc count))
           (reduce +))
      column))
+
+(defmacro when-let*
+  "<https://clojuredocs.org/clojure.core/when-let#example-5797f908e4b0bafd3e2a04bb>"
+  ([bindings & body]
+   (if (seq bindings)
+     `(when-let [~(first bindings) ~(second bindings)]
+        (when-let* ~(drop 2 bindings) ~@body))
+     `(do ~@body))))
 
 ;; Kahn's topological sort. <https://gist.github.com/alandipert/1263783>
 ;; Copyright (c) Alan Dipert. All rights reserved.

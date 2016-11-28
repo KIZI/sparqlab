@@ -25,7 +25,7 @@
            (org.apache.jena.graph Node)
            (org.topbraid.spin.arq ARQ2SPIN)
            (org.apache.jena.sparql.lang SyntaxVarScope)
-           (org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token)
+           (org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token TokenMgrError)
            (org.aksw.jena_sparql_api.algebra.transform TransformDistributeJoinOverUnion)))
 
 (def arq-context
@@ -103,8 +103,11 @@
   [^Query query]
   (string/trim (.serialize query)))
 
-(defn- get-error-offset
+(defmulti get-error-offset
   "Compute offset of a syntax `exception` in `query` based on line and column numbers."
+  (fn [_ exception] (type exception)))
+
+(defmethod get-error-offset ParseException
   [^String query
    ^ParseException exception]
   (let [current-token (.currentToken exception)]
@@ -112,6 +115,17 @@
                                      (.beginLine current-token)
                                      (.beginColumn current-token))
        (count (.image current-token))))) ; Number of characters in the preceding token
+
+(defmethod get-error-offset TokenMgrError
+  [^String query
+   ^TokenMgrError exception]
+  (let [get-second-number (comp #(Integer/parseInt %) second)
+        message (.getMessage exception)]
+    (util/when-let* [line (re-find #"line (\d+)" message)
+                     column (re-find #"column (\d+)" message)]
+                    (util/line-and-column->offset query
+                                                  (get-second-number line)
+                                                  (get-second-number column)))))
 
 (defn- get-expected-tokens
   "Get string representations of the tokens expected by `exception`."
@@ -129,6 +143,10 @@
     (try (do (.QueryUnit parser)
              (SyntaxVarScope/check parsed-query)
              {:valid? true})
+         (catch TokenMgrError ex
+           {:offset (get-error-offset query ex) 
+            :message (.getMessage ex)
+            :valid? false})
          (catch ParseException ex
            {:expected (get-expected-tokens ex)
             :offset (get-error-offset query ex)
