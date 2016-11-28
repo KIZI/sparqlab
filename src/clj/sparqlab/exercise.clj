@@ -4,7 +4,7 @@
             [sparqlab.config :refer [local-language]]
             [clojure.set :refer [union]]
             [clojure.tools.logging :as log])
-  (:import [org.apache.jena.rdf.model Model]))
+  (:import (org.apache.jena.rdf.model Model)))
 
 (defn equal-query?
   "Test if queries `a` and `b` are equal. Starts by testing string equality, then tests equality

@@ -7,7 +7,7 @@
             [ring.middleware.format :refer [wrap-restful-format]]
             [ring-ttl-session.core :refer [ttl-memory-store]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]])
-  (:import [javax.servlet ServletContext]))
+  (:import (javax.servlet ServletContext)))
 
 (defn wrap-context [handler]
   (fn [request]

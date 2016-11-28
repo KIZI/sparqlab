@@ -4,8 +4,8 @@
             [clojure.string :as string]
             [clojure.java.io :as io]
             [clojure.walk :refer [keywordize-keys]])
-  (:import [org.apache.jena.rdf.model Literal Model Resource]
-           [org.apache.jena.datatypes BaseDatatype$TypedValue DatatypeFormatException]))
+  (:import (org.apache.jena.rdf.model Literal Model Resource)
+           (org.apache.jena.datatypes BaseDatatype$TypedValue DatatypeFormatException)))
 
 (defn xml-schema-data-type?
   "Predicate testing if `data-type` is from XML Schema."

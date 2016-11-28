@@ -3,8 +3,8 @@
             [mount.core :as mount]
             [clojure.tools.logging :as log]
             [clojure.java.io :as io])
-  (:import [org.apache.jena.rdf.model Model ModelFactory]
-           [org.apache.jena.query Query QueryFactory]))
+  (:import (org.apache.jena.rdf.model Model ModelFactory)
+           (org.apache.jena.query Query QueryFactory)))
 
 ; ----- Data pre-processing -----
 

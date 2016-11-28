@@ -14,7 +14,7 @@
             [clojure.string :as string]
             [clojure.java.io :as io]
             [clojure.edn :as edn])
-  (:import [java.io PushbackReader]))
+  (:import (java.io PushbackReader)))
 
 ; Selmer template filters
 (add-filter! :markdown (fn [s] [:safe (md-to-html-string s)]))

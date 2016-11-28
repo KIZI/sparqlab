@@ -11,20 +11,20 @@
             [stencil.core :refer [render-file]]
             [stencil.loader :refer [set-cache]]
             [mount.core :as mount])
-  (:import [java.io StringReader]
-           [java.net SocketException]
-           [org.apache.jena.query ARQ DatasetFactory Query QueryExecutionFactory
-                                  QueryFactory QueryParseException Syntax]
-           [org.apache.jena.update UpdateAction UpdateFactory]
-           [org.apache.jena.rdf.model Model ModelFactory]
-           [org.apache.jena.riot Lang RDFDataMgr]
-           [org.apache.jena.sparql.algebra Algebra]
-           [org.apache.jena.sparql.util Context NodeIsomorphismMap]
-           [org.apache.jena.sparql.core Var]
-           [org.apache.jena.graph Node]
-           [org.topbraid.spin.arq ARQ2SPIN]
-           [org.apache.jena.sparql.lang SyntaxVarScope]
-           [org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token]))
+  (:import (java.io StringReader)
+           (java.net SocketException)
+           (org.apache.jena.query ARQ DatasetFactory Query QueryExecutionFactory
+                                  QueryFactory QueryParseException Syntax)
+           (org.apache.jena.update UpdateAction UpdateFactory)
+           (org.apache.jena.rdf.model Model ModelFactory)
+           (org.apache.jena.riot Lang RDFDataMgr)
+           (org.apache.jena.sparql.algebra Algebra)
+           (org.apache.jena.sparql.util Context NodeIsomorphismMap)
+           (org.apache.jena.sparql.core Var)
+           (org.apache.jena.graph Node)
+           (org.topbraid.spin.arq ARQ2SPIN)
+           (org.apache.jena.sparql.lang SyntaxVarScope)
+           (org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token)))
 
 (def arq-context
   "Context allowing more aggressive SPARQL query optimizations."
