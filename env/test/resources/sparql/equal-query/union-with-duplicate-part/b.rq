@@ -1,0 +1,11 @@
+PREFIX : <http://example.com/>
+
+SELECT *
+WHERE {
+  {
+    :a :b :c .
+  } UNION {
+    :d :e :f .
+  }
+  :x :y :z .
+}

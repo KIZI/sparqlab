@@ -18,13 +18,15 @@
            (org.apache.jena.update UpdateAction UpdateFactory)
            (org.apache.jena.rdf.model Model ModelFactory)
            (org.apache.jena.riot Lang RDFDataMgr)
-           (org.apache.jena.sparql.algebra Algebra)
+           (org.apache.jena.sparql.algebra Algebra Op)
+           (org.apache.jena.sparql.algebra.optimize Optimize TransformMergeBGPs)
            (org.apache.jena.sparql.util Context NodeIsomorphismMap)
            (org.apache.jena.sparql.core Var)
            (org.apache.jena.graph Node)
            (org.topbraid.spin.arq ARQ2SPIN)
            (org.apache.jena.sparql.lang SyntaxVarScope)
-           (org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token)))
+           (org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token)
+           (org.aksw.jena_sparql_api.algebra.transform TransformDistributeJoinOverUnion)))
 
 (def arq-context
   "Context allowing more aggressive SPARQL query optimizations."
@@ -139,9 +141,16 @@
            {:message (.getMessage ex)
             :valid? false}))))
 
+(defn transform-distribute-join-over-union
+  [^Op op]
+  (Optimize/apply (TransformMergeBGPs.) (TransformDistributeJoinOverUnion/transform op)))
+
 (defn normalize-query
   [^Query query]
-  (Algebra/optimize (Algebra/compile query) arq-context))
+  (-> query
+      Algebra/compile
+      transform-distribute-join-over-union
+      (Algebra/optimize arq-context)))
 
 (defn normalize-select-results
   "Normalize results of a SPARQL SELECT query."
