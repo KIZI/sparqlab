@@ -3,8 +3,8 @@
             [sparqlab.sparql :as sparql]
             [clojure.test :refer :all]
             [clojure.java.io :as io])
-  (:import [org.apache.jena.rdf.model ModelFactory]
-           [org.apache.jena.datatypes.xsd XSDDatatype]))
+  (:import (org.apache.jena.rdf.model ModelFactory)
+           (org.apache.jena.datatypes.xsd XSDDatatype)))
 
 (deftest resource->clj
   (with-open [model (ModelFactory/createDefaultModel)]

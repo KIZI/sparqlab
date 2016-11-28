@@ -7,7 +7,7 @@
             [clojure.tools.logging :as log]
             [clojure.string :as string]
             [clojure.edn :as edn])
-  (:import [org.apache.jena.query QueryFactory]))
+  (:import (org.apache.jena.query QueryFactory)))
 
 (deftest extract-language-constructs
   (let [dir "sparql/extract-language-constructs"
