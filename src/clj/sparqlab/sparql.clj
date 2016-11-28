@@ -46,9 +46,6 @@
               (.equals other n2)))
           (.equals n1 n2))))))
 
-; Disable Stencil's caching for testing
-(set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
-
 (derive ::describe ::construct)
 
 ; ----- Private functions -----
