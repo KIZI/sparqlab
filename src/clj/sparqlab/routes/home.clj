@@ -5,7 +5,6 @@
             [sparqlab.prefixes :as prefix]
             [sparqlab.util :refer [kahn-sort query-file?]]
             [sparqlab.exercise :as exercise]
-            [sparqlab.config :refer [local-language]]
             [sparqlab.cookies :as cookie]
             [compojure.core :refer [context defroutes GET POST]]
             [clojure.tools.logging :as log]
@@ -42,10 +41,11 @@
        exercises))
 
 (defn get-exercise
-  [id]
+  [{lang :accept-lang}
+   id]
   (let [model (-> "get_exercise"
                   (sparql/sparql-template {:exercise (prefix/exercise id)
-                                           :language local-language})
+                                           :language lang})
                   construct-query)
         select-fn (comp (partial sparql/select-query model) sparql/sparql-template)
         description (first (select-fn "get_exercise_description"))
@@ -63,9 +63,10 @@
   (select-query (sparql/sparql-template "get_prerequisites" {:exercise (prefix/exercise id)})))
 
 (defn get-exercises-by-difficulty
-  [exercise-statuses]
+  [{lang :accept-lang}
+   exercise-statuses]
   (let [exercises (-> "get_exercises_by_difficulty"
-                      (sparql/sparql-template {:language local-language})
+                      (sparql/sparql-template {:language lang})
                       select-query
                       (mark-exercises-with-statuses exercise-statuses))]
     (group-by :difficultyLevel exercises)))
@@ -97,16 +98,16 @@
   (let [exercise-statuses (cookie/get-exercise-statuses request)
         {easy 0
          normal 1
-         hard 2} (get-exercises-by-difficulty exercise-statuses)]
+         hard 2} (get-exercises-by-difficulty request exercise-statuses)]
     (layout/render "exercises_by_difficulty.html" {:title (tr [:exercises-by-difficulty/title])
                                                    :easy easy
                                                    :normal normal
                                                    :hard hard})))
 
 (defn get-exercises-by-categories
-  [exercise-statuses]
+  [{lang :accept-lang} exercise-statuses]
   (let [exercises (-> "get_exercises_by_category"
-                      (sparql/sparql-template {:language local-language})
+                      (sparql/sparql-template {:language lang})
                       select-query
                       (mark-exercises-with-statuses exercise-statuses))]
     (sort-by (comp string/lower-case key)
@@ -116,15 +117,16 @@
   [{tr :tempura/tr
     :as request}]
   (let [exercise-statuses (cookie/get-exercise-statuses request)
-        exercises (get-exercises-by-categories exercise-statuses)]
+        exercises (get-exercises-by-categories request exercise-statuses)]
     (layout/render "exercises_by_category.html" {:exercises exercises
                                                  :title (tr [:exercises-by-category/title])})))
 
 (defn get-exercises-by-language-constructs
-  [exercise-statuses]
+  [{lang :accept-lang}
+   exercise-statuses]
   (let [sorted-exercises (sort-exercises-by-dependencies)
         exercises (-> "get_exercises_by_difficulty"
-                      (sparql/sparql-template {:language local-language})
+                      (sparql/sparql-template {:language lang})
                       select-query
                       (mark-exercises-with-statuses exercise-statuses))]
     (sort-by (comp #(.indexOf sorted-exercises %) prefix/exercise :id) exercises)))
@@ -133,7 +135,7 @@
   [{tr :tempura/tr
     :as request}]
   (let [exercise-statuses (cookie/get-exercise-statuses request)
-        exercises (get-exercises-by-language-constructs exercise-statuses)]
+        exercises (get-exercises-by-language-constructs request exercise-statuses)]
     (layout/render "exercises_by_language_constructs.html"
                    {:title (tr [:exercises-by-language-constructs/title])
                     :exercises exercises})))
@@ -151,6 +153,7 @@
 
 (defn evaluate-exercise
   [{{query "query"} :form-params
+    lang :accept-lang
     tr :tempura/tr
     :as request}
    id]
@@ -162,7 +165,8 @@
             verdict (exercise/evaluate-exercise canonical-query
                                                 query
                                                 :prohibited (map :prohibited prohibits)
-                                                :required (map :required requires))
+                                                :required (map :required requires)
+                                                :lang lang)
             exercise-status (get (cookie/get-exercise-statuses request) id)]
         (cond-> (layout/render "evaluation.html"
                                (assoc (merge exercise verdict)
@@ -174,9 +178,12 @@
 
 (defn search-exercises
   "Search exercises for a `search-term` or several SPARQL `search-constructs`."
-  [request search-term search-constructs]
+  [{lang :accept-lang
+    :as request}
+   search-term
+   search-constructs]
   (let [exercise-statuses (cookie/get-exercise-statuses request)
-        exercises-found (->> {:language local-language
+        exercises-found (->> {:language lang
                               :search-term search-term
                               :search-constructs search-constructs}
                              (sparql/sparql-template "find_exercises")
@@ -184,8 +191,8 @@
     (mark-exercises-with-statuses exercises-found exercise-statuses)))
 
 (defn show-exercise
-  [id]
-  (let [exercise (get-exercise id)
+  [request id]
+  (let [exercise (get-exercise request id)
         prerequisites (get-prerequisites id)]
     (layout/render "exercise.html" (assoc exercise
                                           :id id
@@ -197,9 +204,10 @@
   (layout/render "endpoint.html" {:title (tr [:endpoint/title])}))
 
 (defn about-page
-  [{tr :tempura/tr}]
+  [{tr :tempura/tr
+    lang :accept-lang}]
   (let [sparql-constructs (select-query (sparql/sparql-template "get_sparql_constructs"
-                                                                {:language local-language}))]
+                                                                {:language lang}))]
     (layout/render "about.html" {:sparql-constructs sparql-constructs
                                  :title (tr [:about/title])})))
 
@@ -225,11 +233,12 @@
 
 (defn search-results
   [{tr :tempura/tr
+    lang :accept-lang
     :as request}
    search-term
    search-constructs]
   (let [exercises-found (search-exercises request search-term search-constructs)
-        construct-labels (exercise/get-construct-labels search-constructs local-language)]
+        construct-labels (exercise/get-construct-labels search-constructs lang)]
     (layout/render "search_results.html" {:exercises exercises-found
                                           :search-term search-term
                                           :search-constructs construct-labels
@@ -238,7 +247,7 @@
 (defroutes home-routes
   (GET "/" request (exercises-by-difficulty request))
   (context "/exercise" []
-           (GET "/show/:id" [id] (show-exercise id))
+           (GET "/show/:id" [id :as request] (show-exercise request id))
            (POST "/evaluate/:id" [id :as request] (evaluate-exercise request id)))
   (context "/exercises" []
            (GET "/by-categories" request (exercises-by-categories request))

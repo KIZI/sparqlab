@@ -1,7 +1,6 @@
 (ns sparqlab.exercise
   (:require [sparqlab.sparql :as sparql]
             [sparqlab.store :as store]
-            [sparqlab.config :refer [local-language]]
             [clojure.set :refer [union]]
             [clojure.tools.logging :as log])
   (:import (org.apache.jena.rdf.model Model)))
@@ -17,21 +16,22 @@
                 sparql/node-isomorphism-map)))
 
 (defn get-construct-labels
-  "Get labels of `constructs` in `local-language`."
-  [constructs local-language]
+  "Get labels of `constructs` in `lang`."
+  [constructs lang]
   (->> (sparql/sparql-template "get_construct_labels"
                                {:constructs constructs
-                                :language local-language})
+                                :language lang})
        store/select-query
        (into #{})))
 
 (defn test-constructs
   "Test SPARQL constructs on `query-model` using `test-query`."
-  [^Model query-model
+  [^String lang
+   ^Model query-model
    ^String test-query]
   (let [constructs (map :construct (sparql/select-query query-model test-query))]
     (when (seq constructs)
-      (get-construct-labels constructs local-language))))
+      (get-construct-labels constructs lang))))
 
 (defn test-prohibited
   "Test if `prohibited` SPARQL language constructs are used in `query-model`."
@@ -42,16 +42,17 @@
 
 (defn test-required
   "Test if `required` SPARQL language constructs are used in `query`."
-  [required
+  [lang
+   required
    ^Model query-model]
   (let [test-query (sparql/sparql-template "test_required" {:required required})]
-    (test-constructs query-model test-query)))
+    (test-constructs lang query-model test-query)))
 
 (defn evaluate-exercise
   "Test if `query-string` is equal to the `canonical-query-string`."
   [^String canonical-query-string
    ^String query-string
-   & {:keys [prohibited required]}]
+   & {:keys [lang prohibited required]}]
   (let [sparql-query (partial sparql/sparql-query sparql/sparql-endpoint)
         canonical-query (sparql/parse-query canonical-query-string)
         query (sparql/parse-query query-string)
@@ -76,7 +77,7 @@
                      :query-results (sparql-query query)}))
         query-in-spin (sparql/query->spin (:query query))
         superfluous-prohibited (test-prohibited prohibited query-in-spin)
-        missing-required (test-required required query-in-spin)]
+        missing-required (test-required lang required query-in-spin)]
     {:canonical-query {:query canonical-query-string
                        :results (:canonical-results results)
                        :results-type (sparql/get-results-type (:query-type canonical-query))}

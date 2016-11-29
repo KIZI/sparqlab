@@ -3,11 +3,6 @@
             [cprop.source :as source]
             [mount.core :refer [args defstate]]))
 
-(def local-language
-  "Local language of the application.
-  Fixed at the moment. To be obtained dynamically."
-  "cs")
-
 (defstate env :start (load-config
                        :merge
                        [(args)

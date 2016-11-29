@@ -11,7 +11,8 @@
             [taoensso.tempura :as tempura])
   (:import (javax.servlet ServletContext)))
 
-(defn wrap-context [handler]
+(defn wrap-context
+  [handler]
   (fn [request]
     (binding [*app-context*
               (if-let [context (:servlet-context request)]
@@ -26,7 +27,8 @@
                 (:app-context env))]
       (handler request))))
 
-(defn wrap-internal-error [handler]
+(defn wrap-internal-error
+  [handler]
   (fn [req]
     (try
       (handler req)
@@ -36,7 +38,8 @@
                      :title "Something very bad has happened!"
                      :message "We've dispatched a team of highly trained gnomes to take care of the problem."})))))
 
-(defn wrap-formats [handler]
+(defn wrap-formats
+  [handler]
   (let [wrapped (wrap-restful-format
                   handler
                   {:formats [:json-kw :transit-json :transit-msgpack]})]
@@ -45,12 +48,23 @@
       ;; since they're not compatible with this middleware
       ((if (:websocket? request) handler wrapped) request))))
 
-(defn wrap-base [handler]
+(defn wrap-accept-language
+  [handler]
+  (let [{:keys [default-locale dict]} tconfig
+        available-locales (set (map name (keys dict)))]
+    (fn [{accept-languages :tempura/accept-langs
+          :as request}]
+      (let [accept-lang (or (some available-locales accept-languages) (name default-locale))]
+        (handler (assoc request :accept-lang accept-lang))))))
+
+(defn wrap-base
+  [handler]
   (-> ((:middleware defaults) handler)
       wrap-webjars
       (wrap-defaults
         (-> site-defaults (assoc-in [:session :store] (ttl-memory-store (* 60 30)))
                           (assoc-in [:security :anti-forgery] false)))
       wrap-context
+      wrap-accept-language
       (tempura/wrap-ring-request {:tr-opts tconfig})
       wrap-internal-error))
