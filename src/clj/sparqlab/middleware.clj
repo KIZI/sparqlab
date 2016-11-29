@@ -2,11 +2,13 @@
   (:require [sparqlab.env :refer [defaults]]
             [sparqlab.config :refer [env]]
             [sparqlab.layout :refer [*app-context* error-page]]
+            [sparqlab.i18n :refer [tconfig]]
             [clojure.tools.logging :as log]
             [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.middleware.format :refer [wrap-restful-format]]
             [ring-ttl-session.core :refer [ttl-memory-store]]
-            [ring.middleware.defaults :refer [site-defaults wrap-defaults]])
+            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+            [taoensso.tempura :as tempura])
   (:import (javax.servlet ServletContext)))
 
 (defn wrap-context [handler]
@@ -50,4 +52,5 @@
         (-> site-defaults (assoc-in [:session :store] (ttl-memory-store (* 60 30)))
                           (assoc-in [:security :anti-forgery] false)))
       wrap-context
+      (tempura/wrap-ring-request {:tr-opts tconfig})
       wrap-internal-error))

@@ -30,7 +30,8 @@
                  [org.topbraid/spin "2.0.0"]
                  [slingshot "0.12.2"]
                  [luminus-immutant "0.2.2"]
-                 [org.aksw.jena-sparql-api/jena-sparql-api-cache "3.1.1-1-SNAPSHOT"]]
+                 [org.aksw.jena-sparql-api/jena-sparql-api-cache "3.1.1-1-SNAPSHOT"]
+                 [com.taoensso/tempura "1.0.0-RC4"]]
 
   :repositories [["org.topbraid" "http://topquadrant.com/repository/spin"]
                  ["maven.aksw.snapshots" "http://maven.aksw.org/archiva/repository/snapshots"]]

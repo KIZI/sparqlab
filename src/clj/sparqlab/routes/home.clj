@@ -92,12 +92,13 @@
   (select-query (sparql/sparql-template "get_namespace_prefixes")))
 
 (defn exercises-by-difficulty
-  [request]
+  [{tr :tempura/tr
+    :as request}]
   (let [exercise-statuses (cookie/get-exercise-statuses request)
         {easy 0
          normal 1
          hard 2} (get-exercises-by-difficulty exercise-statuses)]
-    (layout/render "exercises_by_difficulty.html" {:title "Cvičení dle obtížnosti"
+    (layout/render "exercises_by_difficulty.html" {:title (tr [:exercises-by-difficulty/title])
                                                    :easy easy
                                                    :normal normal
                                                    :hard hard})))
@@ -112,11 +113,12 @@
              (group-by :categoryLabel exercises))))
 
 (defn exercises-by-categories
-  [request]
+  [{tr :tempura/tr
+    :as request}]
   (let [exercise-statuses (cookie/get-exercise-statuses request)
         exercises (get-exercises-by-categories exercise-statuses)]
     (layout/render "exercises_by_category.html" {:exercises exercises
-                                                 :title "Cvičení dle kategorií"})))
+                                                 :title (tr [:exercises-by-category/title])})))
 
 (defn get-exercises-by-language-constructs
   [exercise-statuses]
@@ -128,11 +130,13 @@
     (sort-by (comp #(.indexOf sorted-exercises %) prefix/exercise :id) exercises)))
 
 (defn exercises-by-language-constructs
-  [request]
+  [{tr :tempura/tr
+    :as request}]
   (let [exercise-statuses (cookie/get-exercise-statuses request)
         exercises (get-exercises-by-language-constructs exercise-statuses)]
-    (layout/render "exercises_by_language_constructs.html" {:title "Cvičení dle jazykových konstruktů"
-                                                            :exercises exercises})))
+    (layout/render "exercises_by_language_constructs.html"
+                   {:title (tr [:exercises-by-language-constructs/title])
+                    :exercises exercises})))
 
 (defn format-invalid-query
   "Render invalid query using syntax validation result."
@@ -147,6 +151,7 @@
 
 (defn evaluate-exercise
   [{{query "query"} :form-params
+    tr :tempura/tr
     :as request}
    id]
   (let [{:keys [valid?] :as validation-result} (sparql/valid-query? query)]
@@ -159,11 +164,13 @@
                                                 :prohibited (map :prohibited prohibits)
                                                 :required (map :required requires))
             exercise-status (get (cookie/get-exercise-statuses request) id)]
-        (cond-> (layout/render "evaluation.html" (assoc (merge exercise verdict)
-                                                        :title (str "Vyhodnocení cvičení: " (:name exercise))))
+        (cond-> (layout/render "evaluation.html"
+                               (assoc (merge exercise verdict)
+                                      :title (tr [:evaluation/title] [(:name exercise)])))
           (and (:equal? verdict) (not= exercise-status "revealed")) (cookie/mark-exercise-as-solved id)))
-      (layout/render "sparql_syntax_error.html" (assoc (format-invalid-query validation-result)
-                                                       :title "Syntaktická chyba ve SPARQL dotazu")))))
+      (layout/render "sparql_syntax_error.html"
+                     (assoc (format-invalid-query validation-result)
+                            :title (tr [:sparql-syntax-error/title]))))))
 
 (defn search-exercises
   "Search exercises for a `search-term` or several SPARQL `search-constructs`."
@@ -186,15 +193,15 @@
                                           :title (:name exercise)))))
 
 (defn sparql-endpoint
-  []
-  (layout/render "endpoint.html" {:title "SPARQL endpoint"}))
+  [{tr :tempura/tr}]
+  (layout/render "endpoint.html" {:title (tr [:endpoint/title])}))
 
 (defn about-page
-  []
+  [{tr :tempura/tr}]
   (let [sparql-constructs (select-query (sparql/sparql-template "get_sparql_constructs"
                                                                 {:language local-language}))]
     (layout/render "about.html" {:sparql-constructs sparql-constructs
-                                 :title "O SPARQLabu"})))
+                                 :title (tr [:about/title])})))
 
 (defn pad-prefixes
   "Pad `prefixes` by prepending spaces to have the same width."
@@ -210,20 +217,23 @@
     (map pad-prefix prefixes)))
 
 (defn data-page
-  []
+  [{tr :tempura/tr}]
   (let [prefixes (get-namespace-prefixes)
         padded-prefixes (pad-prefixes prefixes)]
     (layout/render "data.html" {:prefixes padded-prefixes
-                                :title "Data SPARQLabu"})))
+                                :title (tr [:data/title])})))
 
 (defn search-results
-  [request search-term search-constructs]
+  [{tr :tempura/tr
+    :as request}
+   search-term
+   search-constructs]
   (let [exercises-found (search-exercises request search-term search-constructs)
         construct-labels (exercise/get-construct-labels search-constructs local-language)]
     (layout/render "search_results.html" {:exercises exercises-found
                                           :search-term search-term
                                           :search-constructs construct-labels
-                                          :title "Nalezená cvičení"})))
+                                          :title (tr [:search-results/title])})))
 
 (defroutes home-routes
   (GET "/" request (exercises-by-difficulty request))
@@ -233,9 +243,9 @@
   (context "/exercises" []
            (GET "/by-categories" request (exercises-by-categories request))
            (GET "/by-language-constructs" request (exercises-by-language-constructs request)))
-  (GET "/endpoint" [] (sparql-endpoint))
-  (GET "/data" [] (data-page))
-  (GET "/about" [] (about-page))
+  (GET "/endpoint" request (sparql-endpoint request))
+  (GET "/data" request (data-page request))
+  (GET "/about" request (about-page request))
   (GET "/search"
        {{search-term :q search-constructs :construct} :params
         :as request}
