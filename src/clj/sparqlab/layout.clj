@@ -35,13 +35,16 @@
 
    returns a response map with the error page as the body
    and the status specified by the status key"
-  [error-details]
+  [{tr :tempura/tr}
+   error-details]
   {:status  (:status error-details)
    :headers {"Content-Type" "text/html; charset=utf-8"}
-   :body    (parser/render-file "error.html" error-details)})
+   :body    (parser/render-file "error.html" (assoc error-details :label (tr [:error/title])))})
 
 (defn not-found
   "Page not found"
-  [{tr :tempura/tr}]
-  (error-page {:status 404
+  [{tr :tempura/tr
+    :as request}]
+  (error-page request
+              {:status 404
                :title (tr [:not-found/title])}))

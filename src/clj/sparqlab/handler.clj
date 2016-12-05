@@ -1,7 +1,7 @@
 (ns sparqlab.handler
   (:require [sparqlab.config :refer [env]]
             [sparqlab.env :refer [defaults]]
-            [sparqlab.layout :as layout :refer [error-page]]
+            [sparqlab.layout :as layout]
             [sparqlab.middleware :as middleware]
             [sparqlab.routes.home :refer [home-routes]]
             [sparqlab.routes.api :refer [api-routes]]

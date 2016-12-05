@@ -34,9 +34,11 @@
       (handler req)
       (catch Throwable t
         (log/error t)
-        (error-page {:status 500
-                     :title "Something very bad has happened!"
-                     :message "We've dispatched a team of highly trained gnomes to take care of the problem."})))))
+        (let [tr (:tempura/tr req)
+              message {:status 500
+                       :title (tr [:internal-error/title])
+                       :message (tr [:internal-error/message])}]
+          (error-page req message))))))
 
 (defn wrap-formats
   [handler]
