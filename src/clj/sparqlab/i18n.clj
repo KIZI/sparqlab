@@ -15,10 +15,13 @@
                       :search "Hledat"
                       :search-query "Hledaný výraz"
                       :sparql-endpoint "SPARQL endpoint"}
+               :close "Zavřít"
                :data {:title "Data"}
                :endpoint {:title "SPARQL endpoint"
                           :run-query "Spustit dotaz"}
                :error {:title "Chyba"}
+               :error-modal {:label "Chyba v provádění dotazu"
+                             :message "Došlo k chybě v provádění dotazu."}
                :evaluation {:confirm-reveal {:label "Potvrdit prozrazení řešení"
                                              :no "Ne"
                                              :question "Opravdu chcete prozradit řešení?"
@@ -45,6 +48,7 @@
                                                   :title "Cvičení dle jazykových konstruktů"}
                :internal-error {:message "Interní chyba aplikace"
                                 :title "Chyba aplikace"}
+               :loading "Načítám"
                :not-found {:title "Stránka nenalezena"}
                :search-results {:not-found "Žádná cvičení nebyla nalezena."
                                 :search-query "Hledaný výraz"

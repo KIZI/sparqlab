@@ -100,14 +100,18 @@
            (util/select-nested-keys dict
                                     [[:and]
                                      [:about :title]
+                                     [:close]
                                      [:data :title]
-                                     [:endpoint :title]]))))
+                                     [:endpoint :title]
+                                     [:loading]]))))
 
 (defn base-exercise-locale
   [{lang :accept-lang}]
   (let [dict (get-in i18n/tconfig [:dict (keyword lang)])]
   (merge (:exercises dict)
-         (util/select-nested-keys dict [[:endpoint :run-query]]))))
+         (util/select-nested-keys dict [[:endpoint :run-query]
+                                        [:error-modal :label]
+                                        [:error-modal :message]]))))
 
 (defn base-evaluation-locale
   [{lang :accept-lang}]
@@ -245,8 +249,10 @@
   [{tr :tempura/tr
     :as request}]
   (layout/render "endpoint.html" (merge (base-locale request)
-                                        {:title (tr [:endpoint/title])
-                                         :run-query (tr [:endpoint/run-query])})))
+                                        {:error-modal {:label (tr [:error-modal/label])
+                                                       :message (tr [:error-modal/message])}
+                                         :run-query (tr [:endpoint/run-query])
+                                         :title (tr [:endpoint/title])})))
 
 (defn about-page
   [{tr :tempura/tr
