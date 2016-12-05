@@ -1,12 +1,12 @@
 (ns sparqlab.handler
   (:require [sparqlab.config :refer [env]]
             [sparqlab.env :refer [defaults]]
-            [sparqlab.layout :refer [error-page]]
+            [sparqlab.layout :as layout :refer [error-page]]
             [sparqlab.middleware :as middleware]
             [sparqlab.routes.home :refer [home-routes]]
             [sparqlab.routes.api :refer [api-routes]]
             [clojure.tools.logging :as log]
-            [compojure.core :refer [routes wrap-routes]]
+            [compojure.core :refer [rfn routes wrap-routes]]
             [compojure.route :as route]
             [mount.core :as mount]))
 
@@ -37,9 +37,6 @@
     (-> #'home-routes
         (wrap-routes middleware/wrap-formats))
     #'api-routes
-    (route/not-found
-      (:body
-        (error-page {:status 404
-                     :title "page not found"})))))
+    (rfn request (layout/not-found request))))
 
 (def app (middleware/wrap-base #'app-routes))

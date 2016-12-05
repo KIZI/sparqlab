@@ -39,3 +39,9 @@
   {:status  (:status error-details)
    :headers {"Content-Type" "text/html; charset=utf-8"}
    :body    (parser/render-file "error.html" error-details)})
+
+(defn not-found
+  "Page not found"
+  [{tr :tempura/tr}]
+  (error-page {:status 404
+               :title (tr [:not-found/title])}))
