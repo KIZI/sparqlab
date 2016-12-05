@@ -32,7 +32,7 @@
           </button>
           <div class="collapse navbar-toggleable-xs" id="collapsing-navbar">
               <a class="navbar-brand" href="{{servlet-context}}/" rel="home">
-                SPARQLab<sup title="Beta verze">&beta;</sup>
+                SPARQLab<sup title="{{beta-version}}">&beta;</sup>
               </a>
               <ul class="nav navbar-nav">
                   <li class="nav-item dropdown">
@@ -42,7 +42,7 @@
                          role="button"
                          aria-haspopup="true"
                          aria-expanded="false">
-                      Cvičení
+                      {{exercise}}
                       </a>
                       <div class="dropdown-menu">
                         <a class="dropdown-item
@@ -50,40 +50,40 @@
                            active
                            {% endifequal %}"
                            href="{{servlet-context}}/">
-                          Dle obtížnosti
+                           {{by-difficulty}}
                         </a>
                         <a class="dropdown-item
                           {% ifequal page "exercises_by_category.html" %}
                           active
                           {% endifequal %}"
                           href="{{servlet-context}}/exercises/by-categories">
-                          Dle kategorií
+                          {{by-category}}
                         </a>
                         <a class="dropdown-item
                            {% ifequal page "exercises_by_language_constructs.html" %}
                            active
                            {% endifequal %}"
                            href="{{servlet-context}}/exercises/by-language-constructs">
-                          Dle jazykových konstruktů
+                           {{by-language-constructs}}
                         </a>
                       </div>
                   </li>
                   <li class="nav-item">
                       <a href="{{servlet-context}}/endpoint"
                          class="nav-link {% ifequal page "endpoint.html" %}active{%endifequal%}">
-                      SPARQL endpoint
+                         {{sparql-endpoint}}
                       </a>
                   </li>
                   <li class="nav-item">
                       <a href="{{servlet-context}}/data"
                          class="nav-link {% ifequal page "data.html" %}active{%endifequal%}">
-                      O datech
+                         {{data-title}}
                       </a>
                   </li>
                   <li class="nav-item">
                       <a href="{{servlet-context}}/about"
                          class="nav-link {% ifequal page "about.html" %}active{%endifequal%}">
-                      O aplikaci
+                         {{about.title}}
                       </a>
                   </li>
                 </ul>
@@ -92,15 +92,15 @@
                       action="{{servlet-context}}/search"
                       method="GET">
                   <div class="input-group">
-                    <label class="sr-only" for="search">Hledaný výraz:</label>
+                    <label class="sr-only" for="search">{{search-query}}:</label>
                     <input id="search-term"
                            name="q"
                            type="text"
                            class="form-control form-control-sm"
-                           placeholder="Hledat">
+                           placeholder="{{search}}">
                     <span class="input-group-btn">
                       <button type="submit" class="btn btn-sm btn-default">
-                        <i class="fa fa-search" title="Hledat" aria-hidden="true"></i>
+                        <i class="fa fa-search" title="{{search}}" aria-hidden="true"></i>
                       </button>
                     </span>
                   </div>

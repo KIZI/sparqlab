@@ -34,6 +34,11 @@
         (when-let* ~(drop 2 bindings) ~@body))
      `(do ~@body))))
 
+(defn select-nested-keys
+  "Select nested keys via `paths` from map `m`."
+  [m paths]
+  (reduce (fn [out path] (update-in out path (partial get-in m path))) {} paths))
+
 ;; Kahn's topological sort. <https://gist.github.com/alandipert/1263783>
 ;; Copyright (c) Alan Dipert. All rights reserved.
 ;; The use and distribution terms for this software are covered by the

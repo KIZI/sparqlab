@@ -2,7 +2,8 @@
   (:require [selmer.parser :as parser]
             [selmer.filters :as filters]
             [markdown.core :refer [md-to-html-string]]
-            [ring.util.http-response :refer [content-type ok]]))
+            [ring.util.http-response :refer [content-type ok]]
+            [clojure.java.io :as io]))
 
 (declare ^:dynamic *app-context*)
 
@@ -15,6 +16,13 @@
                        (let [wrapped (md-to-html-string content)]
                          [:safe (subs wrapped 3 (- (count wrapped) 4))])))
 
+(def template-name
+  (comp
+    (memfn getName)
+    io/as-file
+    io/resource
+    (partial str "templates/")))
+
 (defn render
   "renders the HTML template located relative to resources/templates"
   [template & [params]]
@@ -23,7 +31,7 @@
       (parser/render-file
         template
         (assoc params
-          :page template
+          :page (template-name template)
           :servlet-context *app-context*)))
     "text/html; charset=utf-8"))
 

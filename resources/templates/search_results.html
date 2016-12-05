@@ -1,34 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Výsledky vyhledávání</h1>
+<h1>{{title}}</h1>
 {% if search-term %}
-<p><strong>Hledaný výraz:</strong> &ldquo;{{search-term}}&rdquo;</p>
+<p><strong>{{search-query}}:</strong> &ldquo;{{search-term}}&rdquo;</p>
 {% endif %}
 {% if search-constructs|not-empty %}
-<p><strong>Hledané SPARQL konstrukty:</strong>
+<p><strong>{{search-query-constructs}}:</strong>
 {% for search-construct in search-constructs %}
-<a href="{{servlet-context}}/search?construct={{search-construct.construct|urlescape}}">{{search-construct.label|inline-markdown}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+<a href="{{servlet-context}}/search?construct={{search-construct.construct|urlescape}}">{{search-construct.label|inline-markdown}}</a>{% ifequal forloop.counter forloop.length|dec %} {{and}} {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
 {% endfor %}
 {% endif %}
-<h4>{{title}}</h4>
 {% if exercises|not-empty %}
 <ul class="exercises">
   {% for exercise in exercises %}
   <li>
     <a href="{{servlet-context}}/exercise/show/{{exercise.id}}">{{exercise.name}}</a>
     {% ifequal exercise.status "solved" %}
-    <i class="fa fa-check done-icon" title="Vyřešeno" aria-hidden="true"></i>
+    <i class="fa fa-check done-icon" title="{{solved}}" aria-hidden="true"></i>
     {% endifequal %}
     {% ifequal exercise.status "revealed" %}
-    <i class="fa revealed-icon" title="Prozrazeno" aria-hidden="true"></i>
+    <i class="fa revealed-icon" title="{{revealed}}" aria-hidden="true"></i>
     {% endifequal %}
-    <span title="{{exercise.difficultyLabel}} obtížnost" class="tag tag-pill tag-info">
+    <span title="{{exercise.difficultyLabel}} {{difficulty}}" class="tag tag-pill tag-info">
       <i class="fa difficulty{{exercise.difficultyLevel}}" aria-hidden="true"></i>
     </span>
   </li>
   {% endfor %}
 </ul>
 {% else %}
-<p>Žádná cvičení nebyla nalezena.</p>
+<p>{{not-found}}</p>
 {% endif %}
 {% endblock %}

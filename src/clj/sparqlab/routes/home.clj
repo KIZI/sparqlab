@@ -3,9 +3,10 @@
             [sparqlab.sparql :as sparql]
             [sparqlab.store :refer [construct-query select-query]]
             [sparqlab.prefixes :as prefix]
-            [sparqlab.util :refer [kahn-sort query-file?]]
+            [sparqlab.util :as util]
             [sparqlab.exercise :as exercise]
             [sparqlab.cookies :as cookie]
+            [sparqlab.i18n :as i18n]
             [compojure.core :refer [context defroutes GET POST]]
             [clojure.tools.logging :as log]
             [markdown.core :refer [md-to-html-string]]
@@ -85,12 +86,36 @@
          select-query
          (group-values-by-key :construct :exercise)
          (merge spin-dependencies)
-         kahn-sort
+         util/kahn-sort
          (remove spin-term?))))
 
 (defn get-namespace-prefixes
   []
   (select-query (sparql/sparql-template "get_namespace_prefixes")))
+
+(defn base-locale
+  [{lang :accept-lang}]
+  (let [dict (get-in i18n/tconfig [:dict (keyword lang)])]
+    (merge (:base dict)
+           (util/select-nested-keys dict
+                                    [[:and]
+                                     [:about :title]
+                                     [:data :title]
+                                     [:endpoint :title]]))))
+
+(defn base-exercise-locale
+  [{lang :accept-lang}]
+  (let [dict (get-in i18n/tconfig [:dict (keyword lang)])]
+  (merge (:exercises dict)
+         (util/select-nested-keys dict [[:endpoint :run-query]]))))
+
+(defn base-evaluation-locale
+  [{lang :accept-lang}]
+  (get-in i18n/tconfig [:dict (keyword lang) :evaluation]))
+
+(defn base-search-locale
+  [{lang :accept-lang}]
+  (get-in i18n/tconfig [:dict (keyword lang) :search-results]))
 
 (defn exercises-by-difficulty
   [{tr :tempura/tr
@@ -99,10 +124,13 @@
         {easy 0
          normal 1
          hard 2} (get-exercises-by-difficulty request exercise-statuses)]
-    (layout/render "exercises_by_difficulty.html" {:title (tr [:exercises-by-difficulty/title])
-                                                   :easy easy
-                                                   :normal normal
-                                                   :hard hard})))
+    (layout/render "exercises_by_difficulty.html"
+                   (merge (base-locale request)
+                          (base-exercise-locale request)
+                          {:title (tr [:exercises-by-difficulty/title])
+                           :easy easy
+                           :normal normal
+                           :hard hard}))))
 
 (defn get-exercises-by-categories
   [{lang :accept-lang} exercise-statuses]
@@ -118,8 +146,11 @@
     :as request}]
   (let [exercise-statuses (cookie/get-exercise-statuses request)
         exercises (get-exercises-by-categories request exercise-statuses)]
-    (layout/render "exercises_by_category.html" {:exercises exercises
-                                                 :title (tr [:exercises-by-category/title])})))
+    (layout/render "exercises_by_category.html"
+                   (merge (base-locale request)
+                          (base-exercise-locale request)
+                          {:exercises exercises
+                           :title (tr [:exercises-by-category/title])}))))
 
 (defn get-exercises-by-language-constructs
   [{lang :accept-lang}
@@ -137,8 +168,11 @@
   (let [exercise-statuses (cookie/get-exercise-statuses request)
         exercises (get-exercises-by-language-constructs request exercise-statuses)]
     (layout/render "exercises_by_language_constructs.html"
-                   {:title (tr [:exercises-by-language-constructs/title])
-                    :exercises exercises})))
+                   (merge (base-locale request)
+                          (base-exercise-locale request)
+                          {:exercises exercises
+                           :note (tr [:exercises-by-language-constructs/note])
+                           :title (tr [:exercises-by-language-constructs/title])}))))
 
 (defn format-invalid-query
   "Render invalid query using syntax validation result."
@@ -161,7 +195,7 @@
     (if valid?
       (let [{canonical-query :query
              :keys [prohibits requires]
-             :as exercise} (get-exercise id)
+             :as exercise} (get-exercise request id)
             verdict (exercise/evaluate-exercise canonical-query
                                                 query
                                                 :prohibited (map :prohibited prohibits)
@@ -169,12 +203,17 @@
                                                 :lang lang)
             exercise-status (get (cookie/get-exercise-statuses request) id)]
         (cond-> (layout/render "evaluation.html"
-                               (assoc (merge exercise verdict)
+                               (assoc (merge (base-locale request)
+                                             (base-evaluation-locale request)
+                                             exercise
+                                             verdict)
                                       :title (tr [:evaluation/title] [(:name exercise)])))
           (and (:equal? verdict) (not= exercise-status "revealed")) (cookie/mark-exercise-as-solved id)))
       (layout/render "sparql_syntax_error.html"
-                     (assoc (format-invalid-query validation-result)
-                            :title (tr [:sparql-syntax-error/title]))))))
+                     (merge (base-locale request)
+                            (assoc (format-invalid-query validation-result)
+                                   :expected-label (tr [:sparql-syntax-error/expected-label])
+                                   :title (tr [:sparql-syntax-error/title])))))))
 
 (defn search-exercises
   "Search exercises for a `search-term` or several SPARQL `search-constructs`."
@@ -194,22 +233,32 @@
   [request id]
   (let [exercise (get-exercise request id)
         prerequisites (get-prerequisites id)]
-    (layout/render "exercise.html" (assoc exercise
-                                          :id id
-                                          :prerequisites prerequisites
-                                          :title (:name exercise)))))
+    (layout/render "exercise.html"
+                   (merge (base-locale request)
+                          (base-exercise-locale request)
+                          (assoc exercise
+                                 :id id
+                                 :prerequisites prerequisites
+                                 :title (:name exercise))))))
 
 (defn sparql-endpoint
-  [{tr :tempura/tr}]
-  (layout/render "endpoint.html" {:title (tr [:endpoint/title])}))
+  [{tr :tempura/tr
+    :as request}]
+  (layout/render "endpoint.html" (merge (base-locale request)
+                                        {:title (tr [:endpoint/title])
+                                         :run-query (tr [:endpoint/run-query])})))
 
 (defn about-page
   [{tr :tempura/tr
-    lang :accept-lang}]
-  (let [sparql-constructs (select-query (sparql/sparql-template "get_sparql_constructs"
-                                                                {:language lang}))]
-    (layout/render "about.html" {:sparql-constructs sparql-constructs
-                                 :title (tr [:about/title])})))
+    lang :accept-lang
+    :as request}]
+  (let [sparql-constructs (-> "get_sparql_constructs"
+                              (sparql/sparql-template {:language lang})
+                              select-query)]
+    (layout/render (str lang "/about.html")
+                   (merge (base-locale request)
+                          {:sparql-constructs sparql-constructs
+                           :title (tr [:about/title])}))))
 
 (defn pad-prefixes
   "Pad `prefixes` by prepending spaces to have the same width."
@@ -225,11 +274,15 @@
     (map pad-prefix prefixes)))
 
 (defn data-page
-  [{tr :tempura/tr}]
+  [{tr :tempura/tr
+    lang :accept-lang
+    :as request}]
   (let [prefixes (get-namespace-prefixes)
         padded-prefixes (pad-prefixes prefixes)]
-    (layout/render "data.html" {:prefixes padded-prefixes
-                                :title (tr [:data/title])})))
+    (layout/render (str lang "/data.html")
+                   (merge (base-locale request)
+                          {:prefixes padded-prefixes
+                           :title (tr [:data/title])}))))
 
 (defn search-results
   [{tr :tempura/tr
@@ -239,10 +292,14 @@
    search-constructs]
   (let [exercises-found (search-exercises request search-term search-constructs)
         construct-labels (exercise/get-construct-labels search-constructs lang)]
-    (layout/render "search_results.html" {:exercises exercises-found
-                                          :search-term search-term
-                                          :search-constructs construct-labels
-                                          :title (tr [:search-results/title])})))
+    (layout/render "search_results.html"
+                   (merge (base-locale request)
+                          (base-exercise-locale request)
+                          (base-search-locale request)
+                          {:exercises exercises-found
+                           :search-term search-term
+                           :search-constructs construct-labels
+                           :title (tr [:search-results/title])}))))
 
 (defroutes home-routes
   (GET "/" request (exercises-by-difficulty request))

@@ -10,10 +10,10 @@
         <p>
         <strong>
           <i class="fa fa-check" aria-hidden="true"></i>
-          Povinné konstrukty:
+          {{required-constructs}}:
         </strong>
           {% for require in requires %}
-          {{require.label|inline-markdown}}{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+          {{require.label|inline-markdown}}{% ifequal forloop.counter forloop.length|dec %} {{and}} {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
           {% endfor %}
         </p>
         {% endif %}
@@ -21,34 +21,34 @@
         <p>
         <strong>
           <i class="fa fa-ban" aria-hidden="true"></i>
-          Zakázané konstrukty:
+          {{prohibited-constructs}}:
          </strong>
           {% for prohibit in prohibits %}
-          {{prohibit.label|inline-markdown}}{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+          {{prohibit.label|inline-markdown}}{% ifequal forloop.counter forloop.length|dec %} {{and}} {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
           {% endfor %}
         </p>
         {% endif %}
         <form action="{{servlet-context}}/exercise/evaluate/{{id}}" method="POST">
           {% include "sparql_editor.html" %}
           <div class="control-buttons hidden btn-group" role="group">
-            <button id="run-query" type="button" class="btn btn-default">Spustit dotaz</button>
-            <button type="submit" class="btn btn-primary">Odeslat</button>
+            <button id="run-query" type="button" class="btn btn-default">{{endpoint.run-query}}</button>
+            <button type="submit" class="btn btn-primary">{{submit}}</button>
           </div>
         </form>
       </div>
       <div class="col-md-4">
         {% if note %}
         <div class="alert alert-info" role="alert">
-          <h5><i class="fa fa-thumb-tack" aria-hidden="true"></i>Poznámka</h5>
+          <h5><i class="fa fa-thumb-tack" aria-hidden="true"></i>{{note}}</h5>
           {{note|markdown}}
         </div>
         {% endif %}
         {% if prerequisites|not-empty %}
         <p class="exercises">
           <small class="text-muted">
-            <strong>Podobná cvičení:</strong>
+            <strong>{{similar-exercises}}:</strong>
             {% for prerequisite in prerequisites %}
-            <a href="{{servlet-context}}/exercise/show/{{prerequisite.id}}">{{prerequisite.name}}</a>{% ifequal forloop.counter forloop.length|dec %} a {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
+            <a href="{{servlet-context}}/exercise/show/{{prerequisite.id}}">{{prerequisite.name}}</a>{% ifequal forloop.counter forloop.length|dec %} {{and}} {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}
             {% endfor %}
           </small>
         </p>

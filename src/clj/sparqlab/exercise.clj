@@ -35,14 +35,15 @@
 
 (defn test-prohibited
   "Test if `prohibited` SPARQL language constructs are used in `query-model`."
-  [prohibited
+  [^String lang
+   prohibited
    ^Model query-model]
   (let [test-query (sparql/sparql-template "test_prohibited" {:prohibited prohibited})]
-    (test-constructs query-model test-query)))
+    (test-constructs lang query-model test-query)))
 
 (defn test-required
   "Test if `required` SPARQL language constructs are used in `query`."
-  [lang
+  [^String lang
    required
    ^Model query-model]
   (let [test-query (sparql/sparql-template "test_required" {:required required})]
@@ -76,7 +77,7 @@
                     {:canonical-results (sparql-query canonical-query)
                      :query-results (sparql-query query)}))
         query-in-spin (sparql/query->spin (:query query))
-        superfluous-prohibited (test-prohibited prohibited query-in-spin)
+        superfluous-prohibited (test-prohibited lang prohibited query-in-spin)
         missing-required (test-required lang required query-in-spin)]
     {:canonical-query {:query canonical-query-string
                        :results (:canonical-results results)
