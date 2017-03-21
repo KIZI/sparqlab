@@ -71,7 +71,7 @@
   rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
 
 :hard a :DifficultyLevel ;
-  skos:prefLabel "Obtížná"@cs, "Hard"@en ;
+  skos:prefLabel "Vysoká"@cs, "Hard"@en ;
   skos:notation 2 ;
   rdfs:isDefinedBy <http://mynarz.net/sparqlab/vocabulary> .
 
