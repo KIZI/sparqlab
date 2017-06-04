@@ -10,8 +10,8 @@
 ### SPIN labels ###
 ###################
 
-sp:Aggregation skos:prefLabel "Agregace"@cs .
-sp:AltPath skos:prefLabel "Alternativní cesta"@cs .
+sp:Aggregation skos:prefLabel "Agregace"@cs, "Aggregate"@en .
+sp:AltPath skos:prefLabel "Alternativní cesta"@cs, "Alternatives path"@en .
 sp:Asc skos:prefLabel "`ASC`" .
 sp:Ask skos:prefLabel "`ASK`" .
 sp:Avg skos:prefLabel "`AVG`" .
@@ -26,18 +26,18 @@ sp:GroupConcat skos:prefLabel "`GROUP_CONCAT`" .
 sp:Max skos:prefLabel "`MAX`" .
 sp:Min skos:prefLabel "`MIN`" .
 sp:Minus skos:prefLabel "`MINUS`" .
-sp:ModPath skos:prefLabel "Proměnná cesta"@cs .
+sp:ModPath skos:prefLabel "Proměnná cesta"@cs, "Variable path"@en .
 sp:NamedGraph skos:prefLabel "`GRAPH`" .
 sp:NotExists skos:prefLabel "`NOT EXISTS`" .
 sp:Optional skos:prefLabel "`OPTIONAL`" .
-sp:Path skos:prefLabel "Cesta" .
-sp:ReversePath skos:prefLabel "Reverzní cesta"@cs .
+sp:Path skos:prefLabel "Cesta"@cs, "Path"@en .
+sp:ReversePath skos:prefLabel "Reverzní cesta"@cs, "Reverse path"@en .
 sp:Sample skos:prefLabel "`SAMPLE`" .
 sp:Select skos:prefLabel "`SELECT`" .
-sp:SeqPath skos:prefLabel "Sekvence cest" .
-sp:SubQuery skos:prefLabel "Vnořený dotaz" .
+sp:SeqPath skos:prefLabel "Sekvence cest"@cs, "Path sequence"@en .
+sp:SubQuery skos:prefLabel "Vnořený dotaz"@cs, "Subquery"@en .
 sp:Sum skos:prefLabel "`SUM`" .
-sp:TriplePath skos:prefLabel "Cesta"@cs .
+sp:TriplePath skos:prefLabel "Cesta"@cs, "Path"@en .
 sp:Union skos:prefLabel "`UNION`" .
 sp:Values skos:prefLabel "`VALUES`" .
 sp:and skos:prefLabel "`&&`" .
@@ -75,7 +75,7 @@ sp:sameTerm skos:prefLabel "`sameTerm`" .
 sp:str skos:prefLabel "`str`" .
 sp:strdt skos:prefLabel "`strdt`" .
 sp:strlen skos:prefLabel "`strlen`" .
-sp:subPath skos:prefLabel "Vnořená cesta"@cs .
+sp:subPath skos:prefLabel "Vnořená cesta"@cs, "Subpath"@en .
 sp:substr skos:prefLabel "`substr`" .
 sp:where skos:prefLabel "`WHERE`" .
 sp:year skos:prefLabel "`year`" .

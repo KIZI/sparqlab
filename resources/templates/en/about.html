@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    {% include "bubbling_beaker.html" %}
+    <p class="lead">SPARQLab serves for exercising the <a href="https://www.w3.org/TR/sparql11-query/"><abbr title="SPARQL Protocol And RDF Query Language" class="initialism">SPARQL</abbr> query language</a>.</p>
+   
+    <p>The goal of each exercise is to formulate a SPARQL query, so that it satisfies the exercise's description. Each exercise has a model solution. The application uses data on pension statistics from the Czech Social Security Administration. The exercises focus on data exploration, such as discovering the dimensions used in the data, but also on data analyses, such as finding out the areas with the largest pay gap between pensions for men and women.</p>
+
+    <p>The source code of the application is openly available in <a href="https://github.com/jindrichmynarz/sparqlab">this repository</a>. If you encounter a bug, you can report it to our <a href="https://github.com/jindrichmynarz/sparqlab/issues">issue tracker</a>.</p>
+
+    <p>The exercises use these SPARQL constructs:
+    {% for sparql-construct in sparql-constructs %}
+    <a href="{{servlet-context}}/search?construct={{sparql-construct.construct|urlescape}}">{{sparql-construct.label|inline-markdown}}</a>{% ifequal forloop.counter forloop.length|dec %} and {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}{% endfor %}.</p>
+
+    <h2>Authors</h2>
+
+    <ul>
+      <li><a href="http://mynarz.net/#jindrich">Jindřich Mynarz</a></li>
+      <li><a href="http://nb.vse.cz/~svatek">Vojtěch Svátek</a></li>
+      <li><a href="http://nb.vse.cz/~xkucj30">Jan Kučera</a></li>
+    </ul>
+
+    <p>The development of this application was funded by the developement grants of the <a href="https://www.vse.cz/english">University of Economics</a> no. 6/2016 and no. 50/2017.</p>
+  </div>
+</div>
+{% endblock %}
