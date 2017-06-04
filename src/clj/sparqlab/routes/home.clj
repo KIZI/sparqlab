@@ -108,10 +108,10 @@
 (defn base-exercise-locale
   [{lang :accept-lang}]
   (let [dict (get-in i18n/tconfig [:dict (keyword lang)])]
-  (merge (:exercises dict)
-         (util/select-nested-keys dict [[:endpoint :run-query]
-                                        [:error-modal :label]
-                                        [:error-modal :message]]))))
+    (merge (:exercises dict)
+           (util/select-nested-keys dict [[:endpoint :run-query]
+                                          [:error-modal :label]
+                                          [:error-modal :message]]))))
 
 (defn base-evaluation-locale
   [{lang :accept-lang}]

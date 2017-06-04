@@ -1,4 +1,5 @@
-(ns sparqlab.prefixes)
+(ns sparqlab.prefixes
+  (:import (java.util UUID)))
 
 ; ----- Namespace prefixes -----
 
@@ -34,4 +35,4 @@
 (defn uuid-iri
   "Generate a UUID-based localhost IRI."
   []
-  (local (str (java.util.UUID/randomUUID))))
+  (local (str (UUID/randomUUID))))
