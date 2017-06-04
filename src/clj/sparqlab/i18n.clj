@@ -35,7 +35,7 @@
                             :solution "Řešení"
                             :title "Vyhodnocení cvičení: %1"}
                :exercises {:difficulty "obtížnost"
-                           :note "Poznámka"
+                           :note-title "Poznámka"
                            :prohibited-constructs "Zakázané konstrukty"
                            :required-constructs "Povinné konstrukty"
                            :revealed "Prozrazeno"
