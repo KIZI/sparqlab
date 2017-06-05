@@ -22,24 +22,18 @@ WHERE {
     rdfs:comment ?_description ;
     sp:text ?_query .
 
-  FILTER (langMatches(lang(?name), "{{language}}")
-          &&
-          langMatches(lang(?_description), "{{language}}"))
   BIND (REPLACE(?_description, "^\\s+|\\s+$", "") AS ?description)
   BIND (REPLACE(?_query, "^\\s+|\\s+$", "") AS ?query)
 
   OPTIONAL {
     <{{exercise}}> dcterms:requires ?required .
     ?required skos:prefLabel ?requiredLabel .
-    FILTER (langMatches(lang(?requiredLabel), "{{language}}") || lang(?requiredLabel) = "")
   }
   OPTIONAL {
     <{{exercise}}> sparqlab:prohibits ?prohibited .
     ?prohibited skos:prefLabel ?prohibitedLabel .
-    FILTER (langMatches(lang(?prohibitedLabel), "{{language}}") || lang(?prohibitedLabel) = "")
   }
   OPTIONAL {
     <{{exercise}}> skos:note ?note .
-    FILTER (langMatches(lang(?note), "{{language}}") || lang(?note) = "")
   }
 }
