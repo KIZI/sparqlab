@@ -1,5 +1,5 @@
 (ns sparqlab.i18n
-  (:require [taoensso.tempura :as tempura :refer [tr]]))
+  (:require [taoensso.tempura :refer [tr]]))
 
 (def tconfig
   {:default-locale :cs
@@ -97,7 +97,7 @@
                            :submit "Submit"}
                :exercises-by-category {:title "Exercises by category"}
                :exercises-by-difficulty {:title "Exercises by difficulty"}
-               :exercises-by-language-constructs {:note "The exercises are sorted by the number of language constructs they require, starting with those that require the least constructs."
+               :exercises-by-language-constructs {:note "The exercises are sorted by the number of language constructs they require; starting with those that require the least."
                                                   :title "Exercises by language constructs"}
                :internal-error {:message "Internal application error"
                                 :title "Application error"}
