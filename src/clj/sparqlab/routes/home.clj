@@ -137,13 +137,15 @@
                            :hard hard}))))
 
 (defn get-exercises-by-categories
-  [{lang :accept-lang} exercise-statuses]
+  [{lang :accept-lang}
+   exercise-statuses]
   (let [exercises (-> "get_exercises_by_category"
                       (sparql/sparql-template {:language lang})
                       select-query
                       (mark-exercises-with-statuses exercise-statuses))]
-    (sort-by (comp string/lower-case key)
-             (group-by :categoryLabel exercises))))
+    (->> exercises
+         (group-by :categoryLabel)
+         (sort-by (comp string/lower-case key)))))
 
 (defn exercises-by-categories
   [{tr :tempura/tr
