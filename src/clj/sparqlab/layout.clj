@@ -7,7 +7,7 @@
 
 (declare ^:dynamic *app-context*)
 
-(parser/set-resource-path!  (clojure.java.io/resource "templates"))
+(parser/set-resource-path! (clojure.java.io/resource "templates"))
 
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
 
@@ -15,13 +15,6 @@
                      (fn [content]
                        (let [wrapped (md-to-html-string content)]
                          [:safe (subs wrapped 3 (- (count wrapped) 4))])))
-
-(def template-name
-  (comp
-    (memfn getName)
-    io/as-file
-    io/resource
-    (partial str "templates/")))
 
 (defn render
   "renders the HTML template located relative to resources/templates"
@@ -31,7 +24,7 @@
       (parser/render-file
         template
         (assoc params
-          :page (template-name template)
+          :page template
           :servlet-context *app-context*)))
     "text/html; charset=utf-8"))
 
