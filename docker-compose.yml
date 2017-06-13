@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
   app:
     build: .
@@ -9,7 +9,9 @@ services:
       - "SPARQL_ENDPOINT=http://stardog:5820/sparqlab/query"
     ports:
       - "3000:3000"
+    restart: always
   stardog:
     image: jindrichmynarz/sparqlab-stardog:1
     ports:
       - "5820:5820"
+    restart: always
