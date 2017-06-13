@@ -1,0 +1,15 @@
+version: "3"
+services:
+  app:
+    build: .
+    depends_on:
+      - stardog
+    environment:
+      - "APP_CONTEXT=/sparqlab"
+      - "SPARQL_ENDPOINT=http://stardog:5820/sparqlab/query"
+    ports:
+      - "3000:3000"
+  stardog:
+    image: jindrichmynarz/sparqlab-stardog:1
+    ports:
+      - "5820:5820"
