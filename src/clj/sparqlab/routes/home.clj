@@ -93,34 +93,6 @@
   []
   (select-query (sparql/sparql-template "get_namespace_prefixes")))
 
-(defn base-locale
-  [{lang :accept-lang}]
-  (let [dict (get-in i18n/tconfig [:dict (keyword lang)])]
-    (merge (:base dict)
-           (util/select-nested-keys dict
-                                    [[:and]
-                                     [:about :title]
-                                     [:close]
-                                     [:data :title]
-                                     [:endpoint :title]
-                                     [:loading]]))))
-
-(defn base-exercise-locale
-  [{lang :accept-lang}]
-  (let [dict (get-in i18n/tconfig [:dict (keyword lang)])]
-    (merge (:exercises dict)
-           (util/select-nested-keys dict [[:endpoint :run-query]
-                                          [:error-modal :label]
-                                          [:error-modal :message]]))))
-
-(defn base-evaluation-locale
-  [{lang :accept-lang}]
-  (get-in i18n/tconfig [:dict (keyword lang) :evaluation]))
-
-(defn base-search-locale
-  [{lang :accept-lang}]
-  (get-in i18n/tconfig [:dict (keyword lang) :search-results]))
-
 (defn exercises-by-difficulty
   [{tr :tempura/tr
     :as request}]
@@ -129,8 +101,8 @@
          normal 1
          hard 2} (get-exercises-by-difficulty request exercise-statuses)]
     (layout/render "exercises_by_difficulty.html"
-                   (merge (base-locale request)
-                          (base-exercise-locale request)
+                   (merge (i18n/base-locale request)
+                          (i18n/base-exercise-locale request)
                           {:title (tr [:exercises-by-difficulty/title])
                            :easy easy
                            :normal normal
@@ -153,8 +125,8 @@
   (let [exercise-statuses (cookie/get-exercise-statuses request)
         exercises (get-exercises-by-categories request exercise-statuses)]
     (layout/render "exercises_by_category.html"
-                   (merge (base-locale request)
-                          (base-exercise-locale request)
+                   (merge (i18n/base-locale request)
+                          (i18n/base-exercise-locale request)
                           {:exercises exercises
                            :title (tr [:exercises-by-category/title])}))))
 
@@ -174,8 +146,8 @@
   (let [exercise-statuses (cookie/get-exercise-statuses request)
         exercises (get-exercises-by-language-constructs request exercise-statuses)]
     (layout/render "exercises_by_language_constructs.html"
-                   (merge (base-locale request)
-                          (base-exercise-locale request)
+                   (merge (i18n/base-locale request)
+                          (i18n/base-exercise-locale request)
                           {:exercises exercises
                            :note (tr [:exercises-by-language-constructs/note])
                            :title (tr [:exercises-by-language-constructs/title])}))))
@@ -209,14 +181,14 @@
                                                 :lang lang)
             exercise-status (get (cookie/get-exercise-statuses request) id)]
         (cond-> (layout/render "evaluation.html"
-                               (assoc (merge (base-locale request)
-                                             (base-evaluation-locale request)
+                               (assoc (merge (i18n/base-locale request)
+                                             (i18n/base-evaluation-locale request)
                                              exercise
                                              verdict)
                                       :title (tr [:evaluation/title] [(:name exercise)])))
           (and (:equal? verdict) (not= exercise-status "revealed")) (cookie/mark-exercise-as-solved id)))
       (layout/render "sparql_syntax_error.html"
-                     (merge (base-locale request)
+                     (merge (i18n/base-locale request)
                             (assoc (format-invalid-query validation-result)
                                    :expected-label (tr [:sparql-syntax-error/expected-label])
                                    :title (tr [:sparql-syntax-error/title])))))))
@@ -240,8 +212,8 @@
   (let [exercise (get-exercise request id)
         prerequisites (get-prerequisites id)]
     (layout/render "exercise.html"
-                   (merge (base-locale request)
-                          (base-exercise-locale request)
+                   (merge (i18n/base-locale request)
+                          (i18n/base-exercise-locale request)
                           (assoc exercise
                                  :id id
                                  :prerequisites prerequisites
@@ -250,7 +222,7 @@
 (defn sparql-endpoint
   [{tr :tempura/tr
     :as request}]
-  (layout/render "endpoint.html" (merge (base-locale request)
+  (layout/render "endpoint.html" (merge (i18n/base-locale request)
                                         {:error-modal {:label (tr [:error-modal/label])
                                                        :message (tr [:error-modal/message])}
                                          :run-query (tr [:endpoint/run-query])
@@ -264,7 +236,7 @@
                               (sparql/sparql-template {:language lang})
                               select-query)]
     (layout/render (str lang "/about.html")
-                   (merge (base-locale request)
+                   (merge (i18n/base-locale request)
                           {:sparql-constructs sparql-constructs
                            :title (tr [:about/title])}))))
 
@@ -288,7 +260,7 @@
   (let [prefixes (get-namespace-prefixes)
         padded-prefixes (pad-prefixes prefixes)]
     (layout/render (str lang "/data.html")
-                   (merge (base-locale request)
+                   (merge (i18n/base-locale request)
                           {:prefixes padded-prefixes
                            :title (tr [:data/title])}))))
 
@@ -301,9 +273,9 @@
   (let [exercises-found (search-exercises request search-term search-constructs)
         construct-labels (exercise/get-construct-labels search-constructs lang)]
     (layout/render "search_results.html"
-                   (merge (base-locale request)
-                          (base-exercise-locale request)
-                          (base-search-locale request)
+                   (merge (i18n/base-locale request)
+                          (i18n/base-exercise-locale request)
+                          (i18n/base-search-locale request)
                           {:exercises exercises-found
                            :search-term search-term
                            :search-constructs construct-labels

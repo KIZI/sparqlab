@@ -1,5 +1,6 @@
 (ns sparqlab.i18n
-  (:require [taoensso.tempura :refer [tr]]))
+  (:require [sparqlab.util :as util]
+            [taoensso.tempura :refer [tr]]))
 
 (def tconfig
   {:default-locale :cs
@@ -109,3 +110,31 @@
                                 :title "Exercises found"}
                :sparql-syntax-error {:title "Invalid query syntax"
                                      :expected-label "Expected"}}}})
+
+(defn base-locale
+  [{lang :accept-lang}]
+  (let [dict (get-in tconfig [:dict (keyword lang)])]
+    (merge (:base dict)
+           (util/select-nested-keys dict
+                                    [[:and]
+                                     [:about :title]
+                                     [:close]
+                                     [:data :title]
+                                     [:endpoint :title]
+                                     [:loading]]))))
+
+(defn base-exercise-locale
+  [{lang :accept-lang}]
+  (let [dict (get-in tconfig [:dict (keyword lang)])]
+    (merge (:exercises dict)
+           (util/select-nested-keys dict [[:endpoint :run-query]
+                                          [:error-modal :label]
+                                          [:error-modal :message]]))))
+
+(defn base-evaluation-locale
+  [{lang :accept-lang}]
+  (get-in tconfig [:dict (keyword lang) :evaluation]))
+
+(defn base-search-locale
+  [{lang :accept-lang}]
+  (get-in tconfig [:dict (keyword lang) :search-results]))
