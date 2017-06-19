@@ -1,6 +1,7 @@
 (function ($) {
   var yasqeOptions = {
     createShareLink: false,
+    language: yasqeLocale,
     lineNumbers: false,
     persistent: null,
     readOnly: true,

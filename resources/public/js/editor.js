@@ -18,6 +18,7 @@ var escapeHTML = function (text) {
     };
     var yasqe = YASQE.fromTextArea(document.getElementById("editor"), {
       autofocus: true,
+      language: yasqeLocale,
       sparql: {
         endpoint: context + "/api/query",
         requestMethod: "GET"
