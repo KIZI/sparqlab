@@ -22,6 +22,7 @@
                  [org.topbraid/spin "2.0.0"]
                  [org.webjars.bower/tether "1.4.0"]
                  [org.webjars/bootstrap "4.0.0-alpha.3"]
+                 [org.webjars.npm/codemirror-minified "5.26.0"]
                  [org.webjars/font-awesome "4.7.0"]
                  [org.webjars/jquery "2.2.4"]
                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
