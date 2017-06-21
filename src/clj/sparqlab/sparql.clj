@@ -171,7 +171,7 @@
   "Normalize results of a SPARQL SELECT query."
   [query-results]
   (let [data (json/parse-string query-results keyword)]
-    (cond-> (map (partial map val) (get-in data [:results :bindings]))
+    (cond-> (map (comp set (partial map val)) (get-in data [:results :bindings]))
       (not (get-in data [:results :ordered])) set ; Unordered bindings are compared as sets 
       )))
 
