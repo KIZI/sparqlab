@@ -82,7 +82,7 @@ h2 {
 }
 
 h3 {
-  margin-top: .5em;
+  margin-top: 1em;
   font-size: 1.2rem;
 }
 
@@ -274,4 +274,8 @@ h3 {
 }
 #bubbling-beaker #bubble-4 {
   animation-duration: 10s;
+}
+
+.merge-gap-shift {
+  padding-left: 3%;
 }
