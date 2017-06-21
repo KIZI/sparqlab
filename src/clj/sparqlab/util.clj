@@ -39,6 +39,17 @@
   [m paths]
   (reduce (fn [out path] (update-in out path (partial get-in m path))) {} paths))
 
+(defn group-values-by-key
+  "Group values at `value-key` in collection `coll` by `group-key`."
+  [group-key value-key coll]
+  (letfn [(group-fn [acc item]
+            (let [k (group-key item)
+                  v (value-key item)]
+              (if (contains? acc k)
+                (update acc k conj v)
+                (assoc acc k #{v}))))]
+    (reduce group-fn {} coll)))
+
 ;; Kahn's topological sort. <https://gist.github.com/alandipert/1263783>
 ;; Copyright (c) Alan Dipert. All rights reserved.
 ;; The use and distribution terms for this software are covered by the

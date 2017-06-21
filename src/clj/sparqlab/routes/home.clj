@@ -21,17 +21,6 @@
 
 (add-filter! :dec dec)
 
-(defn group-values-by-key
-  "Group values at `value-key` in collection `coll` by `group-key`."
-  [group-key value-key coll]
-  (letfn [(group-fn [acc item]
-            (let [k (group-key item)
-                  v (value-key item)]
-              (if (contains? acc k)
-                (update acc k conj v)
-                (assoc acc k #{v}))))]
-    (reduce group-fn {} coll)))
-
 (defn mark-exercises-with-statuses
   [exercises exercise-statuses]
   (map (fn [{:keys [id]
@@ -84,7 +73,7 @@
     (->> "extract_exercise_constructs"
          sparql/sparql-template 
          select-query
-         (group-values-by-key :construct :exercise)
+         (util/group-values-by-key :construct :exercise)
          (merge spin-dependencies)
          util/kahn-sort
          (remove spin-term?))))
