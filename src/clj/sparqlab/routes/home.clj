@@ -163,19 +163,19 @@
                                                 :prohibited (map :prohibited prohibits)
                                                 :required (map :required requires)
                                                 :lang lang)
-            exercise-status (get (cookie/get-exercise-statuses request) id)]
-        (cond-> (layout/render "evaluation.html"
-                               (assoc (merge (i18n/base-locale request)
-                                             (i18n/base-evaluation-locale request)
-                                             exercise
-                                             verdict)
-                                      :title (tr [:evaluation/title] [(:name exercise)])))
+            exercise-status (get (cookie/get-exercise-statuses request) id)
+            data (merge (i18n/base-locale request)
+                        (i18n/base-evaluation-locale request)
+                        exercise
+                        verdict
+                        {:title (tr [:evaluation/title] [(:name exercise)])})]
+        (cond-> (layout/render "evaluation.html" data)
           (and (:equal? verdict) (not= exercise-status "revealed")) (cookie/mark-exercise-as-solved id)))
-      (layout/render "sparql_syntax_error.html"
-                     (merge (i18n/base-locale request)
-                            (assoc (format-invalid-query validation-result)
-                                   :expected-label (tr [:sparql-syntax-error/expected-label])
-                                   :title (tr [:sparql-syntax-error/title])))))))
+      (let [error-data (merge (i18n/base-locale request)
+                              (format-invalid-query validation-result)
+                              {:expected-label (tr [:sparql-syntax-error/expected-label])
+                               :title (tr [:sparql-syntax-error/title])})] 
+        (layout/render "sparql_syntax_error.html" error-data)))))
 
 (defn search-exercises
   "Search exercises for a `search-term` or several SPARQL `search-constructs`."
