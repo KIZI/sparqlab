@@ -17,21 +17,36 @@ yasrConfig = {
   useGoogleCharts: false
 };
 YASR.plugins.table.defaults.fetchTitlesFromPreflabel = false;
-YASR.plugins.table.defaults.datatable.language = {
-  "url": "/localization/Czech.json"
-};
 
-var yasqeLocale = {
-	invalidLine: "Na tomto řádku je chyba. Očekáváno:",
-	setFullScreen: "Maximalizovat na celou obrazovku",
-	setSmallScreen: "Minimalizovat",
-	shareQuery: "Sdílení dotazu",
-	shorten: "Zkrátit",
-	autocomplete: {
-		failedSuggestions: "Stahování dokončení selhalo...",
-		fetching: "Stahování dokončení",
-		nothing: "Nic k dokončení!",
-		trigger: "Stiskněte CTRL - <mezerník> pro automatické dokončování",
-		zeroMatches: "Žádná dokončení nenalezena..."
-	}
-};
+var sparqlabLocale, yasqeLocale;
+if (acceptLang === "cs") {
+  YASR.plugins.table.defaults.datatable.language = {
+    "url": "/localization/Czech.json"
+  };
+  sparqlabLocale = {
+    expectedToken: "Očekáváno",
+    syntaxError: "Chyba syntaxe dotazu",
+    timeout: "Dotaz překročil maximální povolenou dobu provádění ({seconds} sekund)."
+  };
+  yasqeLocale = {
+    invalidLine: "Na tomto řádku je chyba. Očekáváno:",
+    setFullScreen: "Maximalizovat na celou obrazovku",
+    setSmallScreen: "Minimalizovat",
+    shareQuery: "Sdílení dotazu",
+    shorten: "Zkrátit",
+    autocomplete: {
+      failedSuggestions: "Stahování dokončení selhalo...",
+      fetching: "Stahování dokončení",
+      nothing: "Nic k dokončení!",
+      trigger: "Stiskněte CTRL - <mezerník> pro automatické dokončování",
+      zeroMatches: "Žádná dokončení nenalezena..."
+    }
+  };
+} else {
+  sparqlabLocale = {
+    expectedToken: "Expected",
+    syntaxError: "Query syntax error",
+    timeout: "The query exceeded the maximum allowed execution time ({seconds} seconds)."
+  };
+  yasqeLocale = YASQE.defaults.language;
+}

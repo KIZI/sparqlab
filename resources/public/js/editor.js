@@ -51,12 +51,10 @@ var escapeHTML = function (text) {
         $loading.hide();
         var $modalMessage = $errorModal.find(".modal-body .modal-message");
         if (textStatus === "timeout") {
-          $modalMessage.text("Dotaz překročil maximální povolenou dobu provádění (" +
-              timeout / 1000 +
-              " sekund).");
+          $modalMessage.text(sparqlabLocale.timeout.replace(/\{[^}]+\}/, (timeout / 1000).toString()));
         } else if (textStatus === "error" && xhr.status === 400) {
           var response = xhr.responseJSON,
-              modalHeading = "<p>Chyba syntaxe dotazu:</p>";
+              modalHeading = "<p>" + sparqlabLocale.syntaxError + "</p>";
           if ("expected" in response) {
             var query = response.query,
               head = query.slice(0, response.offset),
@@ -66,7 +64,9 @@ var escapeHTML = function (text) {
               modalHeading +
               "<pre>" +
               escapeHTML(head) +
-              '<span id="syntax-error" data-toggle="tooltip" data-placement="bottom" title="Očekáváno: ' +
+              '<span id="syntax-error" data-toggle="tooltip" data-placement="bottom" title="' +
+              sparqlabLocale.expectedToken +
+              ': ' +
               expected +
               '">...</span>' +
               escapeHTML(tail) +
