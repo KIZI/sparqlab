@@ -36,8 +36,8 @@
   };
 
   $(document).ready(function () {
-    var $query = $("#query"),
-        $canonicalQuery = $("#canonical-query"),
+    var query = document.getElementById("query"),
+        canonicalQuery = document.getElementById("canonical-query"),
         queryResults = YASR(document.getElementById("query-results"), yasrConfig),
         $results = $("#results"),
         canonicalQueryResults = YASR(document.getElementById("canonical-query-results"), yasrConfig),
@@ -48,9 +48,9 @@
     // Show YASQE if query is incorrect and solution not revealed.
     // Show MergeView if query is correct or solution is revealed.
     if ($mergeView.hasClass("hidden")) {
-      textAreaToYasqe($query[0]);
+      textAreaToYasqe(query);
     } else {
-      showMergeView($mergeView, $query.val(), $canonicalQuery.val());
+      showMergeView($mergeView, query.value, canonicalQuery.value);
     }
 
     queryResults.setResponse({
@@ -67,7 +67,7 @@
         {id: exerciseId},
         function (solution) {
           $(".yasqe").hide();
-          showMergeView($mergeView, $query.val(), solution);
+          showMergeView($mergeView, query.value, solution);
           $("#reveal-solution-button").hide();
         }
       );
