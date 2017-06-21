@@ -116,7 +116,8 @@
 (defn base-locale
   [{lang :accept-lang}]
   (let [dict (get-in tconfig [:dict (keyword lang)])]
-    (merge (:base dict)
+    (merge {:accept-lang lang}
+           (:base dict)
            (util/select-nested-keys dict
                                     [[:and]
                                      [:about :title]
