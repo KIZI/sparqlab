@@ -40,7 +40,7 @@
     </p>
     {% endif %}
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6 merge-gap-shift">
     <h2>{{solution}}</h2>
   </div>
 </div>
@@ -58,7 +58,7 @@
       <textarea id="results" class="hidden" data-type="{{query.results-type}}">{% safe %}{{query.results}}{% endsafe %}</textarea>
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6 merge-gap-shift">
     <h3>{{results}}</h3>
     <div id="canonical-query-results">
       <textarea id="canonical-results" class="hidden" data-type="{{canonical-query.results-type}}">{% safe %}{{canonical-query.results}}{% endsafe %}</textarea>
