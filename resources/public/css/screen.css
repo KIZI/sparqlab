@@ -95,7 +95,7 @@ h3 {
 }
 
 .correct {
-  color: #5cb85c; 
+  color: #5cb85c;
 }
 
 .incorrect {
@@ -142,7 +142,7 @@ h3 {
 .cm-s-sparqlab .cm-punc, /* ^^ in datatype annotations, triple separators */
 .cm-s-sparqlab .cm-property,
 .cm-s-sparqlab .cm-operator {}
-.cm-s-sparqlab .cm-variable-2 {color: #05a;} 
+.cm-s-sparqlab .cm-variable-2 {color: #05a;}
 .cm-s-sparqlab .cm-variable-3 {color: #795da3;} /* absolute IRIs */
 .cm-s-sparqlab .cm-comment {color: #969896;} /* comments */
 .cm-s-sparqlab .cm-string {color: #183691;} /* literals */
@@ -159,7 +159,15 @@ h3 {
 .cm-s-sparqlab .CodeMirror-matchingbracket {
   color: #ff358b !important;
 }
-
+.cm-s-sparqlab .CodeMirror-merge-l-chunk-start {
+  border-top: 1px solid #69d7ff;
+}
+.cm-s-sparqlab .CodeMirror-merge-l-chunk {
+  background-color: #e3f8ff;
+}
+.cm-s-sparqlab .CodeMirror-merge-l-chunk-end {
+  border-bottom: 1px solid #69d7ff;
+}
 .cm-s-sparqlab .cm-error {color: #f00;} /* errors */
 
 /* Loading animation */
@@ -235,7 +243,7 @@ h3 {
     opacity: 0;
   }
   30% {
-    transform: scale(1); 
+    transform: scale(1);
     opacity: 0.9;
   }
   95% {

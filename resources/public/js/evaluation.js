@@ -2,7 +2,7 @@
   var yasqeOptions = {
     createShareLink: false,
     language: yasqeLocale,
-    lineNumbers: false,
+    lineNumbers: true,
     persistent: null,
     readOnly: true,
     theme: "sparqlab"
@@ -22,19 +22,37 @@
       return path.substring(index + 1);
     } 
   };
+  var showMergeView = function ($mergeView, query, canonicalQuery) {
+    $mergeView.removeClass("hidden");
+    CodeMirror.MergeView($mergeView[0], { 
+      connect: "align",
+      lineNumbers: true,
+      mode: "sparql11",
+      origLeft: query,
+      revertButtons: false,
+      theme: "sparqlab",
+      value: canonicalQuery
+    });
+  };
 
   $(document).ready(function () {
-    var query = textAreaToYasqe(document.getElementById("query")),
+    var $query = $("#query"),
         $canonicalQuery = $("#canonical-query"),
         queryResults = YASR(document.getElementById("query-results"), yasrConfig),
         $results = $("#results"),
         canonicalQueryResults = YASR(document.getElementById("canonical-query-results"), yasrConfig),
         $canonicalResults = $("#canonical-results"),
-        $revealSolution = $("#reveal-solution");
+        $revealSolution = $("#reveal-solution"),
+        $mergeView = $("#mergeview");
        
-    if (!$canonicalQuery.hasClass("invisible")) {
-      canonicalQuery = textAreaToYasqe($canonicalQuery[0]);
+    // Show YASQE if query is incorrect and solution not revealed.
+    // Show MergeView if query is correct or solution is revealed.
+    if ($mergeView.hasClass("hidden")) {
+      textAreaToYasqe($query[0]);
+    } else {
+      showMergeView($mergeView, $query.val(), $canonicalQuery.val());
     }
+
     queryResults.setResponse({
       response: $results.val(),
       contentType: $results.data("type")
@@ -48,9 +66,8 @@
       $.get("../../api/exercise-solution",
         {id: exerciseId},
         function (solution) {
-          $canonicalQuery.val(solution);
-          $canonicalQuery.removeClass("invisible");
-          canonicalQuery = textAreaToYasqe($canonicalQuery[0]);
+          $(".yasqe").hide();
+          showMergeView($mergeView, $query.val(), solution);
           $("#reveal-solution-button").hide();
         }
       );

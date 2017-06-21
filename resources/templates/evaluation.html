@@ -44,17 +44,12 @@
     <h2>{{solution}}</h2>
   </div>
 </div>
-<div id="mergeview"></div>
+<div id="mergeview"{% if not equal? %} class="hidden"{% endif %}></div>
 <div class="row">
   <div class="col-md-6">
-    <textarea id="query" class="form-control" readonly rows="10">{{query.query}}</textarea>
+    <textarea id="query" class="hidden">{{query.query}}</textarea>
   </div>
-  <div class="col-md-6">
-    <textarea id="canonical-query"
-              class="form-control {% if not equal? %}invisible{% endif %}"
-              readonly
-              rows="10">{% if equal? %}{{canonical-query.query}}{% endif %}</textarea>
-  </div>
+  <textarea id="canonical-query" class="hidden">{% if equal? %}{{canonical-query.query}}{% endif %}</textarea>
 </div>
 <div class="row">
   <div class="col-md-6">
