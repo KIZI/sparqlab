@@ -10,6 +10,9 @@
 
 (parser/set-resource-path! (clojure.java.io/resource "templates"))
 
+; Selmer template filters
+(filters/add-filter! :dec dec)
+
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
 
 (filters/add-filter! :inline-markdown

@@ -16,11 +16,6 @@
             [clojure.edn :as edn])
   (:import (java.io PushbackReader)))
 
-; Selmer template filters
-(add-filter! :markdown (fn [s] [:safe (md-to-html-string s)]))
-
-(add-filter! :dec dec)
-
 (defn mark-exercises-with-statuses
   [exercises exercise-statuses]
   (map (fn [{:keys [id]
