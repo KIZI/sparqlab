@@ -110,14 +110,6 @@
     </div>
 
     <!-- scripts -->
-    {% script "/assets/jquery/jquery.min.js" %}
-    {% script "/assets/tether/dist/js/tether.min.js" %}
-    {% script "/assets/bootstrap/js/bootstrap.min.js" %}
-    {% script "/assets/codemirror-minified/lib/codemirror.js" %}
-    {% script "/js/yasqe.min.js" %}
-    {% script "/js/yasr.bundled.min.js" %}
-    {% script "/js/script.js" %}
-
     <script>
       var context = "{{servlet-context}}",
           acceptLang = "{{accept-lang}}";
@@ -129,6 +121,14 @@
       ga('create', 'UA-100486526-1', 'auto');
       ga('send', 'pageview');
     </script>
+    {% script "/assets/jquery/jquery.min.js" %}
+    {% script "/assets/tether/dist/js/tether.min.js" %}
+    {% script "/assets/bootstrap/js/bootstrap.min.js" %}
+    {% script "/assets/codemirror-minified/lib/codemirror.js" %}
+    {% script "/js/yasqe.min.js" %}
+    {% script "/js/yasr.bundled.min.js" %}
+    {% script "/js/script.js" %}
+
     {% block page-scripts %}
     {% endblock %}
   </body>
