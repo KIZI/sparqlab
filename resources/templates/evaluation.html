@@ -6,11 +6,10 @@
   <div class="col-md-6">
     <div class="clearfix">
       <h2 class="pull-left">
-        {% if equal? %}
-        {{correct-answer}}<i class="fa fa-check correct" title="{{correct-answer}}" aria-hidden="true"></i>
-        {% else %}
-        {{incorrect-answer}}<i class="fa fa-times incorrect" title="{{incorrect-answer}}" aria-hidden="true"></i>
-        {% endif %}
+        {{your-answer}}{%
+        if equal? %}<i class="fa fa-check correct" title="{{correct-answer}}" aria-hidden="true"></i>{%
+        else %}<i class="fa fa-times incorrect" title="{{incorrect-answer}}" aria-hidden="true"></i>{%
+        endif %}
       </h2>
       {% if not equal? %}
       <div class="pull-right">
@@ -45,6 +44,7 @@
     <h2>{{solution}}</h2>
   </div>
 </div>
+<div id="mergeview"></div>
 <div class="row">
   <div class="col-md-6">
     <textarea id="query" class="form-control" readonly rows="10">{{query.query}}</textarea>
@@ -88,5 +88,7 @@
 </div>
 {% endblock %}
 {% block page-scripts %}
+{% script "https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js" %}
+{% script "/js/merge.js" %}
 {% script "/js/evaluation.js" %}
 {% endblock %}

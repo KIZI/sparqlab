@@ -34,7 +34,8 @@
                             :results "Výsledky"
                             :reveal-solution "Prozradit řešení"
                             :solution "Řešení"
-                            :title "Vyhodnocení cvičení: %1"}
+                            :title "Vyhodnocení cvičení: %1"
+                            :your-answer "Vaše odpověď"}
                :exercises {:difficulty "obtížnost"
                            :note-title "Poznámka"
                            :prohibited-constructs "Zakázané konstrukty"
@@ -87,7 +88,8 @@
                             :results "Results"
                             :reveal-solution "Reveal solution"
                             :solution "Solution"
-                            :title "Exercise evaluation: %1"}
+                            :title "Exercise evaluation: %1"
+                            :your-answer "Your answer"}
                :exercises {:difficulty "difficulty"
                            :note-title "Note"
                            :prohibited-constructs "Prohibited constructs"
