@@ -33,6 +33,7 @@
       theme: "sparqlab",
       value: canonicalQuery
     });
+    $(".CodeMirror-merge-scrolllock").attr("title", sparqlabLocale.lockedScrolling);
   };
 
   $(document).ready(function () {

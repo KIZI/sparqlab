@@ -25,6 +25,7 @@ if (acceptLang === "cs") {
   };
   sparqlabLocale = {
     expectedToken: "Očekáváno",
+    lockedScrolling: "Přepnout společné posouvání",
     syntaxError: "Chyba syntaxe dotazu",
     timeout: "Dotaz překročil maximální povolenou dobu provádění ({seconds} sekund)."
   };
@@ -45,6 +46,7 @@ if (acceptLang === "cs") {
 } else {
   sparqlabLocale = {
     expectedToken: "Expected",
+    lockedScrolling: "Toggle locked scrolling",
     syntaxError: "Query syntax error",
     timeout: "The query exceeded the maximum allowed execution time ({seconds} seconds)."
   };
