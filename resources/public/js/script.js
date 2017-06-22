@@ -18,6 +18,7 @@ yasrConfig = {
 };
 YASR.plugins.table.defaults.fetchTitlesFromPreflabel = false;
 YASR.plugins.rawResponse.defaults.CodeMirror.lineNumbers = false;
+YASR.plugins.rawResponse.defaults.CodeMirror.theme = "sparqlab";
 
 var sparqlabLocale, yasqeLocale;
 if (acceptLang === "cs") {
