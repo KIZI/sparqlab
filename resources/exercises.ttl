@@ -2164,3 +2164,27 @@ WHERE {
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:highest-pension a sp:Query ;
+  rdfs:label "Nejvyšší důchod"@cs ;
+  rdfs:comment "Vyberte nejvyšší průměrný důchod v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Průměrný důchod je uváděn jako hodnota míry `cssz-measure:prumerna-vyse-duchodu-v-kc`. Pro pozorování odkazující na nejvyšší průměrný důchod vyberte RDF se všemi trojicemi, v nichž je pozorování subjektem."@cs ;
+  sp:text """
+PREFIX cssz-measure: <https://data.cssz.cz/ontology/measure/>
+
+CONSTRUCT {
+  ?observation ?p ?o .
+}
+FROM <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>
+WHERE {
+  {
+    SELECT ?observation
+    WHERE {
+      ?observation cssz-measure:prumerna-vyse-duchodu-v-kc ?pension .
+    }
+    ORDER BY DESC(?pension)
+    LIMIT 1
+  }
+  ?observation ?p ?o .
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
