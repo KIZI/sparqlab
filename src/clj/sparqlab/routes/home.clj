@@ -31,17 +31,18 @@
   (let [model (-> "get_exercise"
                   (sparql/sparql-template {:exercise (prefix/exercise id)
                                            :language lang})
-                  construct-query)
-        select-fn (comp (partial sparql/select-query model) sparql/sparql-template)
-        description (first (select-fn "get_exercise_description"))
-        prohibits (select-fn "get_prohibits")
-        requires (select-fn "get_requires")
-        construct-template (and (:reveal description)
-                                (sparql/get-construct-template (:query description)))]
-    (assoc description
-           :prohibits prohibits
-           :requires requires
-           :construct-template construct-template)))
+                  construct-query)]
+    (when-not (.isEmpty model)
+      (let [select-fn (comp (partial sparql/select-query model) sparql/sparql-template)
+            description (first (select-fn "get_exercise_description"))
+            prohibits (select-fn "get_prohibits")
+            requires (select-fn "get_requires")
+            construct-template (and (:reveal description)
+                                    (sparql/get-construct-template (:query description)))]
+        (assoc description
+               :prohibits prohibits
+               :requires requires
+               :construct-template construct-template)))))
 
 (defn get-prerequisites
   [id]
@@ -158,11 +159,14 @@
       (let [{canonical-query :query
              :keys [prohibits requires]
              :as exercise} (get-exercise request id)
-            verdict (exercise/evaluate-exercise canonical-query
-                                                query
-                                                :prohibited (map :prohibited prohibits)
-                                                :required (map :required requires)
-                                                :lang lang)
+            verdict (exercise/reformat-results tr
+                                               (exercise/evaluate-exercise canonical-query
+                                                                           query
+                                                                           :prohibited (map :prohibited
+                                                                                            prohibits)
+                                                                           :required (map :required
+                                                                                          requires)
+                                                                           :lang lang))
             exercise-status (get (cookie/get-exercise-statuses request) id)
             data (merge (i18n/base-locale request)
                         (i18n/base-evaluation-locale request)
@@ -193,15 +197,16 @@
 
 (defn show-exercise
   [request id]
-  (let [exercise (get-exercise request id)
-        prerequisites (get-prerequisites id)]
-    (layout/render "exercise.html"
-                   (merge (i18n/base-locale request)
-                          (i18n/base-exercise-locale request)
-                          (assoc exercise
-                                 :id id
-                                 :prerequisites prerequisites
-                                 :title (:name exercise))))))
+  (if-let [exercise (get-exercise request id)]
+    (let [prerequisites (get-prerequisites id)]
+      (layout/render "exercise.html"
+                     (merge (i18n/base-locale request)
+                            (i18n/base-exercise-locale request)
+                            (assoc exercise
+                                   :id id
+                                   :prerequisites prerequisites
+                                   :title (:name exercise)))))
+    (layout/not-found request)))
 
 (defn sparql-endpoint
   [{tr :tempura/tr
