@@ -17,6 +17,7 @@ yasrConfig = {
   useGoogleCharts: false
 };
 YASR.plugins.table.defaults.fetchTitlesFromPreflabel = false;
+YASR.plugins.rawResponse.defaults.CodeMirror.lineNumbers = false;
 
 var sparqlabLocale, yasqeLocale;
 if (acceptLang === "cs") {

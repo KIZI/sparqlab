@@ -2,7 +2,7 @@
   var yasqeOptions = {
     createShareLink: false,
     language: yasqeLocale,
-    lineNumbers: true,
+    lineNumbers: false,
     persistent: null,
     readOnly: true,
     theme: "sparqlab"
@@ -26,7 +26,6 @@
     $mergeView.removeClass("hidden");
     CodeMirror.MergeView($mergeView[0], { 
       connect: "align",
-      lineNumbers: true,
       mode: "sparql11",
       origLeft: query,
       revertButtons: false,
