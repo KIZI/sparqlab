@@ -1,6 +1,6 @@
 (ns sparqlab.sparql
   (:require [sparqlab.prefixes :refer [uuid-iri]]
-            [sparqlab.rdf :refer [resource->clj]]
+            [sparqlab.rdf :as rdf]
             [sparqlab.util :as util]
             [sparqlab.config :refer [env]]
             [clj-http.client :as client]
@@ -13,11 +13,10 @@
             [mount.core :as mount])
   (:import (java.io StringReader)
            (java.net SocketException)
-           (org.apache.jena.query ARQ DatasetFactory Query QueryExecutionFactory
+           (org.apache.jena.query ARQ Query QueryExecutionFactory
                                   QueryFactory QueryParseException Syntax)
            (org.apache.jena.update UpdateAction UpdateFactory)
            (org.apache.jena.rdf.model Model ModelFactory)
-           (org.apache.jena.riot Lang RDFDataMgr)
            (org.apache.jena.sparql.algebra Algebra Op)
            (org.apache.jena.sparql.algebra.optimize Optimize TransformMergeBGPs)
            (org.apache.jena.sparql.util Context NodeIsomorphismMap)
@@ -58,7 +57,7 @@
 
 (defn- process-select-binding
   [sparql-binding variable]
-  [(keyword variable) (->plain-literal (resource->clj (.get sparql-binding variable)))])
+  [(keyword variable) (->plain-literal (rdf/resource->clj (.get sparql-binding variable)))])
 
 (defn- process-select-solution
   "Process SPARQL SELECT `solution` for `result-vars`."
@@ -89,14 +88,6 @@
   [query-type]
   (cond (or (= query-type ::ask) (= query-type ::select)) "application/json"
         (isa? query-type ::construct) "text/turtle"))
-
-(defn turtle-string->model
-  "Convert RDF in Turtle to an in-memory RDF model."
-  [turtle]
-  (let [input-stream (io/input-stream (.getBytes turtle))
-        dataset (DatasetFactory/create)]
-    (RDFDataMgr/read dataset input-stream Lang/TURTLE)
-    (.getDefaultModel dataset)))
 
 (defn serialize-query
   "Serialize SPARQL `query` to string."
@@ -167,6 +158,12 @@
       transform-distribute-join-over-union
       (Algebra/optimize arq-context)))
 
+(defn equal-construct?
+  "Test if the CONSTRUCT clause in query `a` and `b` is the same."
+  [^Query a
+   ^Query b]
+  (.equalIso (.getConstructTemplate a) (.getConstructTemplate b) node-isomorphism-map))
+
 (defn normalize-select-results
   "Normalize results of a SPARQL SELECT query."
   [query-results]
@@ -184,7 +181,8 @@
   "Test if query results are equal. Dispatches on the type of the first query results.
   If the query types of the compared query results don't match, results are treated as unequal."
   ; Query types are compared with `isa?` to allow comparing DESCRIBE and CONSTRUCT.
-  (fn [type-1 results-1 type-2 results-2] (when (or (isa? type-1 type-2) (isa? type-2 type-1)) type-1)))
+  (fn [type-1 results-1 type-2 results-2]
+    (when (or (isa? type-1 type-2) (isa? type-2 type-1)) type-1)))
 
 (defmethod equal-query-results? ::ask
   [_ results-1 _ results-2]
@@ -192,8 +190,8 @@
 
 (defmethod equal-query-results? ::construct
   [_ results-1 _ results-2]
-  (with-open [results-1' (turtle-string->model results-1)
-              results-2' (turtle-string->model results-2)]
+  (with-open [results-1' (rdf/turtle-string->model results-1)
+              results-2' (rdf/turtle-string->model results-2)]
     (.isIsomorphicWith results-1' results-2')))
 
 (defmethod equal-query-results? ::select

@@ -1,0 +1,6 @@
+CONSTRUCT {
+  ?person a <http://schema.org/Person> .
+}
+WHERE {
+  ?person a <http://schema.org/Person> .
+}

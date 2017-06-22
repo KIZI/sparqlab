@@ -1,0 +1,8 @@
+PREFIX schema: <http://schema.org/>
+
+CONSTRUCT {
+  ?person a schema:Person .
+}
+WHERE {
+  ?person a schema:Person .
+}
