@@ -1,0 +1,18 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+CONSTRUCT {
+  ?concept a skos:Concept ; skos:inScheme ?conceptScheme .
+}
+FROM <https://data.cssz.cz/resource/dataset/pomocne-ciselniky>
+WHERE {
+  {
+    SELECT ?concept
+    WHERE {
+      ?concept a skos:Concept ;
+        skos:inScheme ?conceptScheme .
+    }
+    GROUP BY ?concept
+    HAVING (COUNT(?conceptScheme) > 1)
+  }
+  ?concept skos:inScheme ?scheme .
+}
