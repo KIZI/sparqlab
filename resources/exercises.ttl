@@ -2147,7 +2147,7 @@ exercise:concepts-in-multiple-schemes a sp:Query ;
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 CONSTRUCT {
-  ?concept skos:inScheme ?scheme .
+  ?concept skos:inScheme ?conceptScheme .
 }
 FROM <https://data.cssz.cz/resource/dataset/pomocne-ciselniky>
 WHERE {
@@ -2160,7 +2160,7 @@ WHERE {
     GROUP BY ?concept
     HAVING (COUNT(?conceptScheme) > 1)
   }
-  ?concept skos:inScheme ?scheme .
+  ?concept skos:inScheme ?conceptScheme .
 }
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
