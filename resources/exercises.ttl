@@ -997,36 +997,6 @@ WHERE {
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
 
-exercise:has-dsd a sp:Query ;
-  rdfs:label "Chybějící popis struktury dat"@cs ;
-  rdfs:comment """Najděte v datech o statistikách důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) struktury dat (<abbr class="initialism" title="Data Structure Definition">DSD</abbr>) odkazované z pozorování, pro něž není znám jejich popis; tzn. neexistuje trojice se strukturou dat v roli subjektu."""@cs ;
-  sp:text """
-PREFIX qb:    <http://purl.org/linked-data/cube#>
-PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX spin:  <http://spinrdf.org/spin#>
-
-CONSTRUCT {
-  [] a spin:ConstraintViolation ;
-    spin:violationRoot ?dsd ;
-    rdfs:comment "Missing description of data structure definition."@en .
-}
-WHERE {
-  {
-    SELECT DISTINCT ?dsd
-    WHERE {
-      GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
-        [] a qb:Observation ;
-          qb:dataSet/qb:structure ?dsd .
-        FILTER NOT EXISTS {
-          ?dsd ?p [] .
-        }
-      }
-    }
-  }
-}
-  """ ;
-  sparqlab:hasDifficulty sparqlab:normal .
-
 exercise:dsd-has-normal-form a sp:Query ;
   rdfs:label "Mají datové struktury popsané DCV normalizovanou podobu?"@cs ;
   rdfs:comment """Zjistěte, zdali data o statistikách důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) jsou datové struktury (<abbr class="initialism" title="Data Structure Definition">DSD</abbr>) v [normalizované podobě](https://www.w3.org/TR/vocab-data-cube/#h2_normalize)."""@cs ;
