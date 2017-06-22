@@ -2139,3 +2139,28 @@ WHERE {
 ORDER BY DESC(?refPeriod)
   """ ;
   sparqlab:hasDifficulty sparqlab:normal .
+
+exercise:concepts-in-multiple-schemes a sp:Query ;
+  rdfs:label "Koncepty ve více slovnících"@cs ;
+  rdfs:comment "Najděte koncepty číselníků (instance `skos:Concept`) v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`, které jsou zahrnuty do více než jednoho slovníku pomocí vlastnostni `skos:inScheme`. Výstupem bude RDF graf, který bude obsahovat trojice spojující koncepty a slovníky pomocí `skos:inScheme`."@cs ;
+  sp:text """
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+CONSTRUCT {
+  ?concept skos:inScheme ?scheme .
+}
+FROM <https://data.cssz.cz/resource/dataset/pomocne-ciselniky>
+WHERE {
+  {
+    SELECT ?concept
+    WHERE {
+      ?concept a skos:Concept ;
+        skos:inScheme ?conceptScheme .
+    }
+    GROUP BY ?concept
+    HAVING (COUNT(?conceptScheme) > 1)
+  }
+  ?concept skos:inScheme ?scheme .
+}
+  """ ;
+  sparqlab:hasDifficulty sparqlab:normal .
