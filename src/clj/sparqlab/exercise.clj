@@ -1,6 +1,7 @@
 (ns sparqlab.exercise
   (:require [sparqlab.sparql :as sparql]
             [sparqlab.store :as store]
+            [sparqlab.rdf :as rdf]
             [clojure.set :refer [union]]
             [clojure.tools.logging :as log])
   (:import (org.apache.jena.rdf.model Model)))
@@ -9,11 +10,16 @@
   "Test if queries `a` and `b` are equal. Starts by testing string equality, then tests equality
   of the parsed queries, then tests equality of the parsed algebras."
   [a b]
-  (or (= (:query-string a) (:query-string b))
-      (and (= (:query-type a) (:query-type b)) (= (:query a) (:query b)))
-      (.equalTo (sparql/normalize-query (:query a))
-                (sparql/normalize-query (:query b))
-                sparql/node-isomorphism-map)))
+  (letfn [(equal-where? [{a :query} {b :query}]
+            (.equalTo (sparql/normalize-query a) (sparql/normalize-query b) sparql/node-isomorphism-map))
+          (equal-construct? [a b]
+            ; If not CONSTRUCT, then skip the equality test.
+            (or (not= (:query-type a) ::sparql/construct)
+                (sparql/equal-construct? (:query a) (:query b))))]
+    (or (= (:query-string a) (:query-string b))
+      (and (= (:query-type a) (:query-type b))
+           (or (= (:query a) (:query b))
+               (and (equal-where? a b) (equal-construct? a b)))))))
 
 (defn get-construct-labels
   "Get labels of `constructs` in `lang`."
@@ -57,10 +63,10 @@
   (let [sparql-query (partial sparql/sparql-query sparql/sparql-endpoint)
         canonical-query (sparql/parse-query canonical-query-string)
         query (sparql/parse-query query-string)
-        equal-query-result (equal-query? canonical-query query)
+        equal-query-result? (equal-query? canonical-query query)
         all-ask-queries? (every? (comp (partial = ::sparql/ask) :query-type) [canonical-query query])
         ; If the queries are the same, retrieve only the canonical results.
-        results (if equal-query-result
+        results (if equal-query-result?
                   (let [res (sparql/sparql-query-cached sparql/sparql-endpoint canonical-query)]
                     {:canonical-results res
                      :query-results res})
@@ -78,21 +84,52 @@
                      :query-results (sparql-query query)}))
         query-in-spin (sparql/query->spin (:query query))
         superfluous-prohibited (test-prohibited lang prohibited query-in-spin)
-        missing-required (test-required lang required query-in-spin)]
+        missing-required (test-required lang required query-in-spin)
+        results-type (comp sparql/get-results-type :query-type)
+        query-results-type (results-type query)
+        canonical-results-type (results-type canonical-query)
+        equal-results? (if all-ask-queries?
+                         (sparql/equal-query-results? ::sparql/select (:canonical-results-to-compare results)
+                                                      ::sparql/select (:query-results-to-compare results))
+                         (sparql/equal-query-results? (:query-type canonical-query)
+                                                      (:canonical-results results)
+                                                      (:query-type query)
+                                                      (:query-results results)))]
     {:canonical-query {:query canonical-query-string
                        :results (:canonical-results results)
-                       :results-type (sparql/get-results-type (:query-type canonical-query))}
+                       :results-type canonical-results-type}
      :query {:missing-required missing-required
              :query query-string
              :results (:query-results results)
-             :results-type (sparql/get-results-type (:query-type query))
+             :results-type query-results-type
              :superfluous-prohibited superfluous-prohibited}
      :equal? (and (empty? (union superfluous-prohibited missing-required))
-                  (or equal-query-result
-                      (if all-ask-queries?
-                        (sparql/equal-query-results? ::sparql/select (:canonical-results-to-compare results)
-                                                     ::sparql/select (:query-results-to-compare results))
-                        (sparql/equal-query-results? (:query-type canonical-query)
-                                                     (:canonical-results results)
-                                                     (:query-type query)
-                                                     (:query-results results)))))}))
+                  (or equal-query-result? equal-results?))
+     :equal-results? equal-results?}))
+
+(defmulti reformat-results
+  "Reformat results of SPARQL queries in exercises."
+  (fn [translate-fn
+       {{qrt :results-type} :query
+        {crt :results-type} :canonical-query}]
+    [qrt crt]))
+
+(defmethod reformat-results ["text/turtle" "text/turtle"]
+  [translate-fn
+   {{query-results :results} :query
+    {canonical-results :results} :canonical-query
+    :keys [equal-results?]
+    :as verdict}]
+  (if equal-results?
+    verdict
+    (let [[query-results' canonical-results'] (rdf/split-diff translate-fn
+                                                              query-results
+                                                              canonical-results)]
+      (-> verdict
+          (assoc-in [:query :results] query-results')
+          (assoc-in [:canonical-query :results] canonical-results')))))
+
+; No reformatting by default.
+(defmethod reformat-results :default
+  [_ verdict]
+  verdict)
