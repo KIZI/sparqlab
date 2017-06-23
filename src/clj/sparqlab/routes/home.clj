@@ -168,11 +168,15 @@
                                                                                           requires)
                                                                            :lang lang))
             exercise-status (get (cookie/get-exercise-statuses request) id)
+            all-selects? (= (get-in verdict [:query :query-type])
+                            (get-in verdict [:canonical-query :query-type])
+                            ::sparql/select)
             data (merge (i18n/base-locale request)
                         (i18n/base-evaluation-locale request)
                         exercise
                         verdict
-                        {:title (tr [:evaluation/title] [(:name exercise)])})]
+                        {:all-selects? all-selects?
+                         :title (tr [:evaluation/title] [(:name exercise)])})]
         (cond-> (layout/render "evaluation.html" data)
           (and (:equal? verdict) (not= exercise-status "revealed")) (cookie/mark-exercise-as-solved id)))
       (let [error-data (merge (i18n/base-locale request)

@@ -279,3 +279,75 @@ h3 {
 .merge-gap-shift {
   padding-left: 3%;
 }
+
+/* Daff */
+
+.daff {
+	font-size: 13px;
+  word-break: break-all;
+}
+
+.daff .add {
+  background-color: #d6ff66;
+}
+
+.daff .remove {
+  background-color: #ffcde2;
+}
+
+.daff td.modify {
+  background-color: #e3f8ff;
+}
+
+.daff td.conflict {
+  background-color: #f00;
+}
+
+.daff .spec {
+  background-color: #aaa;
+}
+
+.daff .move {
+  background-color: #ffa;
+}
+
+.daff .null {
+  color: #888;
+}
+
+.daff td, .daff th {
+  padding: 3px 7px 2px;
+}
+
+.daff thead tr th:first-child {
+  min-width: 4em;
+}
+
+.daff thead th {
+  font-weight: bold;
+  padding-bottom: 4px;
+  padding-top: 5px;
+  text-align: left;
+}
+
+.daff th:not(:first-child) {
+	border-left: 1px dotted gray;
+}
+
+.daff tr th {
+  border-bottom: 2px solid #ddd;
+}
+
+.daff td {
+	padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.daff .gap {
+  color: #888;
+}
+
+.daff tr.index td, .daff .index, .daff tr.header th.index, .daff td.index:first-child, .daff tr:first-child td.index {
+  background-color: #fff;
+  border: none;
+}

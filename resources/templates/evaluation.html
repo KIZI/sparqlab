@@ -54,15 +54,23 @@
 <div class="row">
   <div class="col-md-6">
     <h3>{{results}}</h3>
-    <div id="query-results">
+    <div id="query-results"{% if all-selects? %} class="daff"{% endif %}>
       <textarea id="results" class="hidden" data-type="{{query.results-type}}">{% safe %}{{query.results}}{% endsafe %}</textarea>
     </div>
   </div>
   <div class="col-md-6 merge-gap-shift">
     <h3>{{results}}</h3>
-    <div id="canonical-query-results">
+    <div id="canonical-query-results"{% if all-selects? %} class="daff"{% endif %}>
       <textarea id="canonical-results" class="hidden" data-type="{{canonical-query.results-type}}">{% safe %}{{canonical-query.results}}{% endsafe %}</textarea>
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div id="query-daff" class="daff"></div>
+  </div>
+  <div class="col-md-6 merge-gap-shift">
+    <div id="canonical-daff" class="daff"></div>
   </div>
 </div>
 <div class="modal fade"
@@ -85,5 +93,6 @@
 {% block page-scripts %}
 {% script "https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js" %}
 {% script "/js/merge.js" %}
+{% script "/js/daff.js" %}
 {% script "/js/evaluation.js" %}
 {% endblock %}

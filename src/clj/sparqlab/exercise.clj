@@ -96,10 +96,12 @@
                                                       (:query-type query)
                                                       (:query-results results)))]
     {:canonical-query {:query canonical-query-string
+                       :query-type (:query-type canonical-query)
                        :results (:canonical-results results)
                        :results-type canonical-results-type}
      :query {:missing-required missing-required
              :query query-string
+             :query-type (:query-type query)
              :results (:query-results results)
              :results-type query-results-type
              :superfluous-prohibited superfluous-prohibited}
