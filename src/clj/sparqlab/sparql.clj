@@ -232,6 +232,11 @@
      :query-string (serialize-query parsed-query)
      :query-type (get-query-type parsed-query)}))
 
+(defn query-prefixes
+  "Get namespace prefixes from `query` as a map."
+  [^Query query]
+  (into {} (.. query getPrefixMapping getNsPrefixMap)))
+
 (defn select-query 
   "Execute SPARQL SELECT `query` on the `model`."
   [^Model model
