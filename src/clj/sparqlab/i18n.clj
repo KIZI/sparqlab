@@ -3,7 +3,7 @@
             [taoensso.tempura :refer [tr]]))
 
 (def tconfig
-  {:default-locale :cs
+  {:default-locale :en
    :dict {:cs {:missing "Chybějící český text"
                :about {:title "O aplikaci"}
                :and "a"
