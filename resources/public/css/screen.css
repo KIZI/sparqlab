@@ -287,6 +287,10 @@ h3 {
   word-break: break-all;
 }
 
+.daff table {
+  width: 100%;
+}
+
 .daff .add {
   background-color: #d6ff66;
 }
