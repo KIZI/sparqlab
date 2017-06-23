@@ -81,16 +81,18 @@
   };
 
   $(document).ready(function () {
-    var json = "application/json",
-        query = document.getElementById("query"),
+    var parse = function (mimetype, text) {
+      return (mimetype === "application/json") ? JSON.parse(text) : text;
+    };
+    var query = document.getElementById("query"),
         canonicalQuery = document.getElementById("canonical-query"),
         $qr = $("#results"),
         qrType = $qr.data("type"),
-        qr = (qrType === json) ? JSON.parse($qr.val()) : $qr.val();
+        qr = parse(qrType, $qr.val()),
         $qrResults = $("#query-results"),
         $cr = $("#canonical-results"),
         crType = $cr.data("type"),
-        cr = (crType === json) ? JSON.parse($cr.val()) : $cr.val();
+        cr = parse(crType, $cr.val()),
         $crResults = $("#canonical-query-results"),
         $revealSolution = $("#reveal-solution"),
         $mergeView = $("#mergeview");
