@@ -28,12 +28,12 @@
         if (binding.hasOwnProperty("xml:lang")) {
           return '"' + binding.value + '"<sup>@' + binding["xml:lang"] + '</sup>';
         } else if (binding.hasOwnProperty("datatype")) {
-          return '"' + binding.value + '"<sup>^^' + binding["datatype"] + '</sup>';
+          return '"' + binding.value + '"<sup>^^&lt;' + binding["datatype"] + '&gt;</sup>';
         } else {
           return '"' + binding.value + '"';
         }
       case "uri":
-        return '<a href="' + binding.value + '">' + binding.value + '</a>';
+        return '<a href="' + binding.value + '">&lt;' + binding.value + '&gt;</a>';
       default: return binding.value;
     }
   };
