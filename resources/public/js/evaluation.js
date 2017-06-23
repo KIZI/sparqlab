@@ -20,7 +20,15 @@
         index = path.lastIndexOf("/");
     if (index !== -1) {
       return path.substring(index + 1);
-    } 
+    }
+  };
+  var shortenIri = function (iri) {
+    for (p in prefixes) {
+      if (iri.indexOf(prefixes[p]) == 0) {
+        return p + ":" + iri.substring(prefixes[p].length);
+      }
+    }
+    return "&lt;" + iri + "&gt;";
   };
   var formatBinding = function (binding) {
     switch (binding.type) {
@@ -28,12 +36,13 @@
         if (binding.hasOwnProperty("xml:lang")) {
           return '"' + binding.value + '"<sup>@' + binding["xml:lang"] + '</sup>';
         } else if (binding.hasOwnProperty("datatype")) {
-          return '"' + binding.value + '"<sup>^^&lt;' + binding["datatype"] + '&gt;</sup>';
+          return ('"' + binding.value + '"<sup>^^<a href="' + binding["datatype"] +
+                  '">' + shortenIri(binding["datatype"]) + '</a></sup>');
         } else {
           return '"' + binding.value + '"';
         }
       case "uri":
-        return '<a href="' + binding.value + '">&lt;' + binding.value + '&gt;</a>';
+        return '<a href="' + binding.value + '">' + shortenIri(binding.value) + '</a>';
       default: return binding.value;
     }
   };
@@ -59,7 +68,7 @@
   };
   var showMergeView = function ($mergeView, query, canonicalQuery) {
     $mergeView.removeClass("hidden");
-    CodeMirror.MergeView($mergeView[0], { 
+    CodeMirror.MergeView($mergeView[0], {
       connect: "align",
       mode: "sparql11",
       origLeft: query,
@@ -86,7 +95,7 @@
         $crResults = $("#canonical-query-results"),
         $revealSolution = $("#reveal-solution"),
         $mergeView = $("#mergeview");
-       
+
     // Show YASQE if query is incorrect and solution not revealed.
     // Show MergeView if query is correct or solution is revealed.
     if ($mergeView.hasClass("hidden")) {
@@ -94,10 +103,10 @@
     } else {
       showMergeView($mergeView, query.value, canonicalQuery.value);
     }
-  
+
     // .daff class is used when both results are SELECT results.
     if ($qrResults.hasClass("daff")) {
-      // In that case we present a tabular diff. 
+      // In that case we present a tabular diff.
       var queryData = parseSelectResults(qr),
           canonicalData = parseSelectResults(cr),
           queryTable = new daff.TableView(queryData),
@@ -117,8 +126,9 @@
       $crResults.html(renderTable(canonicalData));
     } else {
       // Otherwise we show the results using YASR
-      var qrYasr = YASR($qrResults[0], yasrConfig),
-          crYasr = YASR($crResults[0], yasrConfig);
+      var config = $.extend(yasrConfig, {getUsedPrefixes: function () { return prefixes; }});
+          qrYasr = YASR($qrResults[0], config),
+          crYasr = YASR($crResults[0], config);
       qrYasr.setResponse({
         response: qr,
         contentType: qrType
