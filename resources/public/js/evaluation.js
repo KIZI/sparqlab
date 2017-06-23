@@ -22,16 +22,6 @@
       return path.substring(index + 1);
     } 
   };
-  var isSelectResult = function (mimetype, text) {
-    if (mimetype === "application/json") {
-      var data = JSON.parse(text);
-      return (data.hasOwnProperty("head") &&
-              data.head.hasOwnProperty("vars") &&
-              data.head.vars.length > 0);
-    } else {
-      return false;
-    }
-  };
   var formatBinding = function (binding) {
     switch (binding.type) {
       case "literal":
