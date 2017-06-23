@@ -3,8 +3,10 @@
             [sparqlab.store :as store]
             [sparqlab.rdf :as rdf]
             [clojure.set :refer [union]]
+            [clojure.string :as string]
             [clojure.tools.logging :as log])
-  (:import (org.apache.jena.rdf.model Model)))
+  (:import (java.util HashMap)
+           (org.apache.jena.rdf.model Model)))
 
 (defn equal-query?
   "Test if queries `a` and `b` are equal. Starts by testing string equality, then tests equality
@@ -95,11 +97,13 @@
                                                       (:canonical-results results)
                                                       (:query-type query)
                                                       (:query-results results)))]
-    {:canonical-query {:query canonical-query-string
+    {:canonical-query {:prefixes (sparql/extract-prefixes (:query canonical-query))
+                       :query canonical-query-string
                        :query-type (:query-type canonical-query)
                        :results (:canonical-results results)
                        :results-type canonical-results-type}
      :query {:missing-required missing-required
+             :prefixes (sparql/extract-prefixes (:query query)) 
              :query query-string
              :query-type (:query-type query)
              :results (:query-results results)
@@ -108,6 +112,62 @@
      :equal? (and (empty? (union superfluous-prohibited missing-required))
                   (or equal-query-result? equal-results?))
      :equal-results? equal-results?}))
+
+(defn split-prefixes
+  "Split a `turtle` string to a set of prefixes and data."
+  [turtle]
+  (let [[prefixes data] (partition-by #(string/starts-with? % "@prefix") (string/split-lines turtle))]
+    [(set prefixes) (string/trim (string/join \newline data))]))
+
+(defn collect-prefixes
+  "Collect namespace prefixes in Turtle strings `a` and `b`."
+  [a b]
+  (let [[a-prefixes a-data] (split-prefixes a)
+        [b-prefixes b-data] (split-prefixes b)]
+    [(str (string/join \newline (sort (union a-prefixes b-prefixes)))
+          "\n\n"
+          a-data)
+     b-data]))
+
+(defn- wrap-comment
+  "Wrap `text` as block comment:
+  ############
+  ### text ###
+  ############"
+  [text]
+  (let [side "###"
+        line (apply str (repeat (+ (count text) 8) \#))]
+    (str "\n\n" line "\n"
+         side " " text " " side "\n"
+         line "\n\n")))
+
+(defn split-diff
+  "Reformat query results in RDF by splitting diffs.
+  Comments are localized using the `translate-fn`."
+  [translate-fn query-results canonical-results]
+  (let [qr (rdf/turtle-string->model query-results)
+        cr (rdf/turtle-string->model canonical-results)
+        ; Namespace prefixes are lost during intersection and difference operations,
+        ; so we add them back.
+        all-prefixes (HashMap. (merge (rdf/model-prefixes qr)
+                                      (rdf/model-prefixes cr)))
+        intersection (-> (.intersection qr cr)
+                         (.setNsPrefixes all-prefixes)
+                         rdf/model->turtle-string)
+        superfluous (-> (.difference qr cr)
+                        (.setNsPrefixes all-prefixes)
+                        rdf/model->turtle-string)
+        missing (-> (.difference cr qr)
+                    (.setNsPrefixes all-prefixes)
+                    rdf/model->turtle-string)
+        [qr-head qr-tail] (collect-prefixes intersection superfluous)
+        [cr-head cr-tail] (collect-prefixes intersection missing)
+        superfluous-comment (translate-fn [:evaluation/superfluous-triples])
+        missing-comment (translate-fn [:evaluation/missing-triples])]
+    [(cond-> qr-head
+       (seq qr-tail) (str (wrap-comment superfluous-comment) qr-tail))
+     (cond-> cr-head
+       (seq cr-tail) (str (wrap-comment missing-comment) cr-tail))]))
 
 (defmulti reformat-results
   "Reformat results of SPARQL queries in exercises."
@@ -124,9 +184,9 @@
     :as verdict}]
   (if equal-results?
     verdict
-    (let [[query-results' canonical-results'] (rdf/split-diff translate-fn
-                                                              query-results
-                                                              canonical-results)]
+    (let [[query-results' canonical-results'] (split-diff translate-fn
+                                                          query-results
+                                                          canonical-results)]
       (-> verdict
           (assoc-in [:query :results] query-results')
           (assoc-in [:canonical-query :results] canonical-results')))))
