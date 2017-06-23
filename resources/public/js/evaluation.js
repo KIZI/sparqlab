@@ -22,35 +22,35 @@
       return path.substring(index + 1);
     }
   };
-  var shortenIri = function (iri) {
-    for (p in prefixes) {
-      if (iri.indexOf(prefixes[p]) == 0) {
-        return p + ":" + iri.substring(prefixes[p].length);
+  var shortenIri = function (prefixPairs, iri) {
+    for (var i = 0; i < prefixPairs.length; i++) {
+      if (iri.indexOf(prefixPairs[i][1]) == 0) {
+        return prefixPairs[i][0] + ":" + iri.substring(prefixPairs[i][1].length);
       }
     }
     return "&lt;" + iri + "&gt;";
   };
-  var formatBinding = function (binding) {
+  var formatBinding = function (prefixPairs, binding) {
     switch (binding.type) {
       case "literal":
         if (binding.hasOwnProperty("xml:lang")) {
           return '"' + binding.value + '"<sup>@' + binding["xml:lang"] + '</sup>';
         } else if (binding.hasOwnProperty("datatype")) {
           return ('"' + binding.value + '"<sup>^^<a href="' + binding["datatype"] +
-                  '">' + shortenIri(binding["datatype"]) + '</a></sup>');
+                  '">' + shortenIri(prefixPairs, binding["datatype"]) + '</a></sup>');
         } else {
           return '"' + binding.value + '"';
         }
       case "uri":
-        return '<a href="' + binding.value + '">' + shortenIri(binding.value) + '</a>';
+        return '<a href="' + binding.value + '">' + shortenIri(prefixPairs, binding.value) + '</a>';
       default: return binding.value;
     }
   };
-  var parseSelectResults = function (data) {
+  var parseSelectResults = function (prefixPairs, data) {
     var head = data.head.vars,
         bindings = data.results.bindings;
     return [head].concat(bindings.map(function (binding) {
-      return head.map(function (variable) { return formatBinding(binding[variable]); });
+      return head.map(function (variable) { return formatBinding(prefixPairs, binding[variable]); });
     }));
   };
   var renderTable = function (data) {
@@ -107,8 +107,16 @@
     // .daff class is used when both results are SELECT results.
     if ($qrResults.hasClass("daff")) {
       // In that case we present a tabular diff.
-      var queryData = parseSelectResults(qr),
-          canonicalData = parseSelectResults(cr),
+      var prefixPairs = [];
+      for (p in prefixes) {
+        prefixPairs.push([p, prefixes[p]]);
+      }
+      // Sort prefixes by namespace length in descending order.
+      prefixPairs.sort(function (a, b) {
+        return b[1].length - a[1].length;
+      });
+      var queryData = parseSelectResults(prefixPairs, qr),
+          canonicalData = parseSelectResults(prefixPairs, cr),
           queryTable = new daff.TableView(queryData),
           canonicalTable = new daff.TableView(canonicalData);
       queryTable.trim();
