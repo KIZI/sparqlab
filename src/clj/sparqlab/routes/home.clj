@@ -171,11 +171,15 @@
             all-selects? (= (get-in verdict [:query :query-type])
                             (get-in verdict [:canonical-query :query-type])
                             ::sparql/select)
+            prefixes (merge (get-in verdict [:query :prefixes])
+                            (get-in verdict [:canonical-query :prefixes])
+                            {"xsd" (prefix/xsd)})
             data (merge (i18n/base-locale request)
                         (i18n/base-evaluation-locale request)
                         exercise
                         verdict
                         {:all-selects? all-selects?
+                         :prefixes prefixes
                          :title (tr [:evaluation/title] [(:name exercise)])})]
         (cond-> (layout/render "evaluation.html" data)
           (and (:equal? verdict) (not= exercise-status "revealed")) (cookie/mark-exercise-as-solved id)))
