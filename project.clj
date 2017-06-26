@@ -1,4 +1,4 @@
-(defproject sparqlab "0.6.0"
+(defproject sparqlab "0.7.0"
   :description "Lab for exercising SPARQL" 
   :url "http://github.com/jindrichmynarz/sparqlab"
   :dependencies [[cheshire "5.7.1"]
