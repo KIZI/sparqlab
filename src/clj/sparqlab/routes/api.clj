@@ -9,7 +9,8 @@
             [clj-http.client :as client]
             [slingshot.slingshot :refer [try+]]
             [ring.util.response :refer [response]]
-            [cheshire.core :refer [generate-string]]))
+            [cheshire.core :refer [generate-string]]
+            [clojure.set :as set]))
 
 (defn sparql-query
   "Execute a SPARQL query in an HTTP GET request using `params` and HTTP `headers`."
@@ -38,6 +39,18 @@
     (cond-> (response solution)
       (not= exercise-status "solved") (cookie/mark-exercise-as-revealed id))))
 
+(defn get-sparql-constructs
+  "Get SPARQL language constructs with labels in given `lang`."
+  [lang]
+  (let [sparql-constructs (-> "get_sparql_constructs"
+                              (sparql/sparql-template {:language lang})
+                              store/select-query)
+        format-construct (fn [construct] 
+                           (-> construct
+                               (dissoc :lang)
+                               (set/rename-keys {:construct :value})))]
+    (generate-string (map format-construct sparql-constructs))))
+
 (defroutes api-routes
   (context "/api" []
            (GET "/query"
@@ -47,4 +60,7 @@
            (GET "/exercise-solution"
                 {{id :id} :params
                  :as request}
-                (get-exercise-solution request id))))
+                (get-exercise-solution request id))
+           (GET "/sparql-constructs"
+                {lang :accept-lang}
+                (get-sparql-constructs lang))))
