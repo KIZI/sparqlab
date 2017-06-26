@@ -4,7 +4,7 @@
 
 {{> sparql/prefixes.mustache }}
 
-SELECT ?construct ?label
+SELECT ?construct ?label (lang(?label) AS ?lang)
 WHERE {
   {
     SELECT DISTINCT ?construct 

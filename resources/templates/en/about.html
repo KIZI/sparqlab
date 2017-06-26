@@ -11,7 +11,18 @@
 
     <p>The exercises use these SPARQL constructs:
     {% for sparql-construct in sparql-constructs %}
-    <a href="{{servlet-context}}/search?construct={{sparql-construct.construct|urlescape}}">{{sparql-construct.label|inline-markdown}}</a>{% ifequal forloop.counter forloop.length|dec %} and {% else %}{% if not forloop.last %}, {% endif %}{% endifequal %}{% endfor %}.</p>
+    <a href="{{servlet-context}}/search?construct={{sparql-construct.construct|urlescape}}">{%
+      if sparql-construct.lang|empty?
+    %}<code>{{sparql-construct.label}}</code>{%
+      else
+    %}{{sparql-construct.label}}{% endif %}</a>{%
+      ifequal forloop.counter forloop.length|dec
+    %} and {%
+      else
+    %}{%
+      if not forloop.last
+    %}, {%
+      endif %}{% endifequal %}{% endfor %}.</p>
 
     <h2>Authors</h2>
 
