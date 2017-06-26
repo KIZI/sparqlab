@@ -12,6 +12,9 @@
             [cheshire.core :refer [generate-string]]
             [clojure.set :as set]))
 
+(def ^:private json-header
+  {"Content-Type" "application/json"})
+
 (defn sparql-query
   "Execute a SPARQL query in an HTTP GET request using `params` and HTTP `headers`."
   [{:keys [query]
@@ -24,7 +27,7 @@
                                                  :query-params params
                                                  :throw-entire-message? true}))
       {:status 400
-       :headers {"Content-Type" "application/json"}
+       :headers json-header
        :body (generate-string validation-results)})))
 
 (defn get-exercise-solution
@@ -49,7 +52,9 @@
                            (-> construct
                                (dissoc :lang)
                                (set/rename-keys {:construct :value})))]
-    (generate-string (map format-construct sparql-constructs))))
+    {:status 200
+     :headers json-header
+     :body (generate-string (map format-construct sparql-constructs))}))
 
 (defroutes api-routes
   (context "/api" []
