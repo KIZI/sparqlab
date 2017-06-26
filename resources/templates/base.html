@@ -13,6 +13,7 @@
     {% style "https://cdn.jsdelivr.net/g/yasqe@2.11.10(yasqe.min.css),yasr@2.10.8(yasr.min.css)" %}
     {% style "/assets/bootstrap/css/bootstrap.min.css" %}
     {% style "/assets/font-awesome/css/font-awesome.min.css" %}
+    {% style "/css/awesomplete.css" %}
     {% style "/assets/codemirror-minified/lib/codemirror.css" %}
     {% style "/css/merge.css" %}
     {% style "/css/screen.css" %}
@@ -89,11 +90,15 @@
                       method="GET">
                   <div class="input-group">
                     <label class="sr-only" for="search">{{search-query}}:</label>
-                    <input id="search-term"
+                    <input class="awesomplete form-control form-control-sm"
+                           id="search-term"
                            name="q"
-                           type="text"
-                           class="form-control form-control-sm"
-                           placeholder="{{search}}">
+                           placeholder="{{search}}"
+                           type="text"/>
+                    <input class="hidden"
+                           id="search-construct"
+                           name="construct"
+                           type="text"/>
                     <span class="input-group-btn">
                       <button type="submit" class="btn btn-sm btn-default">
                         <i class="fa fa-search" title="{{search}}" aria-hidden="true"></i>
@@ -125,6 +130,7 @@
     {% script "/assets/tether/dist/js/tether.min.js" %}
     {% script "/assets/bootstrap/js/bootstrap.min.js" %}
     {% script "/assets/codemirror-minified/lib/codemirror.js" %}
+    {% script "/js/awesomplete.min.js" %}
     {% script "/js/yasqe.min.js" %}
     {% script "/js/yasr.bundled.min.js" %}
     {% script "/js/script.js" %}

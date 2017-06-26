@@ -54,3 +54,23 @@ if (acceptLang === "cs") {
   };
   yasqeLocale = YASQE.defaults.language;
 }
+
+// Setup autocomplete for searching by SPARQL language constructs
+(function ($) {
+  $(document).ready(function () {
+    $.get("api/sparql-constructs", function (data) {
+      var searchTerm = document.getElementById("search-term"),
+          searchConstruct = document.getElementById("search-construct");
+      new Awesomplete(searchTerm, {
+        autoFirst: true,
+        list: data
+      });
+      searchTerm.addEventListener("awesomplete-select", function (e) {
+        e.preventDefault();
+        searchConstruct.value = e.text.value;
+        searchTerm.value = "";
+        $(searchTerm).closest("form").submit(); 
+      });
+    });
+  });
+})(jQuery);
