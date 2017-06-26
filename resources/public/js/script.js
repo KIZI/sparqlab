@@ -74,7 +74,7 @@ var initAutocomplete = function (data) {
 (function ($) {
   $(document).ready(function () {
     $.ajax({
-      url: "/" + context + "api/sparql-constructs",
+      url: context + "/api/sparql-constructs",
       success: initAutocomplete
     });
   });
