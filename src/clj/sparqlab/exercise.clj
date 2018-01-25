@@ -19,6 +19,8 @@
             (or (not= (:query-type a) ::sparql/construct)
                 (sparql/equal-construct? (:query a) (:query b))))]
     (or (= (:query-string a) (:query-string b))
+    (.equals (sparql/transform-query-filter a) (sparql/transform-query-filter b))
+    (.equals (sparql/transform-query-path-flattern-std a) (sparql/transform-query-path-flattern-std b))    
       (and (= (:query-type a) (:query-type b))
            (or (= (:query a) (:query b))
                (and (equal-where? a b) (equal-construct? a b)))))))
@@ -103,7 +105,7 @@
                        :results (:canonical-results results)
                        :results-type canonical-results-type}
      :query {:missing-required missing-required
-             :prefixes (sparql/extract-prefixes (:query query)) 
+             :prefixes (sparql/extract-prefixes (:query query))
              :query query-string
              :query-type (:query-type query)
              :results (:query-results results)

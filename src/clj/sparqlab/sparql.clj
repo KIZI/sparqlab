@@ -6,7 +6,7 @@
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [clojure.string :as string]
-            [cheshire.core :as json] 
+            [cheshire.core :as json]
             [clojure.java.io :as io]
             [stencil.core :refer [render-file]]
             [stencil.loader :refer [set-cache]]
@@ -25,7 +25,10 @@
            (org.topbraid.spin.arq ARQ2SPIN)
            (org.apache.jena.sparql.lang SyntaxVarScope)
            (org.apache.jena.sparql.lang.sparql_11 ParseException SPARQLParser11 Token TokenMgrError)
-           (org.aksw.jena_sparql_api.algebra.transform TransformDistributeJoinOverUnion)))
+           (org.aksw.jena_sparql_api.algebra.transform TransformDistributeJoinOverUnion)
+           (org.apache.jena.sparql.algebra.optimize TransformPathFlatternStd)
+           (org.apache.jena.sparql.algebra Transformer)
+           (org.aksw.jena_sparql_api.algebra.transform TransformPushFiltersIntoBGP)))
 
 (def arq-context
   "Context allowing more aggressive SPARQL query optimizations."
@@ -126,7 +129,7 @@
     (mapv (partial aget token-images) idxs)))
 
 (defn valid-query?
-  "Validates syntax of `query`." 
+  "Validates syntax of `query`."
   [^String query]
   (let [parsed-query (doto (Query.) (.setStrict true))
         parser (doto (SPARQLParser11. (StringReader. query))
@@ -135,7 +138,7 @@
              (SyntaxVarScope/check parsed-query)
              {:valid? true})
          (catch TokenMgrError ex
-           {:offset (get-error-offset query ex) 
+           {:offset (get-error-offset query ex)
             :message (.getMessage ex)
             :valid? false})
          (catch ParseException ex
@@ -150,6 +153,33 @@
 (defn transform-distribute-join-over-union
   [^Op op]
   (Optimize/apply (TransformMergeBGPs.) (TransformDistributeJoinOverUnion/transform op)))
+
+(defn transform-push-filters-into-bgp
+  [^Op op]
+  (Optimize/apply (TransformMergeBGPs.) (TransformPushFiltersIntoBGP/transform op)))
+
+(defn transform-query-filter
+  "Remove unnecessary filter"
+  [^Query query]
+  (-> query
+      Algebra/compile
+      transform-push-filters-into-bgp
+      (Algebra/optimize arq-context)))
+
+
+(defn transform-path-flattern-std
+  [^Op op]
+  (Transformer/transform TransformPathFlatternStd op))
+
+(defn transform-query-path-flattern-std
+  "Replace property path with union"
+  [^Query query]
+  (.toString
+  (-> query
+      Algebra/compile
+      transform-path-flattern-std
+    )))
+
 
 (defn normalize-query
   [^Query query]
@@ -169,7 +199,7 @@
   [query-results]
   (let [data (json/parse-string query-results keyword)]
     (cond-> (map (comp set (partial map val)) (get-in data [:results :bindings]))
-      (not (get-in data [:results :ordered])) set ; Unordered bindings are compared as sets 
+      (not (get-in data [:results :ordered])) set ; Unordered bindings are compared as sets
       )))
 
 (defn parse-ask-result
@@ -232,7 +262,7 @@
      :query-string (serialize-query parsed-query)
      :query-type (get-query-type parsed-query)}))
 
-(defn select-query 
+(defn select-query
   "Execute SPARQL SELECT `query` on the `model`."
   [^Model model
    ^String query]
