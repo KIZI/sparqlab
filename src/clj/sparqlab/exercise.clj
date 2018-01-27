@@ -103,7 +103,7 @@
                        :results (:canonical-results results)
                        :results-type canonical-results-type}
      :query {:missing-required missing-required
-             :prefixes (sparql/extract-prefixes (:query query)) 
+             :prefixes (sparql/extract-prefixes (:query query))
              :query query-string
              :query-type (:query-type query)
              :results (:query-results results)

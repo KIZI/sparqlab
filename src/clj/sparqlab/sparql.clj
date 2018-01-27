@@ -6,7 +6,7 @@
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [clojure.string :as string]
-            [cheshire.core :as json] 
+            [cheshire.core :as json]
             [clojure.java.io :as io]
             [stencil.core :refer [render-file]]
             [stencil.loader :refer [set-cache]]
@@ -126,7 +126,7 @@
     (mapv (partial aget token-images) idxs)))
 
 (defn valid-query?
-  "Validates syntax of `query`." 
+  "Validates syntax of `query`."
   [^String query]
   (let [parsed-query (doto (Query.) (.setStrict true))
         parser (doto (SPARQLParser11. (StringReader. query))
@@ -135,7 +135,7 @@
              (SyntaxVarScope/check parsed-query)
              {:valid? true})
          (catch TokenMgrError ex
-           {:offset (get-error-offset query ex) 
+           {:offset (get-error-offset query ex)
             :message (.getMessage ex)
             :valid? false})
          (catch ParseException ex
@@ -169,7 +169,7 @@
   [query-results]
   (let [data (json/parse-string query-results keyword)]
     (cond-> (map (comp set (partial map val)) (get-in data [:results :bindings]))
-      (not (get-in data [:results :ordered])) set ; Unordered bindings are compared as sets 
+      (not (get-in data [:results :ordered])) set ; Unordered bindings are compared as sets
       )))
 
 (defn parse-ask-result
@@ -232,7 +232,7 @@
      :query-string (serialize-query parsed-query)
      :query-type (get-query-type parsed-query)}))
 
-(defn select-query 
+(defn select-query
   "Execute SPARQL SELECT `query` on the `model`."
   [^Model model
    ^String query]
