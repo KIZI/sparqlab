@@ -35,7 +35,7 @@
                  [slingshot "0.12.2"]
                  [stencil "0.5.0"]]
 
-  :repositories [["org.topbraid" "http://topquadrant.com/repository/spin"]
+  :repositories [["org.topbraid" "https://topquadrant.com/repository/spin"]
                  ["maven.aksw.snapshots" "http://maven.aksw.org/archiva/repository/snapshots"]]
   :min-lein-version "2.0.0"
 
