@@ -86,7 +86,7 @@ sp:year skos:prefLabel "year" .
 
 exercise:classes a sp:Query ;
   rdfs:label "Instanciované třídy"@cs ;
-  rdfs:comment "Vyberte třídy instanciované v datech (bez opakování)."@cs ;
+  rdfs:comment "Jaké třídy mají v datech alespoň jednu instanci? Vypište je tak, aby se neopakovaly."@cs ;
   sp:text """
 SELECT DISTINCT ?class
 WHERE {
@@ -97,7 +97,7 @@ WHERE {
 
 exercise:classes-histogram a sp:Query ;
   rdfs:label "Četnost výskytů instanciovaných tříd"@cs ;
-  rdfs:comment "Spočítejte četnost výskytů tříd instanciovaných v datech. Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  rdfs:comment "Spočítejte četnost výskytů tříd, které mají v datech alespoň jednu instanci. Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
   sp:text """
 SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
@@ -110,7 +110,7 @@ ORDER BY DESC(?count)
 
 exercise:classes-histogram-code-lists a sp:Query ;
   rdfs:label "Četnost výskytů tříd instanciovaných v číselnících"@cs ;
-  rdfs:comment "Spočítejte četnost výskytů tříd instanciovaných v číselnících (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  rdfs:comment "Spočítejte četnost výskytů tříd, které mají v číselnících alespoň jednu instanci (pojmenovaný graf `https://data.cssz.cz/resource/dataset/pomocne-ciselniky`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
   sp:text """
 SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
@@ -125,7 +125,7 @@ ORDER BY DESC(?count)
 
 exercise:classes-histogram-data a sp:Query ;
   rdfs:label "Četnost výskytů tříd instanciovaných ve statistikách důchodů a důchodců"@cs ;
-  rdfs:comment "Spočítejte četnost výskytů tříd instanciovaných ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  rdfs:comment "Spočítejte četnost výskytů tříd, které mají ve statistikách důchodů a důchodců alespoň jednu instanci (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
   sp:text """
 SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
@@ -140,7 +140,7 @@ ORDER BY DESC(?count)
 
 exercise:classes-histogram-metadata a sp:Query ;
   rdfs:label "Četnost výskytů tříd instanciovaných v metadatech"@cs ;
-  rdfs:comment "Spočítejte četnost výskytů tříd instanciovaných v metadatech ke statistikám důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
+  rdfs:comment "Spočítejte četnost výskytů tříd, které mají v metadatech ke statistikám důchodů a důchodců alespoň jednu instanci (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech/metadata`). Pro každou třídu uveďte počet jejích instancí a výsledky seřaďte sestupně dle počtu."@cs ;
   sp:text """
 SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
@@ -183,7 +183,7 @@ WHERE {
 
 exercise:object-property-path a sp:Query ;
   rdfs:label "Cesty mezi instancemi tříd"@cs ;
-  rdfs:comment "Vyberte predikáty spojující instance tříd ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Pro každou kombinaci tříd a predikátu uveďte počet spojení a výsledky podle tohoto počtu seřaďte sestupně."@cs ;
+  rdfs:comment "Jaké kombinace tříd představujících subjekt a objekt tvrzení a predikátů spojujících instance těchto tříd se vyskytují ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`)? Pro každou kombinaci tříd a predikátu uveďte také počet tvrzení a výsledky podle tohoto počtu seřaďte sestupně."@cs ;
   sp:text """
 SELECT ?class1 ?p ?class2 (COUNT(*) AS ?count)
 WHERE {
@@ -329,7 +329,7 @@ ORDER BY DESC(?maxCardinality)
 
 exercise:properties-qb-observation-data a sp:Query ;
   rdfs:label "Predikáty pozorování ve statistikách důchodů a důchodců"@cs ;
-  rdfs:comment "Vyberte predikáty pozorování (tj. instancí `qb:Observation`) ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Výsledky budou obsahovat každý predikát pouze jednou."@cs ;
+  rdfs:comment "Vyberte predikáty popisující pozorování (tj. instance `qb:Observation`) ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Vypište výsledky tak, aby obsahovaly každý predikát pouze jednou."@cs ;
   sp:text """
 PREFIX qb: <http://purl.org/linked-data/cube#>
 
@@ -345,7 +345,7 @@ WHERE {
 
 exercise:some-data a sp:Query ;
   rdfs:label "Jsou v úložišti data?"@cs ;
-  rdfs:comment "Zjistěte, zdali jsou v dotazovaném úložišti data."@cs ;
+  rdfs:comment "Zjistěte, zdali jsou v úložišti nějaká data."@cs ;
   sp:text """
 ASK {
   [] ?p [] .
@@ -355,7 +355,7 @@ ASK {
 
 exercise:some-named-graphs a sp:Query ;
   rdfs:label "Jsou v úložišti pojmenované grafy?"@cs ;
-  rdfs:comment "Zjistěte, zdali jsou v dotazovaném úložišti pojmenované grafy."@cs ;
+  rdfs:comment "Zjistěte, zdali jsou v úložišti nějaké pojmenované grafy."@cs ;
   sp:text """
 ASK
 WHERE {
@@ -379,7 +379,7 @@ WHERE {
 
 exercise:graph-sizes a sp:Query ;
   rdfs:label "Velikost grafů"@cs ;
-  rdfs:comment "Spočtěte trojice v každém grafu a seřaďte výsledky sestupně dle velikosti."@cs ;
+  rdfs:comment "Pro každý graf spočtěte počet trojic v daném grafu a seřaďte výsledky sestupně dle počtu trojic v grafu."@cs ;
   sp:text """
 SELECT ?graph (COUNT(*) AS ?size)
 WHERE {
@@ -426,6 +426,7 @@ WHERE {
 exercise:dataset-attributes a sp:Query ;
   rdfs:label "Atributy ve statistikách důchodů a důchodců"@cs ;
   rdfs:comment "Vyberte atributy (tj. instance `qb:AttributeProperty`), které jsou použity ve struktuře datové kostky statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`)."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 
@@ -444,7 +445,8 @@ WHERE {
 
 exercise:dataset-component-labels-czech a sp:Query ;
   rdfs:label "Názvy komponent datasetu statistik důchodů a důchodců v češtině"@cs ;
-  rdfs:comment "Vyberte názvy komponent datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) v češtině. Výsledky seřaďte vzestupně dle volitelně uvedeného pořadí komponent (`qb:order`) ve struktuře datasetu. Názvy se nebudou opakovat."@cs ;
+  rdfs:comment "Vyberte názvy komponent datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) v češtině. Výsledky seřaďte vzestupně dle volitelně uvedeného pořadí komponent (`qb:order`) ve struktuře datasetu. Názvy komponent vypište tak, aby se opakovaly."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -467,7 +469,7 @@ ORDER BY ?order
 
 exercise:dataset-component-properties-with-classes a sp:Query ;
   rdfs:label "Komponenty datasetu statistik důchodů a důchodců s třídami"@cs ;
-  rdfs:comment "Vyberte komponenty datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) spolu s volitelně uvedenými třídami predikátů, na něž komponenty odkazují přes predikát odvozený z `qb:componentProperty` pomocí `rdfs:subPropertyOf` v Data Cube Vocabulary (pojmenovaný graf `http://purl.org/linked-data/cube`)."@cs ;
+  rdfs:comment "Vyberte komponenty datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) spolu s volitelně uvedenými třídami predikátů v případě, že daný predikát propojující určitou komponentu a třídu je odvozen z `qb:componentProperty` pomocí `rdfs:subPropertyOf` v Data Cube Vocabulary (pojmenovaný graf `http://purl.org/linked-data/cube`)."@cs ;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -493,7 +495,8 @@ ORDER BY ?componentProperty
 
 exercise:dataset-dimensions a sp:Query ;
   rdfs:label "Dimenze statistik důchodů a důchodců"@cs ;
-  rdfs:comment "Vyberte dimenze (instance `qb:DimensionProperty`) ze struktury datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Dimenze se nebudou ve výsledcích opakovat."@cs ;
+  rdfs:comment "Vyberte dimenze (instance `qb:DimensionProperty`) ze struktury datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Dimenze vypište tak, aby se ve výsledcích neopakovaly."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 
@@ -509,7 +512,8 @@ WHERE {
 
 exercise:dataset-measures a sp:Query ;
   rdfs:label "Míry statistik důchodů a důchodců"@cs ;
-  rdfs:comment "Vyberte míry (instance `qb:MeasureProperty`) ze struktury datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Míry se nebudou ve výsledcích opakovat."@cs ;
+  rdfs:comment "Vyberte míry (instance `qb:MeasureProperty`) ze struktury datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Míry vypište tak, aby se ve výsledcích neopakovaly."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 
@@ -540,7 +544,7 @@ WHERE {
 
 exercise:vocabularies a sp:Query ;
   rdfs:label "Slovníky"@cs ;
-  rdfs:comment "Vyberte slovníky použité v datech statistik důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Jako slovník berte jmenný prostor termínu instanciované třídy nebo použitého predikátu. Za jmenný prostor považujte část IRI termínů po poslední lomítko (`/`) nebo hash (`#`). Pro každý slovník vraťte počet rozdílných termínů a výsledky seřaďte sestupně dle tohoto počtu."@cs ;
+  rdfs:comment "Vyberte slovníky použité v datech statistik důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Jako slovník berte jmenný prostor termínu třídy, která má v datech alespoň jednu instanci, nebo použitého predikátu. Za jmenný prostor považujte část IRI termínů po poslední lomítko (`/`) nebo hash (`#`). Pro každý slovník vraťte počet unikátních termínů a výsledky seřaďte sestupně dle tohoto počtu."@cs ;
   sp:text """
 SELECT ?vocabulary (COUNT(*) AS ?count)
 WHERE {
@@ -570,7 +574,7 @@ ORDER BY DESC(?count)
 
 exercise:most-common-class-data a sp:Query ;
   rdfs:label "Nejčastěji instanciovaná třída ve statistikách důchodů a důchodců"@cs ;
-  rdfs:comment "Vyberte třídu s nejvyšším počtem instancí ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). V případě, že by tříd s nejvyšším počtem instací bylo více, postačí vybrat jednu z nich."@cs ;
+  rdfs:comment "Vyberte třídu s nejvyšším počtem instancí ve statistikách důchodů a důchodců (pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). V případě, že by tříd s nejvyšším počtem instancí bylo více, postačí vybrat jednu z nich."@cs ;
   sp:text """
 SELECT ?class (COUNT(?s) AS ?count)
 WHERE {
@@ -730,7 +734,7 @@ WHERE {
 
 exercise:omitted-top-concepts a sp:Query ;
   rdfs:label "Chybí v číselnících koncepty představujcí vrchol hierarchie?"@cs ;
-  rdfs:comment "Zjistěte, zdali některé číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) postrádají koncepty představujcí vrchol hierarchie. Ty jsou buď odkázány z číselníku (instance `skos:ConceptScheme`) pomocí predikátu `skos:hasTopConcept` nebo naopak vrcholové koncepty odkazují na číselník pomocí inverzního predikátu `skos:topConceptOf`."@cs ;
+  rdfs:comment "Zjistěte, zdali některé číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) postrádají koncepty představující vrchol hierarchie. Ty jsou buď odkázány z číselníku (instance `skos:ConceptScheme`) pomocí predikátu `skos:hasTopConcept` nebo naopak vrcholové koncepty odkazují na číselník pomocí inverzního predikátu `skos:topConceptOf`."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -781,7 +785,7 @@ WHERE {
 
 exercise:pairwise-disjoint-skos-label-properties a sp:Query ;
   rdfs:label "Mají koncepty číselníků překrývající se štítky?"@cs ;
-  rdfs:comment "Zjistěte, zdali číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) obsahují koncepty s překrývajícími se štítky. Tyto koncepty mají stejnou hodnotu pro kterýkoli pár predikáty `skos:prefLabel`, `skos:altLabel` nebo `skos:hiddenLabel`. Jde o integritní omezení [S13](https://www.w3.org/TR/skos-reference/#S13) slovníku SKOS."@cs ;
+  rdfs:comment "Zjistěte, zdali číselníky (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) obsahují koncepty s překrývajícími se štítky. Tyto koncepty mají stejnou hodnotu pro kterýkoli pár predikátů `skos:prefLabel`, `skos:altLabel` nebo `skos:hiddenLabel`. Jde o integritní omezení [S13](https://www.w3.org/TR/skos-reference/#S13) slovníku SKOS."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -899,7 +903,7 @@ WHERE {
 
 exercise:top-concept-has-no-broader-concept a sp:Query ;
   rdfs:label "Mají koncepty představující vrchol hierearchie nadřazené koncepty?"@cs ;
-  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) objevují chybné koncepty představující vrchol hierearchie, které mají nadřazené koncepty ve stejném konceptuálním schématu. Jako koncepty představující vrchol hierearchie berte ty, které odkazují na své schéma pomocí predikátu `skos:topConceptOf` nebo jsou ze schématu odkazovány pomocí predikátu `skos:hasTopConcept`. Nadřazené koncepty hledejte přes hierarchické predikáty `skos:broader`, `skos:broaderTransitive`, `skos:narrower` nebo `skos:narrowerTransitive`."@cs ;
+  rdfs:comment "Zjistěte, zdali se v číselnících (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`) objevují chybné koncepty představující vrchol hierarchie, které mají nadřazené koncepty ve stejném konceptuálním schématu. Jako koncepty představující vrchol hierarchie berte ty, které odkazují na své schéma pomocí predikátu `skos:topConceptOf` nebo jsou ze schématu odkazovány pomocí predikátu `skos:hasTopConcept`. Nadřazené koncepty hledejte přes hierarchické predikáty `skos:broader`, `skos:broaderTransitive`, `skos:narrower` nebo `skos:narrowerTransitive`."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -1065,7 +1069,7 @@ WHERE {
 
 exercise:comparing-from-and-graph a sp:Query ;
   rdfs:label "Jsou počty trojic ve slovníku statistik důchodů a důchodců shodné při použití klauzulí FROM, FROM NAMED a GRAPH?"@cs ;
-  rdfs:comment "Spočtěte trojice ve slovníku statistik důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`) třemi způsoby s využitím klauzulí FROM, FROM NAMED a GRAPH a ověřte, že se součty rovnají."@cs ;
+  rdfs:comment "Spočtěte trojice ve slovníku statistik důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/rocenka/vocabulary>`) třemi způsoby s využitím klauzulí FROM, FROM NAMED a GRAPH a ověřte, že se součty rovnají. Ověření proveďte v rámci jednoho dotazu, tj. nikoli tak, že manuálně porovnáte výsledky tří samostatně spuštěných dotazů."@cs ;
   dcterms:requires sp:NamedGraph, sp:from, sp:fromNamed ;
   sp:text """
 ASK
@@ -1100,7 +1104,7 @@ WHERE {
 
 exercise:count-distinct-classes a sp:Query ;
   rdfs:label "Kolik různých tříd je instanciováno?"@cs ;
-  rdfs:comment "Spočtěte různé třídy, jejichž instance jsou v datech o statistikách důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`)."@cs ;
+  rdfs:comment "Spočtěte, kolik různých tříd má instance v datech o statistikách důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`)."@cs ;
   sp:text """
 SELECT (COUNT(DISTINCT ?class) AS ?count)
 WHERE {
@@ -1113,7 +1117,7 @@ WHERE {
 
 exercise:count-distinct-classes-without-distinct a sp:Query ;
   rdfs:label "Kolik různých tříd je instanciováno (bez DISTINCT)?"@cs ;
-  rdfs:comment "Spočtěte různé třídy, jejichž instance jsou v datech o statistikách důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) bez použití modifikátoru `DISTINCT`."@cs ;
+  rdfs:comment "Spočtěte, kolik různých tříd má instance v datech o statistikách důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) bez použití modifikátoru `DISTINCT`."@cs ;
   sparqlab:prohibits sp:distinct ;
   sp:text """
 SELECT (COUNT(?class) AS ?count)
@@ -1133,7 +1137,7 @@ WHERE {
 
 exercise:count-distinct-classes-with-reduced a sp:Query ;
   rdfs:label "Kolik různých tříd je instanciováno (pomocí REDUCED)?"@cs ;
-  rdfs:comment "Spočtěte různé třídy, jejichž instance jsou v datech o statistikách důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) s použitím modifikátoru `REDUCED`."@cs ;
+  rdfs:comment "Spočtěte, kolik různých tříd má instance v datech o statistikách důchodů a důchodců (pojmenovaný graf `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`) s použitím modifikátoru `REDUCED`."@cs ;
   dcterms:requires sp:reduced ;
   sparqlab:prohibits sp:distinct, sp:groupBy ;
   sp:text """
@@ -1208,7 +1212,7 @@ WHERE {
 
 exercise:pension-kind-schemes a sp:Query ;
   rdfs:label "Číselníky druhů důchodů"@cs ;
-  rdfs:comment "Najděte číselníky druhů důchodů. Koncepty těchto číselníků jsou instancemi třídy `pen-onto:PensionKind`. Číselníky najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
+  rdfs:comment "Najděte a vypište číselníky druhů důchodů. Koncepty těchto číselníků jsou instancemi třídy `pen-onto:PensionKind`. Číselníky najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
   sp:text """
 PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
 PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
@@ -1356,6 +1360,7 @@ WHERE {
 exercise:dsd-components a sp:Query ;
   rdfs:label "Komponenty datové struktury statistik důchodů a důchodců"@cs ;
   rdfs:comment "Vypište komponenty datové struktury statistik důchodů a důchodců (`<https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech>`). Komponenty jsou z datové struktury odkazovány predikátem `qb:structure`. Pro každý komponent vypište jeho český název (`rdfs:label`), vlastnost komponentu, volitelnou úroveň přiřazení (`qb:componentAttachment`) a volitelně uvedení, zdali je komponent povinný (`qb:componentRequired`). Predikáty odkazující na vlastnosti komponent vezměte jako podřazené predikáty (`rdfs:subPropertyOf`) predikátu `qb:componentProperty` (včetně tohoto predikátu) z pojmenovaného grafu `<http://purl.org/linked-data/cube>`. Jako výchozí hodnotu úrovně přiřazení uveďte `qb:Observation`. Výchozí hodnotou indikátoru povinnosti komponentu je v případě atributů `false`, v ostatních případech `true`. Komponenty seřaďte vzestupně dle volitelně uvedeného pořadí (`qb:order`). Data o statistikách důchodů a důchodců naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs ;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -1399,6 +1404,7 @@ ORDER BY ?order
 exercise:is-multimeasure-dataset a sp:Query ;
   rdfs:label "Obsahuje dataset statistik důchodů a důchodců více měr?"@cs ;
   rdfs:comment "Zjistěte, zdali dataset statistik důchodů a důchodců (<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>) uvádí pro svá pozorování více druhů měr. Míry jsou ve struktuře datasetu uvedeny buď jako objekty `qb:measure` nebo `qb:componentProperty`, pokud instanciují `qb:MeasureProperty`. Data o statistikách důchodů a důchodců naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs ;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 
@@ -1428,6 +1434,7 @@ WHERE {
 exercise:component-properties-with-most-specific-classes a sp:Query ;
   rdfs:label "Nejspecifičtější třídy vlastnostní komponent"@cs ;
   rdfs:comment "Vypište nejspecifičtější třídy instanciované vlastnostmi komponent datové struktury statistik důchodů a důchodců (`<https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech>`). Predikáty připojující vlastnosti ke komponentám datové struktury vezměte jako vlastnosti odvozené z `qb:componentProperty` pomocí `rdfs:subPropertyOf` včetně samotné `qb:componentProperty`. Tyto odvozené vlastnosti definované slovníkem Data Cube Vocabulary naleznete v pojmenovaném grafu `<http://purl.org/linked-data/cube>`. Dejte pozor na to, že třída vlastnosti komponenty nemusí být uvedena. Vyberte pouze nejspecifičtější třídy, které nemají žádné podtřídy odkazované pomocí `rdfs:subClassOf`. Data o statistikách důchodů a důchodců najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs ;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -1475,7 +1482,7 @@ LIMIT 1
 
 exercise:path-between-pension-kinds a sp:Query ;
   rdfs:label "Cesta mezi druhy důchodů"@cs ;
-  rdfs:comment "Vypište prvky cesty mezi konceptem pro důchody celkem včetně netypických výplat (`pension-kind:PK_total_without_special_pensions_2008`) a konceptem pro starobní důchod S (`pension-kind:PK_S_2008`). Prvky cesty jsou propojeny predikátem `skos:narrower`. Výsledná cesta obsahuje také svůj počáteční a koncový uzel. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:comment "Vypište prvky cesty mezi konceptem pro důchody celkem včetně netypických výplat (`pension-kind:PK_total_without_special_pensions_2008`) a konceptem pro starobní důchod S (`pension-kind:PK_S_2008`). Prvky cesty jsou propojeny predikátem `skos:narrower`. Výslednou cestu vypište tak, aby obsahovala také svůj počáteční a koncový uzel. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   sp:text """
 PREFIX pension-kind: <https://data.cssz.cz/resource/pension-kind/>
 PREFIX skos:          <http://www.w3.org/2004/02/skos/core#>
@@ -1582,7 +1589,7 @@ ORDER BY ?year
 
 exercise:greatest-gender-pay-gap a sp:Query ;
   rdfs:label "Největší rozdíl v průměrné výši starobního důchodu mužů a žen"@cs ;
-  rdfs:comment "Najděte největší rozdíl v průměrné výši starobního důchodu mužů a žen. Rozdíl počítejte jako relativní podílem mezi průměrnou výší důchodu žen a průměrnou výší důchodu mužů. Jako druhy důchodu berte v potaz ekvivalenty `pension-kind:PK_old_age_total_without_SR`. Pro největší rozdíl získejte název jeho refereční oblasti a rok. Data statistik důchodů a důchodců naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Data číselníků jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:comment "Najděte největší rozdíl v průměrné výši starobního důchodu mužů a žen. Rozdíl počítejte jako relativní podílem mezi průměrnou výší důchodu žen a průměrnou výší důchodu mužů. Jako druhy důchodu berte v potaz ekvivalenty `pension-kind:PK_old_age_total_without_SR`. Pro největší rozdíl získejte název jeho referenční oblasti a rok. Data statistik důchodů a důchodců naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Data číselníků jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   skos:note "Protože jsou uvažovány druhy důchodů ekvivalentní `pension-kind:PK_old_age_total_without_SR`, jedná se o pouze starobní důchody dle zákona č. 155/1995 Sb., o důchodovém pojištění."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
@@ -1720,7 +1727,7 @@ WHERE {
 
 exercise:greatest-increase-in-pensions a sp:Query ;
   rdfs:label "Největší meziroční nárůst průměrné výše starobních důchodů"@cs ;
-  rdfs:comment "Najděte kde a kdy došlo k největšímu meziročnímu nárůstu průměrné výše starobních důchodů. Jako starobní důchody berte berte druhy důchodů ekvivalentních s `pension-kind:PK_old_age_total_without_SR`. Uvažujte pouze počty pro všechna pohlaví (`<https://data.cssz.cz/ontology/sdmx/code/sex-T>`). Data pro období, za něž jsou výše důchodů uváděny, najdete v číselníku `<https://data.cssz.cz/ontology/dates/DatesScheme>`. Meziroční nárůst vypočtěte v procentech jako rozdíl průměrné výše důchodů ve dvou následných letech vydělený průměrnou výší důchodu v počátečním roce. Pro nalezenou referenční oblast uveďte název (`skos:prefLabel`). Pro počáteční a konečný rok uveďte jejich koncová data (`skos:notation`). Průměrné výše důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:comment "Najděte kde a kdy došlo k největšímu meziročnímu nárůstu průměrné výše starobních důchodů. Jako starobní důchody berte druhy důchodů ekvivalentní s `pension-kind:PK_old_age_total_without_SR`. Uvažujte pouze počty pro všechna pohlaví (`<https://data.cssz.cz/ontology/sdmx/code/sex-T>`). Data pro období, za něž jsou výše důchodů uváděny, najdete v číselníku `<https://data.cssz.cz/ontology/dates/DatesScheme>`. Meziroční nárůst vypočtěte v procentech jako rozdíl průměrné výše důchodů ve dvou následných letech vydělený průměrnou výší důchodu v počátečním roce. Pro nalezenou referenční oblast uveďte název (`skos:prefLabel`). Pro počáteční a konečný rok uveďte jejich koncová data (`skos:notation`). Průměrné výše důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   skos:note "Protože jsou uvažovány druhy důchodů ekvivalentní `pension-kind:PK_old_age_total_without_SR`, jedná se o pouze starobní důchody dle zákona č. 155/1995 Sb., o důchodovém pojištění."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
@@ -1950,7 +1957,7 @@ WHERE {
 
 exercise:average-pension-per-region a sp:Query ;
   rdfs:label "Průměrný důchod dle krajů"@cs ;
-  rdfs:comment "Spočítejte průměrný důchod dle krajů (instance `ruian:Vusc`) v roce 2015 (referenční období `day:2015-12-31`). Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
+  rdfs:comment "Spočítejte průměrný důchod za všechny kraje (instance `ruian:Vusc`) v roce 2015 (referenční období `day:2015-12-31`). Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
@@ -2142,7 +2149,7 @@ ORDER BY DESC(?refPeriod)
 
 exercise:concepts-in-multiple-schemes a sp:Query ;
   rdfs:label "Koncepty ve více slovnících"@cs ;
-  rdfs:comment "Najděte koncepty číselníků (instance `skos:Concept`) v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`, které jsou zahrnuty do více než jednoho slovníku pomocí vlastnostni `skos:inScheme`. Výstupem bude RDF graf, který bude obsahovat trojice spojující koncepty a slovníky pomocí `skos:inScheme`."@cs ;
+  rdfs:comment "Najděte koncepty číselníků (instance `skos:Concept`) v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`, které jsou zahrnuty do více než jednoho slovníku pomocí vlastnosti `skos:inScheme`. Výstupem bude RDF graf, který bude obsahovat trojice spojující koncepty a slovníky pomocí `skos:inScheme`."@cs ;
   sp:text """
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
