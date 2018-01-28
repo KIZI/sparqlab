@@ -426,7 +426,7 @@ WHERE {
 exercise:dataset-attributes a sp:Query ;
   rdfs:label "Atributy ve statistikách důchodů a důchodců"@cs ;
   rdfs:comment "Vyberte atributy (tj. instance `qb:AttributeProperty`), které jsou použity ve struktuře datové kostky statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`)."@cs ;
-  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku [The RDF Data Cube Vocabulary](https://www.w3.org/TR/vocab-data-cube)."@cs;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 
@@ -446,7 +446,7 @@ WHERE {
 exercise:dataset-component-labels-czech a sp:Query ;
   rdfs:label "Názvy komponent datasetu statistik důchodů a důchodců v češtině"@cs ;
   rdfs:comment "Vyberte názvy komponent datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) v češtině. Výsledky seřaďte vzestupně dle volitelně uvedeného pořadí komponent (`qb:order`) ve struktuře datasetu. Názvy komponent vypište tak, aby se opakovaly."@cs ;
-  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku [The RDF Data Cube Vocabulary](https://www.w3.org/TR/vocab-data-cube)."@cs;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -496,7 +496,7 @@ ORDER BY ?componentProperty
 exercise:dataset-dimensions a sp:Query ;
   rdfs:label "Dimenze statistik důchodů a důchodců"@cs ;
   rdfs:comment "Vyberte dimenze (instance `qb:DimensionProperty`) ze struktury datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Dimenze vypište tak, aby se ve výsledcích neopakovaly."@cs ;
-  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku [The RDF Data Cube Vocabulary](https://www.w3.org/TR/vocab-data-cube)."@cs;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 
@@ -513,7 +513,7 @@ WHERE {
 exercise:dataset-measures a sp:Query ;
   rdfs:label "Míry statistik důchodů a důchodců"@cs ;
   rdfs:comment "Vyberte míry (instance `qb:MeasureProperty`) ze struktury datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`). Míry vypište tak, aby se ve výsledcích neopakovaly."@cs ;
-  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku [The RDF Data Cube Vocabulary](https://www.w3.org/TR/vocab-data-cube)."@cs;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 
@@ -1360,7 +1360,7 @@ WHERE {
 exercise:dsd-components a sp:Query ;
   rdfs:label "Komponenty datové struktury statistik důchodů a důchodců"@cs ;
   rdfs:comment "Vypište komponenty datové struktury statistik důchodů a důchodců (`<https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech>`). Komponenty jsou z datové struktury odkazovány predikátem `qb:structure`. Pro každý komponent vypište jeho český název (`rdfs:label`), vlastnost komponentu, volitelnou úroveň přiřazení (`qb:componentAttachment`) a volitelně uvedení, zdali je komponent povinný (`qb:componentRequired`). Predikáty odkazující na vlastnosti komponent vezměte jako podřazené predikáty (`rdfs:subPropertyOf`) predikátu `qb:componentProperty` (včetně tohoto predikátu) z pojmenovaného grafu `<http://purl.org/linked-data/cube>`. Jako výchozí hodnotu úrovně přiřazení uveďte `qb:Observation`. Výchozí hodnotou indikátoru povinnosti komponentu je v případě atributů `false`, v ostatních případech `true`. Komponenty seřaďte vzestupně dle volitelně uvedeného pořadí (`qb:order`). Data o statistikách důchodů a důchodců naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
-  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku [The RDF Data Cube Vocabulary](https://www.w3.org/TR/vocab-data-cube)."@cs ;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -1404,7 +1404,7 @@ ORDER BY ?order
 exercise:is-multimeasure-dataset a sp:Query ;
   rdfs:label "Obsahuje dataset statistik důchodů a důchodců více měr?"@cs ;
   rdfs:comment "Zjistěte, zdali dataset statistik důchodů a důchodců (<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>) uvádí pro svá pozorování více druhů měr. Míry jsou ve struktuře datasetu uvedeny buď jako objekty `qb:measure` nebo `qb:componentProperty`, pokud instanciují `qb:MeasureProperty`. Data o statistikách důchodů a důchodců naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
-  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku [The RDF Data Cube Vocabulary](https://www.w3.org/TR/vocab-data-cube)."@cs ;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 
@@ -1434,7 +1434,7 @@ WHERE {
 exercise:component-properties-with-most-specific-classes a sp:Query ;
   rdfs:label "Nejspecifičtější třídy vlastnostní komponent"@cs ;
   rdfs:comment "Vypište nejspecifičtější třídy instanciované vlastnostmi komponent datové struktury statistik důchodů a důchodců (`<https://data.cssz.cz/resource/data-structure-definition/duchodci-v-cr-krajich-okresech>`). Predikáty připojující vlastnosti ke komponentám datové struktury vezměte jako vlastnosti odvozené z `qb:componentProperty` pomocí `rdfs:subPropertyOf` včetně samotné `qb:componentProperty`. Tyto odvozené vlastnosti definované slovníkem Data Cube Vocabulary naleznete v pojmenovaném grafu `<http://purl.org/linked-data/cube>`. Dejte pozor na to, že třída vlastnosti komponenty nemusí být uvedena. Vyberte pouze nejspecifičtější třídy, které nemají žádné podtřídy odkazované pomocí `rdfs:subClassOf`. Data o statistikách důchodů a důchodců najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`."@cs ;
-  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku The RDF Data Cube Vocabulary."@cs ;
+  skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku [The RDF Data Cube Vocabulary](https://www.w3.org/TR/vocab-data-cube)."@cs ;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
