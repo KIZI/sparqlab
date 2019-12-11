@@ -1,5 +1,5 @@
 (defproject sparqlab "0.7.0"
-  :description "Lab for exercising SPARQL" 
+  :description "Lab for exercising SPARQL"
   :url "http://github.com/jindrichmynarz/sparqlab"
   :dependencies [[cheshire "5.7.1"]
                  [clj-http "3.6.0"]
@@ -35,8 +35,8 @@
                  [slingshot "0.12.2"]
                  [stencil "0.5.0"]]
 
-  :repositories [["org.topbraid" "https://topquadrant.com/repository/spin"]
-                 ["maven.aksw.snapshots" "http://maven.aksw.org/archiva/repository/snapshots"]]
+  :repositories [["org.topbraid" "https://www.topquadrant.com/repository/spin"]
+                 ["maven.aksw.snapshots" "https://maven.aksw.org/archiva/repository/snapshots"]]
   :min-lein-version "2.0.0"
 
   :jvm-opts ["-server" "-Dconf=.lein-env"]
@@ -53,7 +53,7 @@
    :init sparqlab.handler/init
    :destroy sparqlab.handler/destroy
    :name "sparqlab.war"}
-  
+
   :test-selectors {:default (complement :integration)
                    :integration :integration
                    :all (constantly true)}
