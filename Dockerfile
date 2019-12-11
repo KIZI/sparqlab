@@ -1,4 +1,4 @@
-FROM clojure
+FROM clojure:lein-2.8.3
 MAINTAINER Jindřich Mynarz <mynarzjindrich@gmail.com>
 
 WORKDIR /root
