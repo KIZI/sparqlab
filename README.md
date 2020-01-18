@@ -10,7 +10,7 @@ SPARQLab is a web application based on the [Luminus](https://luminusweb.com) fra
 
 ## Acknowledgements
 
-SPARQLab was funded by developement grants of the University of Economics no. 6/2016 and no. 50/2017. The application received additional support from the prize for the best student application based on Czech open data in the [Czech Open Data Challenge 2016](http://www.otevrenadata.cz/soutez/soutezni-aplikace-2016).
+SPARQLab was funded by developement grants of the University of Economics no. 6/2016 and no. 50/2017. The application received additional support from the prize for the best student application based on Czech open data in the Czech Open Data Challenge 2016.
 
 ## License
 
