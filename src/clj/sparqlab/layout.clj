@@ -47,7 +47,8 @@
    :headers {"Content-Type" "text/html; charset=utf-8"}
    :body    (parser/render-file "error.html" (merge (i18n/base-locale request)
                                                     error-details
-                                                    {:label (tr [:error/title])}))})
+                                                    {:label (tr [:error/title])
+                                                     :servlet-context *app-context*}))})
 
 (defn not-found
   "Page not found"
