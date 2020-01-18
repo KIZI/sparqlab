@@ -9,7 +9,7 @@
 
     <p>Zdrojový kód aplikace je volně dostupný v <a href="https://github.com/jindrichmynarz/sparqlab">tomto repozitáři</a>. Pokud se setkáte s chybou, můžete jí nahlásit do <a href="https://github.com/jindrichmynarz/sparqlab/issues">issue trackeru</a>.</p>
 
-    <p>Cvičení používají tyto prvky jazyka SPARQL:
+    <p>SPARQLab vyžaduje SPARQL dotazy validní dle standardu <a href="https://www.w3.org/TR/sparql11-query/#grammar">SPARQL 1.1 Query Language</a>. Cvičení používají tyto prvky jazyka SPARQL:
     {% for sparql-construct in sparql-constructs %}
     <a href="{{servlet-context}}/search?construct={{sparql-construct.construct|urlescape}}">{%
       if sparql-construct.lang|empty?
@@ -24,7 +24,7 @@
     %}, {%
       endif %}{% endifequal %}{% endfor %}.</p>
 
-    <p>Cvičení lze prohledávat dle textu zadání nebo konstruktů jazyka SPARQL.</p>
+    <p>Cvičení lze prohledávat dle textů jejich zadání nebo konstruktů jazyka SPARQL, které jsou ve cvičeních použity.</p>
 
     <h2>Autoři</h2>
 
