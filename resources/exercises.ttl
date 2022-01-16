@@ -198,7 +198,7 @@ ORDER BY DESC(?count)
 
 exercise:one-quad a sp:Query ;
   rdfs:label "Jedna čtveřice"@cs ;
-  rdfs:comment "Vyberte jednu (libovolnou) čtveřici z dat."@cs ;
+  rdfs:comment "Vyberte jednu (první nalezenou) čtveřici z dat."@cs ;
   skos:note "Čtveřice je RDF trojice doplněná o identifikátor grafu, ve kterém se nachází."@cs ;
   sp:text """
 SELECT *
@@ -213,7 +213,7 @@ LIMIT 1
 
 exercise:one-triple a sp:Query ;
   rdfs:label "Jedna trojice"@cs ;
-  rdfs:comment "Vyberte jednu (libovolnou) trojici z dat."@cs ;
+  rdfs:comment "Vyberte jednu (první nalezenou) trojici z dat."@cs ;
   sp:text """
 SELECT *
 WHERE {
@@ -445,7 +445,7 @@ WHERE {
 
 exercise:dataset-component-labels-czech a sp:Query ;
   rdfs:label "Názvy komponent datasetu statistik důchodů a důchodců v češtině"@cs ;
-  rdfs:comment "Vyberte názvy komponent datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) v češtině. Výsledky seřaďte vzestupně dle volitelně uvedeného pořadí komponent (`qb:order`) ve struktuře datasetu. Názvy komponent vypište tak, aby se opakovaly."@cs ;
+  rdfs:comment "Vyberte názvy komponent datasetu statistik důchodů a důchodců (dataset a pojmenovaný graf `https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech`) v češtině. Výsledky seřaďte vzestupně dle volitelně uvedeného pořadí komponent (`qb:order`) ve struktuře datasetu. Názvy komponent vypište tak, aby se neopakovaly."@cs ;
   skos:note "Před řešením úlohy se seznamte s datovým modelem slovníku [The RDF Data Cube Vocabulary](https://www.w3.org/TR/vocab-data-cube)."@cs;
   sp:text """
 PREFIX qb:   <http://purl.org/linked-data/cube#>
@@ -1198,7 +1198,7 @@ exercise:count-pension-kinds a sp:Query ;
   rdfs:label "Počet druhů důchodů"@cs ;
   rdfs:comment "Spočtěte, kolik druhů důchodů se nachází v číselníku druhů důchodů z roku 2008 (`<http://data.cssz.cz/ontology/pension-kinds/PensionKindScheme_2008>`). Číselník najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
   sp:text """
-PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX pen-onto: <https://data.cssz.cz/ontology/pension-kinds/>
 PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
 
 SELECT (COUNT(DISTINCT ?concept) AS ?count)
@@ -1214,7 +1214,7 @@ exercise:pension-kind-schemes a sp:Query ;
   rdfs:label "Číselníky druhů důchodů"@cs ;
   rdfs:comment "Najděte a vypište číselníky druhů důchodů. Koncepty těchto číselníků jsou instancemi třídy `pen-onto:PensionKind`. Číselníky najdete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`)."@cs ;
   sp:text """
-PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX pen-onto: <https://data.cssz.cz/ontology/pension-kinds/>
 PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
 
 SELECT DISTINCT ?pensionKindScheme
@@ -1271,7 +1271,7 @@ exercise:is-pension-kinds-2008-polyhierarchical a sp:Query ;
   rdfs:comment "Zjistěte, zdali je číselník druhů důchodů z roku 2008 (`pen-onto:PensionKindScheme_2008`) polyhierarchický. Číselník naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   skos:note "Polyhierarchické číselníky obsahují koncepty, které mají více než jeden nadřazený koncept."@cs ;
   sp:text """
-PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX pen-onto: <https://data.cssz.cz/ontology/pension-kinds/>
 PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
 
 ASK
@@ -1293,13 +1293,12 @@ WHERE {
 
 exercise:pensions-rounded-to-thousands a sp:Query ;
   rdfs:label "Důchody zaokrouhlené na tisíce"@cs ;
-  rdfs:comment "Získejte průměrnou výši starobních důchodů pro Českou republiku (referenční oblast `<https://data.cssz.cz/resource/ruian/staty/1>`) aritmeticky zaokrouhlenou na tisíce. Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`sdmx-code:sex-T`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Výsledky seřaďte bez opakování sestupně dle 4-místného literálu roku průměrného důchodu."@cs ;
+  rdfs:comment "Získejte průměrnou výši starobních důchodů pro Českou republiku (referenční oblast `<https://data.cssz.cz/resource/ruian/staty/1>`) aritmeticky zaokrouhlenou na tisíce. Jako druh důchodu použijte shodné koncepty s `pension-kind:PK_old_age_total_without_SR` z pojmenovaného grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`. Vyberte průměrnou výši důchodů pro všechna pohlaví (`<http://purl.org/linked-data/sdmx/2009/code#sex-T>`). Výše starobních důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Výsledky seřaďte bez opakování sestupně dle 4-místného literálu roku průměrného důchodu."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
 PREFIX pension-kind:   <https://data.cssz.cz/resource/pension-kind/>
 PREFIX qb:             <http://purl.org/linked-data/cube#>
-PREFIX sdmx-code:      <http://purl.org/linked-data/sdmx/2009/code#>
 PREFIX skos:           <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd:            <http://www.w3.org/2001/XMLSchema#>
 
@@ -1311,7 +1310,7 @@ WHERE {
  GRAPH <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> {
    [] a qb:Observation ;
      qb:dataSet <https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech> ;
-     cssz-dimension:pohlavi sdmx-code:sex-T ;
+     cssz-dimension:pohlavi <http://purl.org/linked-data/sdmx/2009/code#sex-T> ;
      cssz-dimension:refArea <https://data.cssz.cz/resource/ruian/staty/1> ;
      cssz-dimension:refPeriod ?refPeriod ;
      cssz-dimension:druh-duchodu ?pensionKind ;
@@ -1461,7 +1460,7 @@ exercise:pension-kinds-2008-depth a sp:Query ;
   rdfs:label "Hloubka hierarchie druhů důchodů z roku 2008"@cs ;
   rdfs:comment "Spočtěte maximální hloubku hierarchie druhů důchodů z roku 2008 (`pen-onto:PensionKindScheme_2008`). Data o tomto číselníku naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   sp:text """
-PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX pen-onto: <https://data.cssz.cz/ontology/pension-kinds/>
 PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
 
 SELECT (COUNT(?mid) AS ?depth)
@@ -1501,7 +1500,7 @@ exercise:pension-kind-with-most-children a sp:Query ;
   rdfs:label "Druh důchodu s nejvíce dceřinými koncepty"@cs ;
   rdfs:comment "Najděte druh důchodu s nejvíce dceřinými koncepty. Berte v potaz druhy důchodů z číselníku `pen-onto:PensionKindScheme_2008`. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   sp:text """
-PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX pen-onto: <https://data.cssz.cz/ontology/pension-kinds/>
 PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
 
 SELECT ?pensionKind
@@ -1521,7 +1520,7 @@ exercise:pension-kind-with-most-descendants a sp:Query ;
   rdfs:label "Druh důchodu s nejvíce potomky"@cs ;
   rdfs:comment "Najděte druh důchodu s nejvíce potomky, kteří jsou mu tranzitivně podřazeni pomocí `skos:narrower`. Berte v potaz druhy důchodů z číselníku `pen-onto:PensionKindScheme_2008`. Číselník druhů důchodů naleznete v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   sp:text """
-PREFIX pen-onto: <http://data.cssz.cz/ontology/pension-kinds/>
+PREFIX pen-onto: <https://data.cssz.cz/ontology/pension-kinds/>
 PREFIX skos:     <http://www.w3.org/2004/02/skos/core#>
 
 SELECT ?pensionKind
@@ -1665,7 +1664,7 @@ LIMIT 1
 
 exercise:greatest-increase-in-orphans a sp:Query ;
   rdfs:label "Největší meziroční nárůst počtu sirotků"@cs ;
-  rdfs:comment "Najděte největší meziroční nárůst sirotků. Jako sirotky berte příjemce druhů důchodů ekvivalentních s `pension-kind:PK_D`. Uvažujte pouze počty pro všechna pohlaví (`<https://data.cssz.cz/ontology/sdmx/code/sex-T>`). Data pro období, za něž jsou počty sirotků uváděny, najdete v číselníku `<https://data.cssz.cz/ontology/dates/DatesScheme>`. Meziroční nárůst vypočtěte v procentech jako rozdíl počtů sirotků ve dvou následných letech vydělený počtem sirotků v počátečním roce. Pro nalezenou referenční oblast uveďte název (`skos:prefLabel`). Pro počáteční a konečný rok uveďte jejich koncová data (`skos:notation`). Počty sirotků se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:comment "Najděte největší meziroční nárůst sirotků. Jako sirotky berte příjemce druhů důchodů ekvivalentních s `pension-kind:PK_D`. Uvažujte pouze počty pro všechna pohlaví (`<https://data.cssz.cz/ontology/sdmx/code/sex-T>`). Data pro období, za něž jsou počty sirotků uváděny, najdete v číselníku `<https://data.cssz.cz/ontology/days/DaysScheme>`. Meziroční nárůst vypočtěte v procentech jako rozdíl počtů sirotků ve dvou následných letech vydělený počtem sirotků v počátečním roce. Pro nalezenou referenční oblast uveďte název (`skos:prefLabel`). Pro počáteční a konečný rok uveďte jejich koncová data (`skos:notation`). Počty sirotků se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
 PREFIX cssz-measure:   <https://data.cssz.cz/ontology/measure/>
@@ -1684,11 +1683,11 @@ WHERE {
         SELECT ?end ?start
         WHERE {
           GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
-            ?end skos:inScheme <https://data.cssz.cz/ontology/dates/DatesScheme> ;
+            ?end skos:inScheme <https://data.cssz.cz/ontology/days/DaysScheme> ;
               skos:notation ?endNotation .
             FILTER STRENDS(?endNotation, "-12-31")
             BIND (CONCAT(STR(xsd:integer(SUBSTR(?endNotation, 1, 4)) - 1), "-12-31") AS ?startNotation)
-            ?start skos:inScheme <https://data.cssz.cz/ontology/dates/DatesScheme> ;
+            ?start skos:inScheme <https://data.cssz.cz/ontology/days/DaysScheme> ;
               skos:notation ?startNotation .
           }
         }
@@ -1727,7 +1726,7 @@ WHERE {
 
 exercise:greatest-increase-in-pensions a sp:Query ;
   rdfs:label "Největší meziroční nárůst průměrné výše starobních důchodů"@cs ;
-  rdfs:comment "Najděte kde a kdy došlo k největšímu meziročnímu nárůstu průměrné výše starobních důchodů. Jako starobní důchody berte druhy důchodů ekvivalentní s `pension-kind:PK_old_age_total_without_SR`. Uvažujte pouze počty pro všechna pohlaví (`<https://data.cssz.cz/ontology/sdmx/code/sex-T>`). Data pro období, za něž jsou výše důchodů uváděny, najdete v číselníku `<https://data.cssz.cz/ontology/dates/DatesScheme>`. Meziroční nárůst vypočtěte v procentech jako rozdíl průměrné výše důchodů ve dvou následných letech vydělený průměrnou výší důchodu v počátečním roce. Pro nalezenou referenční oblast uveďte název (`skos:prefLabel`). Pro počáteční a konečný rok uveďte jejich koncová data (`skos:notation`). Průměrné výše důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
+  rdfs:comment "Najděte kde a kdy došlo k největšímu meziročnímu nárůstu průměrné výše starobních důchodů. Jako starobní důchody berte druhy důchodů ekvivalentní s `pension-kind:PK_old_age_total_without_SR`. Uvažujte pouze počty pro všechna pohlaví (`<https://data.cssz.cz/ontology/sdmx/code/sex-T>`). Data pro období, za něž jsou výše důchodů uváděny, najdete v číselníku `<https://data.cssz.cz/ontology/days/DaysScheme>`. Meziroční nárůst vypočtěte v procentech jako rozdíl průměrné výše důchodů ve dvou následných letech vydělený průměrnou výší důchodu v počátečním roce. Pro nalezenou referenční oblast uveďte název (`skos:prefLabel`). Pro počáteční a konečný rok uveďte jejich koncová data (`skos:notation`). Průměrné výše důchodů se nacházejí v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/duchodci-v-cr-krajich-okresech>`. Číselníky jsou v pojmenovaném grafu `<https://data.cssz.cz/resource/dataset/pomocne-ciselniky>`."@cs ;
   skos:note "Protože jsou uvažovány druhy důchodů ekvivalentní `pension-kind:PK_old_age_total_without_SR`, jedná se o pouze starobní důchody dle zákona č. 155/1995 Sb., o důchodovém pojištění."@cs ;
   sp:text """
 PREFIX cssz-dimension: <https://data.cssz.cz/ontology/dimension/>
@@ -1747,11 +1746,11 @@ WHERE {
         SELECT ?end ?start
         WHERE {
           GRAPH <https://data.cssz.cz/resource/dataset/pomocne-ciselniky> {
-            ?end skos:inScheme <https://data.cssz.cz/ontology/dates/DatesScheme> ;
+            ?end skos:inScheme <https://data.cssz.cz/ontology/days/DaysScheme> ;
               skos:notation ?endNotation .
             FILTER STRENDS(?endNotation, "-12-31")
             BIND (CONCAT(STR(xsd:integer(SUBSTR(?endNotation, 1, 4)) - 1), "-12-31") AS ?startNotation)
-            ?start skos:inScheme <https://data.cssz.cz/ontology/dates/DatesScheme> ;
+            ?start skos:inScheme <https://data.cssz.cz/ontology/days/DaysScheme> ;
               skos:notation ?startNotation .
           }
         }
